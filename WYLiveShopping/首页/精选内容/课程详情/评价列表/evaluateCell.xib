@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="evaluateCELL" rowHeight="115" id="KGk-i7-Jjw" customClass="evaluateCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="115"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="115"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="edit_默认头像.png" translatesAutoresizingMaskIntoConstraints="NO" id="d2C-Od-tLv">
+                        <rect key="frame" x="15" y="10" width="38" height="38"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="38" id="969-4o-CRV"/>
+                            <constraint firstAttribute="width" constant="38" id="Ri7-t9-ADk"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="19"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="哥来自江湖" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jl4-ej-qcT">
+                        <rect key="frame" x="63" y="12" width="82" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.1960784314" green="0.1960784314" blue="0.1960784314" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="学习28个课时评价" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jqh-4M-lWc">
+                        <rect key="frame" x="63" y="33.5" width="101" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.58823529411764708" green="0.58823529411764708" blue="0.58823529411764708" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="全网质量最好课程之一！" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AF7-OE-ntF">
+                        <rect key="frame" x="63" y="58" width="242" height="52"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.39215686274509803" green="0.39215686274509803" blue="0.39215686274509803" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2020-02-01" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uN2-w2-6yP">
+                        <rect key="frame" x="236" y="33.5" width="69" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.58823529411764708" green="0.58823529411764708" blue="0.58823529411764708" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yc9-7D-KxU" customClass="WYCouserStarView">
+                        <rect key="frame" x="215" y="14.5" width="90" height="15"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="Cgm-FX-M68"/>
+                            <constraint firstAttribute="width" constant="90" id="v2X-No-ybM"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="jl4-ej-qcT" firstAttribute="top" secondItem="d2C-Od-tLv" secondAttribute="top" constant="2" id="0Wn-wu-XhU"/>
+                    <constraint firstItem="AF7-OE-ntF" firstAttribute="leading" secondItem="jl4-ej-qcT" secondAttribute="leading" id="6fc-31-9mF"/>
+                    <constraint firstItem="d2C-Od-tLv" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="FeP-ht-zBR"/>
+                    <constraint firstItem="yc9-7D-KxU" firstAttribute="trailing" secondItem="AF7-OE-ntF" secondAttribute="trailing" id="JSj-7h-deS"/>
+                    <constraint firstItem="uN2-w2-6yP" firstAttribute="trailing" secondItem="yc9-7D-KxU" secondAttribute="trailing" id="PlH-J8-iTf"/>
+                    <constraint firstAttribute="trailing" secondItem="AF7-OE-ntF" secondAttribute="trailing" constant="15" id="RyY-2n-rv7"/>
+                    <constraint firstItem="uN2-w2-6yP" firstAttribute="centerY" secondItem="Jqh-4M-lWc" secondAttribute="centerY" id="VTu-C0-QAY"/>
+                    <constraint firstItem="jl4-ej-qcT" firstAttribute="leading" secondItem="d2C-Od-tLv" secondAttribute="trailing" constant="10" id="ZZH-wp-xZS"/>
+                    <constraint firstItem="AF7-OE-ntF" firstAttribute="top" secondItem="d2C-Od-tLv" secondAttribute="bottom" constant="10" id="brT-rv-FCH"/>
+                    <constraint firstItem="yc9-7D-KxU" firstAttribute="centerY" secondItem="jl4-ej-qcT" secondAttribute="centerY" id="dVr-38-M4S"/>
+                    <constraint firstItem="d2C-Od-tLv" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="fRa-Z1-G1h"/>
+                    <constraint firstItem="Jqh-4M-lWc" firstAttribute="bottom" secondItem="d2C-Od-tLv" secondAttribute="bottom" id="gIr-UL-m5b"/>
+                    <constraint firstItem="Jqh-4M-lWc" firstAttribute="leading" secondItem="jl4-ej-qcT" secondAttribute="leading" id="hso-16-Mf8"/>
+                    <constraint firstAttribute="bottom" secondItem="AF7-OE-ntF" secondAttribute="bottom" constant="5" id="oNh-6q-k1I"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentL" destination="AF7-OE-ntF" id="eOL-HK-JGY"/>
+                <outlet property="iconImgV" destination="d2C-Od-tLv" id="E9I-w1-33U"/>
+                <outlet property="nameL" destination="jl4-ej-qcT" id="FQp-M2-Yy1"/>
+                <outlet property="numL" destination="Jqh-4M-lWc" id="F9S-4g-FDq"/>
+                <outlet property="starView" destination="yc9-7D-KxU" id="foE-yA-Hfz"/>
+                <outlet property="timeL" destination="uN2-w2-6yP" id="qw8-kU-D91"/>
+            </connections>
+            <point key="canvasLocation" x="131.8840579710145" y="124.21875"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="edit_默认头像.png" width="160" height="160"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
