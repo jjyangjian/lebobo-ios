@@ -102,6 +102,8 @@
     }
 
 }
+#pragma mark - 暂时丢弃的方法
+
 ///推广详情
 - (void)doAllTuiGuang{
     spreadViewController *vc = [[spreadViewController alloc]init];
@@ -126,15 +128,10 @@
 - (void)conSMButtonClick:(UIButton *)sender{
     NSLog(@"代销%ld",sender.tag - 1000);
     if (sender.tag == 1000) {
-        GoodsAdminViewController *vc = [[GoodsAdminViewController alloc]init];
-        [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
-
-    }else if (sender.tag == 1001){
         StoreOrderListViewController *vc = [[StoreOrderListViewController alloc]init];
         vc.statusType = @"1";
         [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
-    }
-    else{
+    }else{
         mineProfitViewController *vc = [[mineProfitViewController alloc]init];
         vc.ptofitType = 0;
         [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
@@ -336,187 +333,111 @@
         [orderBtnArray addObject:btn];
     }
 
-    UIView *menuView2 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width-30, 110)];
-    menuView2.backgroundColor = [UIColor whiteColor];
-    menuView2.layer.cornerRadius = 5;
-    menuView2.layer.masksToBounds = YES;
-    spreadView = [[UIView alloc] initWithFrame:CGRectMake(15, headerView.bottom + 10, _window_width-30, 110)];
-    CALayer * subLayer2 = spreadView.layer;
-    subLayer2.shadowColor = [UIColor blackColor].CGColor;
-    subLayer2.shadowOffset = CGSizeMake(0, 2.5);
-    subLayer2.shadowOpacity = 0.05;
-    subLayer2.shadowRadius = 2.5;
-    [_backScrollView addSubview:spreadView];
-    [spreadView addSubview:menuView2];
-    
-    UIButton *tuiguanBtn = [UIButton buttonWithType:0];
-    [tuiguanBtn addTarget:self action:@selector(doAllTuiGuang) forControlEvents:UIControlEventTouchUpInside];
-    [menuView2 addSubview:tuiguanBtn];
-    [tuiguanBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(menuView2).offset(-5);
-        make.top.equalTo(menuView2).offset(13);
-        make.height.mas_equalTo(16);
-    }];
-    UIImageView *rightImgV2 = [[UIImageView alloc]init];
-    rightImgV2.image = [UIImage imageNamed:@"mine_right"];
-    [tuiguanBtn addSubview:rightImgV2];
-    [rightImgV2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.right.centerY.equalTo(tuiguanBtn);
-        make.width.equalTo(rightImgV2.mas_width);
-    }];
-    UILabel *tuiguangLabel = [[UILabel alloc]init];
-    tuiguangLabel.font = SYS_Font(12);
-    tuiguangLabel.textColor = RGB_COLOR(@"#dcdcdc", 1);
-    tuiguangLabel.text = @"查看详情";
-    [tuiguanBtn addSubview:tuiguangLabel];
-    [tuiguangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(tuiguanBtn);
-        make.right.equalTo(rightImgV2.mas_left).offset(-2);
-        make.centerY.equalTo(tuiguanBtn);
-    }];
+    // 暂时隐藏我的推广模块
+    // UIView *menuView2 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width-30, 110)];
+    // menuView2.backgroundColor = [UIColor whiteColor];
+    // menuView2.layer.cornerRadius = 5;
+    // menuView2.layer.masksToBounds = YES;
+    // spreadView = [[UIView alloc] initWithFrame:CGRectMake(15, headerView.bottom + 10, _window_width-30, 110)];
+    // CALayer * subLayer2 = spreadView.layer;
+    // subLayer2.shadowColor = [UIColor blackColor].CGColor;
+    // subLayer2.shadowOffset = CGSizeMake(0, 2.5);
+    // subLayer2.shadowOpacity = 0.05;
+    // subLayer2.shadowRadius = 2.5;
+    // [_backScrollView addSubview:spreadView];
+    // [spreadView addSubview:menuView2];
+    // 
+    // UIButton *tuiguanBtn = [UIButton buttonWithType:0];
+    // [tuiguanBtn addTarget:self action:@selector(doAllTuiGuang) forControlEvents:UIControlEventTouchUpInside];
+    // [menuView2 addSubview:tuiguanBtn];
+    // [tuiguanBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    //     make.right.equalTo(menuView2).offset(-5);
+    //     make.top.equalTo(menuView2).offset(13);
+    //     make.height.mas_equalTo(16);
+    // }];
+    // UIImageView *rightImgV2 = [[UIImageView alloc]init];
+    // rightImgV2.image = [UIImage imageNamed:@"mine_right"];
+    // [tuiguanBtn addSubview:rightImgV2];
+    // [rightImgV2 mas_makeConstraints:^(MASConstraintMaker *make) {
+    //     make.height.right.centerY.equalTo(tuiguanBtn);
+    //     make.width.equalTo(rightImgV2.mas_width);
+    // }];
+    // UILabel *tuiguangLabel = [[UILabel alloc]init];
+    // tuiguangLabel.font = SYS_Font(12);
+    // tuiguangLabel.textColor = RGB_COLOR(@"#dcdcdc", 1);
+    // tuiguangLabel.text = @"查看详情";
+    // [tuiguanBtn addSubview:tuiguangLabel];
+    // [tuiguangLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    //     make.left.equalTo(tuiguanBtn);
+    //     make.right.equalTo(rightImgV2.mas_left).offset(-2);
+    //     make.centerY.equalTo(tuiguanBtn);
+    // }];
 
-    UILabel *label2 = [[UILabel alloc]init];
-    label2.font = [UIFont boldSystemFontOfSize:14];
-    label2.textColor = color32;
-    label2.text = @"我的推广";
-    [menuView2 addSubview:label2];
-    [label2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(menuView2).offset(13);
-        make.centerY.equalTo(tuiguanBtn);
-    }];
-    UIView *labelView = [[UIView alloc]initWithFrame:CGRectMake(0, 44, menuView2.width, 66)];
-    [menuView2 addSubview:labelView];
-    tuiguangLabelArray = [NSMutableArray array];
-    NSArray *array2 = @[@"当前佣金",@"昨日收益",@"推广人数",@"推广人订单"];
-    for (int i = 0; i < array2.count; i ++) {
-        UILabel *topLabel = [[UILabel alloc]init];
-        topLabel.font = [UIFont boldSystemFontOfSize:15];
-        [labelView addSubview:topLabel];
-        [topLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(labelView).multipliedBy(0.5);
-            make.centerX.equalTo(labelView).multipliedBy(0.25+i*0.5);
-        }];
-        UILabel *botLabel = [[UILabel alloc]init];
-        botLabel.font = SYS_Font(12);
-        botLabel.text = array2[i];
-        botLabel.textColor = color64;
-        [labelView addSubview:botLabel];
-        [botLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(labelView).multipliedBy(1.3);
-            make.centerX.equalTo(topLabel);
-        }];
-        [tuiguangLabelArray addObject:topLabel];
-        UIButton *btn = [UIButton buttonWithType:0];
-        [labelView addSubview:btn];
-        [btn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(topLabel);
-            make.centerX.equalTo(topLabel);
-            make.bottom.equalTo(botLabel);
-            make.width.equalTo(botLabel);
-        }];
+    // UILabel *label2 = [[UILabel alloc]init];
+    // label2.font = [UIFont boldSystemFontOfSize:14];
+    // label2.textColor = color32;
+    // label2.text = @"我的推广";
+    // [menuView2 addSubview:label2];
+    // [label2 mas_makeConstraints:^(MASConstraintMaker *make) {
+    //     make.left.equalTo(menuView2).offset(13);
+    //     make.centerY.equalTo(tuiguanBtn);
+    // }];
+    // UIView *labelView = [[UIView alloc]initWithFrame:CGRectMake(0, 44, menuView2.width, 66)];
+    // [menuView2 addSubview:labelView];
+    // tuiguangLabelArray = [NSMutableArray array];
+    // NSArray *array2 = @[@"当前佣金",@"昨日收益",@"推广人数",@"推广人订单"];
+    // for (int i = 0; i < array2.count; i ++) {
+    //     UILabel *topLabel = [[UILabel alloc]init];
+    //     topLabel.font = [UIFont boldSystemFontOfSize:15];
+    //     [labelView addSubview:topLabel];
+    //     [topLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    //         make.centerY.equalTo(labelView).multipliedBy(0.5);
+    //         make.centerX.equalTo(labelView).multipliedBy(0.25+i*0.5);
+    //     }];
+    //     UILabel *botLabel = [[UILabel alloc]init];
+    //     botLabel.font = SYS_Font(12);
+    //     botLabel.text = array2[i];
+    //     botLabel.textColor = color64;
+    //     [labelView addSubview:botLabel];
+    //     [botLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    //         make.centerY.equalTo(labelView).multipliedBy(1.3);
+    //         make.centerX.equalTo(topLabel);
+    //     }];
+    //     [tuiguangLabelArray addObject:topLabel];
+    //     UIButton *btn = [UIButton buttonWithType:0];
+    //     [labelView addSubview:btn];
+    //     [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+    //         make.top.equalTo(topLabel);
+    //         make.centerX.equalTo(topLabel);
+    //         make.bottom.equalTo(botLabel);
+    //         make.width.equalTo(botLabel);
+    //     }];
 
-        if (i == 0 || i == 1 ) {
-            topLabel.textColor = normalColors;
-            [btn addTarget:self action:@selector(doAllTuiGuang) forControlEvents:UIControlEventTouchUpInside];
-        }else{
-            topLabel.textColor = color32;
-            if (i == 2) {
-                [btn addTarget:self action:@selector(tuiGuangPeopleNums) forControlEvents:UIControlEventTouchUpInside];
-            }else{
-                [btn addTarget:self action:@selector(tuiGuangOrderNums) forControlEvents:UIControlEventTouchUpInside];
-            }
-        }
+    //     if (i == 0 || i == 1 ) {
+    //         topLabel.textColor = normalColors;
+    //         [btn addTarget:self action:@selector(doAllTuiGuang) forControlEvents:UIControlEventTouchUpInside];
+    //     }else{
+    //         topLabel.textColor = color32;
+    //         if (i == 2) {
+    //             [btn addTarget:self action:@selector(tuiGuangPeopleNums) forControlEvents:UIControlEventTouchUpInside];
+    //         }else{
+    //             [btn addTarget:self action:@selector(tuiGuangOrderNums) forControlEvents:UIControlEventTouchUpInside];
+    //         }
+    //     }
 
-    }
+    // }
     
 }
 - (void)addStoreView{
-    
-    UIView *subView1 = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width-30, 115)];
-    subView1.backgroundColor = [UIColor whiteColor];
-    subView1.layer.cornerRadius = 5;
-    subView1.layer.masksToBounds = YES;
-    consignmentView = [[UIView alloc] initWithFrame:CGRectMake(15, spreadView.bottom + 10, _window_width-30, 115)];
-    CALayer * subLayer1 = consignmentView.layer;
-    subLayer1.shadowColor = [UIColor blackColor].CGColor;
-    subLayer1.shadowOffset = CGSizeMake(0, 2.5);
-    subLayer1.shadowOpacity = 0.05;
-    subLayer1.shadowRadius = 2.5;
-    [_backScrollView addSubview:consignmentView];
-    [consignmentView addSubview:subView1];
-    
-    UIButton *conSMBtn = [UIButton buttonWithType:0];
-    [conSMBtn addTarget:self action:@selector(doConsignmentDetailes) forControlEvents:UIControlEventTouchUpInside];
-    [subView1 addSubview:conSMBtn];
-    [conSMBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(subView1).offset(-5);
-        make.top.equalTo(subView1).offset(13);
-        make.height.mas_equalTo(16);
-    }];
-    UIImageView *rightImgV = [[UIImageView alloc]init];
-    rightImgV.image = [UIImage imageNamed:@"mine_right"];
-    [conSMBtn addSubview:rightImgV];
-    [rightImgV mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.right.centerY.equalTo(conSMBtn);
-        make.width.equalTo(rightImgV.mas_width);
-    }];
-    UILabel *conSMLabel = [[UILabel alloc]init];
-    conSMLabel.font = SYS_Font(12);
-    conSMLabel.textColor = RGB_COLOR(@"#dcdcdc", 1);
-    conSMLabel.text = @"查看详情";
-    [conSMBtn addSubview:conSMLabel];
-    [conSMLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(conSMBtn);
-        make.right.equalTo(rightImgV.mas_left).offset(-2);
-        make.centerY.equalTo(conSMBtn);
-    }];
-
-    UILabel *label = [[UILabel alloc]init];
-    label.font = [UIFont boldSystemFontOfSize:14];
-    label.textColor = color32;
-    label.text = @"我的代销";
-    [subView1 addSubview:label];
-    [label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(subView1).offset(13);
-        make.centerY.equalTo(conSMBtn);
-    }];
-    NSArray *array = @[@"商品管理",@"代销订单",@"代销收益"];
-    CGFloat btnWidth = subView1.width/4;
-    for (int i = 0; i < array.count; i ++) {
-        UIButton *btn = [UIButton buttonWithType:0];
-        btn.frame = CGRectMake((i%4) * btnWidth, 45, btnWidth, 55);
-        btn.tag = 1000 + i;
-        [btn addTarget:self action:@selector(conSMButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [subView1 addSubview:btn];
-        UIImageView *imgV = [[UIImageView alloc]init];
-        imgV.image = [UIImage imageNamed:array[i]];
-        [btn addSubview:imgV];
-        [imgV mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(btn);
-            make.width.height.mas_equalTo(30);
-            make.top.equalTo(btn).offset(7);
-        }];
-        UILabel *btnL = [[UILabel alloc]init];
-        btnL.text = array[i];
-        btnL.font = SYS_Font(12);
-        btnL.textColor = color64;
-        [btn addSubview:btnL];
-        [btnL mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.bottom.equalTo(btn);
-            make.width.lessThanOrEqualTo(btn);
-        }];
-    }
-
-    
-    
-    
-    
-    
+    // 只保留我的店铺模块，隐藏我的代销模块
     UIView *subView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width-30, 115)];
     subView.backgroundColor = [UIColor whiteColor];
     subView.layer.cornerRadius = 5;
     subView.layer.masksToBounds = YES;
-    storeView = [[UIView alloc] initWithFrame:CGRectMake(15, consignmentView.bottom + 10, _window_width-30, 115)];
+    
+    // 调整店铺模块的位置，直接从headerView底部开始计算
+    UIView *headerView = _backScrollView.subviews.firstObject;
+    storeView = [[UIView alloc] initWithFrame:CGRectMake(15, headerView.bottom + 10, _window_width-30, 115)];
     CALayer * subLayer = storeView.layer;
     subLayer.shadowColor = [UIColor blackColor].CGColor;
     subLayer.shadowOffset = CGSizeMake(0, 2.5);
@@ -561,6 +482,7 @@
         make.centerY.equalTo(storeBtn);
     }];
     NSArray *array2 = @[@"店铺订单",@"店铺收益"];
+    CGFloat btnWidth = subView.width/4;
     for (int i = 0; i < array2.count; i ++) {
         UIButton *btn = [UIButton buttonWithType:0];
         btn.frame = CGRectMake((i%4) * btnWidth, 45, btnWidth, 55);
@@ -635,6 +557,7 @@
             }else{
                 bindingPhoneBtn.hidden = NO;
             }
+            // 恢复我的店铺模块显示
             if ([minstr([info valueForKey:@"isshop"]) isEqual:@"1"]) {
                 if (!storeView) {
                     [self addStoreView];
@@ -658,20 +581,23 @@
                     [btn showBadgeWithNumber:[minstr([orderStatusNum valueForKey:@"refund_count"]) integerValue]];
                 }
             }
-            for (int i = 0; i < tuiguangLabelArray.count; i ++) {
-                UILabel *label = tuiguangLabelArray[i];
-                if (i == 0) {
-                    label.text = minstr([info valueForKey:@"brokerage_price"]);
-                }else if (i == 1) {
-                    label.text = minstr([info valueForKey:@"yesterDay"]);
-                }else if (i == 2) {
-                    //spread_count一级人数
-                    label.attributedText = [self getAttStrWithNums:minstr([info valueForKey:@"spread_total"]) andCompany:@"人"];
-                }else {
-                    //一级订单数spread_order_count
-                    label.attributedText = [self getAttStrWithNums:minstr([info valueForKey:@"order_count"]) andCompany:@"单"];
-                }
-            }
+            // 暂时隐藏我的推广模块，跳过相关数据更新
+            // if (tuiguangLabelArray.count > 0) {
+            //     for (int i = 0; i < tuiguangLabelArray.count; i ++) {
+            //         UILabel *label = tuiguangLabelArray[i];
+            //         if (i == 0) {
+            //             label.text = minstr([info valueForKey:@"brokerage_price"]);
+            //         }else if (i == 1) {
+            //             label.text = minstr([info valueForKey:@"yesterDay"]);
+            //         }else if (i == 2) {
+            //             //spread_count一级人数
+            //             label.attributedText = [self getAttStrWithNums:minstr([info valueForKey:@"spread_total"]) andCompany:@"人"];
+            //         }else {
+            //             //一级订单数spread_order_count
+            //             label.attributedText = [self getAttStrWithNums:minstr([info valueForKey:@"order_count"]) andCompany:@"单"];
+            //         }
+            //     }
+            // }
             for (int i = 0; i < mineHaveLabelArray.count; i ++) {
                 UILabel *label = mineHaveLabelArray[i];
                 if (i == 0) {
@@ -727,7 +653,24 @@
     subView.layer.cornerRadius = 5;
     subView.layer.masksToBounds = YES;
 
-    bottomView = [[UIView alloc] initWithFrame:CGRectMake(15, storeView ? storeView.bottom + 10 : spreadView.bottom + 10, _window_width-30, 46 + 69 * count)];
+    // 计算新的行数，因为添加了商品管理按钮
+    int newCount = listArray.count + 1;
+    int newRowCount;
+    if (newCount % 4 == 0) {
+        newRowCount = newCount/4;
+    }else{
+        newRowCount = (newCount/4 + 1);
+    }
+    
+    // 更新subView和bottomView的高度
+    subView.frame = CGRectMake(0, 0, _window_width-30, 46 + 69 * newRowCount);
+    // 调整布局，根据是否有店铺模块计算位置
+    UIView *headerView = _backScrollView.subviews.firstObject;
+    CGFloat bottomViewY = headerView.bottom + 10;
+    if (storeView) {
+        bottomViewY = storeView.bottom + 10;
+    }
+    bottomView = [[UIView alloc] initWithFrame:CGRectMake(15, bottomViewY, _window_width-30, 46 + 69 * newRowCount)];
     CALayer *subLayer = bottomView.layer;
     subLayer.shadowColor = [UIColor blackColor].CGColor;
     subLayer.shadowOffset = CGSizeMake(0, 2.5);
@@ -778,11 +721,44 @@
             make.width.lessThanOrEqualTo(btn);
         }];
     }
+    
+    // 添加商品管理按钮
+    UIButton *goodsManageBtn = [UIButton buttonWithType:0];
+    int lastIndex = listArray.count;
+    goodsManageBtn.frame = CGRectMake((lastIndex%4) * btnWidth, 46+(lastIndex/4*69), btnWidth, 55);
+    goodsManageBtn.tag = 2000 + lastIndex;
+    [goodsManageBtn addTarget:self action:@selector(bottomButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [subView addSubview:goodsManageBtn];
+    UIImageView *imgV = [[UIImageView alloc]init];
+    imgV.image = [UIImage imageNamed:@"商品管理"];
+    [goodsManageBtn addSubview:imgV];
+    [imgV mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(goodsManageBtn);
+        make.width.height.mas_equalTo(30);
+        make.top.equalTo(goodsManageBtn).offset(7);
+    }];
+    UILabel *btnL = [[UILabel alloc]init];
+    btnL.text = @"商品管理";
+    btnL.font = SYS_Font(12);
+    btnL.textColor = color64;
+    [goodsManageBtn addSubview:btnL];
+    [btnL mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.bottom.equalTo(goodsManageBtn);
+        make.width.lessThanOrEqualTo(goodsManageBtn);
+    }];
 
 }
 //底部按钮点击
 - (void)bottomButtonClick:(UIButton *)sender{
     NSLog(@"底部菜单%ld",sender.tag - 2000);
+    
+    // 处理商品管理按钮点击
+    if (sender.tag - 2000 == listArray.count) {
+        GoodsAdminViewController *vc = [[GoodsAdminViewController alloc]init];
+        [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+        return;
+    }
+    
     NSString *menuID = minstr([listArray[sender.tag - 2000] valueForKey:@"id"]);
     if ([menuID isEqual:@"138"]) {
         //我的余额
