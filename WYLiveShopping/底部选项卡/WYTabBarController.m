@@ -7,6 +7,8 @@
 //
 #import "WYTabBarController.h"
 #import "WYLiveShopHomeViewController.h"
+#import "JJHomeLiveListVC.h"
+
 #import "MineViewController.h"
 #import "ClassificationViewController.h"
 #import "OptimizationViewController.h"
@@ -103,7 +105,11 @@
 
 #pragma mark  在这里更换 左右tabbar的image
 - (void)setUpAllChildVc {
-    WYLiveShopHomeViewController *home = [WYLiveShopHomeViewController new];
+//    WYLiveShopHomeViewController *home = [WYLiveShopHomeViewController new];
+    JJHomeLiveListVC *home = [JJHomeLiveListVC new];
+
+    
+    
     WYFindViewController *find = [WYFindViewController new];
     MineViewController *mine = [MineViewController new];
     ClassificationViewController *class  = [ClassificationViewController new];

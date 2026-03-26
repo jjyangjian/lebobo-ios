@@ -169,6 +169,7 @@
 }
 - (void)addheaderView{
     UIView *headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, 270+statusbarHeight)];
+    headerView.backgroundColor = UIColor.orangeColor;
     headerView.backgroundColor = [UIColor whiteColor];
     [_backScrollView addSubview:headerView];
     UIImageView *colorImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, _window_width, 220+statusbarHeight)];
@@ -232,7 +233,9 @@
     }];
 
     mineHaveLabelArray = [NSMutableArray array];
-    NSArray *array3 = @[@"收藏夹",@"关注店铺",@"我的积分",@"我的卡券"];
+    NSArray *array3 = @[@"收藏夹",@"关注店铺"
+//                        ,@"我的积分",@"我的卡券"
+    ];
     for (int i = 0; i < array3.count; i ++) {
         UILabel *topLabel = [[UILabel alloc]init];
         topLabel.font = [UIFont boldSystemFontOfSize:14];

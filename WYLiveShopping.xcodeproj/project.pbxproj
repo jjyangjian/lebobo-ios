@@ -349,8 +349,6 @@
 		188F01F024E78122006186FD /* RechargeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F01EF24E78122006186FD /* RechargeViewController.m */; };
 		188F01F424E7813F006186FD /* applePay.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F01F324E7813F006186FD /* applePay.m */; };
 		188F020B24E7816E006186FD /* Order.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F01F624E7816E006186FD /* Order.m */; };
-		188F020C24E7816E006186FD /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188F01F724E7816E006186FD /* libcrypto.a */; };
-		188F021524E7816E006186FD /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 188F020A24E7816E006186FD /* libssl.a */; };
 		188F021924E78AD5006186FD /* WYProfitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F021824E78AD5006186FD /* WYProfitViewController.m */; };
 		188F021D24E7AD5C006186FD /* WYGiftListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F021C24E7AD5C006186FD /* WYGiftListView.m */; };
 		188F022024E7B535006186FD /* giftCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F021F24E7B535006186FD /* giftCell.m */; };
@@ -1307,6 +1305,10 @@
 		6FB9E03A2F22201C00B17937 /* MHSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6FB9E0392F22201C00B17937 /* MHSDK.bundle */; };
 		6FB9E03C2F22205100B17937 /* MHResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6FB9E03B2F22205100B17937 /* MHResource.bundle */; };
 		EBA376512F5AD4FE0072659F /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBA376502F5AD4FE0072659F /* openssl.framework */; };
+		F15859932F7419FB00C76D09 /* JJHomeLiveListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598F2F7419FB00C76D09 /* JJHomeLiveListVC.m */; };
+		F15859942F7419FB00C76D09 /* JJHomeLiveListItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */; };
+		F15859952F7419FB00C76D09 /* JJHomeLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598B2F7419FB00C76D09 /* JJHomeLiveListCell.m */; };
+		F15859962F7419FB00C76D09 /* JJHomeLiveListHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598D2F7419FB00C76D09 /* JJHomeLiveListHeader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1803,9 +1805,7 @@
 		188F01F224E7813F006186FD /* applePay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = applePay.h; sourceTree = "<group>"; };
 		188F01F324E7813F006186FD /* applePay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = applePay.m; sourceTree = "<group>"; };
 		188F01F624E7816E006186FD /* Order.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Order.m; sourceTree = "<group>"; };
-		188F01F724E7816E006186FD /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		188F020924E7816E006186FD /* Order.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Order.h; sourceTree = "<group>"; };
-		188F020A24E7816E006186FD /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
 		188F021724E78AD5006186FD /* WYProfitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYProfitViewController.h; sourceTree = "<group>"; };
 		188F021824E78AD5006186FD /* WYProfitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYProfitViewController.m; sourceTree = "<group>"; };
 		188F021B24E7AD5C006186FD /* WYGiftListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYGiftListView.h; sourceTree = "<group>"; };
@@ -3189,6 +3189,14 @@
 		6FB9E03B2F22205100B17937 /* MHResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MHResource.bundle; sourceTree = "<group>"; };
 		70F7C805BB6701840E91F0CF /* Pods-WYLiveShopping.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WYLiveShopping.debug.xcconfig"; path = "Target Support Files/Pods-WYLiveShopping/Pods-WYLiveShopping.debug.xcconfig"; sourceTree = "<group>"; };
 		EBA376502F5AD4FE0072659F /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
+		F158598A2F7419FB00C76D09 /* JJHomeLiveListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeLiveListCell.h; sourceTree = "<group>"; };
+		F158598B2F7419FB00C76D09 /* JJHomeLiveListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListCell.m; sourceTree = "<group>"; };
+		F158598C2F7419FB00C76D09 /* JJHomeLiveListHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeLiveListHeader.h; sourceTree = "<group>"; };
+		F158598D2F7419FB00C76D09 /* JJHomeLiveListHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListHeader.m; sourceTree = "<group>"; };
+		F158598E2F7419FB00C76D09 /* JJHomeLiveListVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeLiveListVC.h; sourceTree = "<group>"; };
+		F158598F2F7419FB00C76D09 /* JJHomeLiveListVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListVC.m; sourceTree = "<group>"; };
+		F15859902F7419FB00C76D09 /* JJHomeLiveListItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeLiveListItemModel.h; sourceTree = "<group>"; };
+		F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListItemModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3201,8 +3209,6 @@
 				1890075526D894CA00F6E939 /* libopencore-amrnb.a in Frameworks */,
 				EBA376512F5AD4FE0072659F /* openssl.framework in Frameworks */,
 				6F9A1E132F2AEA4100260590 /* FaceLandMark.framework in Frameworks */,
-				188F020C24E7816E006186FD /* libcrypto.a in Frameworks */,
-				188F021524E7816E006186FD /* libssl.a in Frameworks */,
 				133609BA916E4D01213AAB2C /* Pods_WYLiveShopping.framework in Frameworks */,
 				1890075426D894CA00F6E939 /* libopencore-amrwb.a in Frameworks */,
 			);
@@ -4143,8 +4149,6 @@
 			isa = PBXGroup;
 			children = (
 				18537AF22F2B5BCC004920F1 /* Util */,
-				188F01F724E7816E006186FD /* libcrypto.a */,
-				188F020A24E7816E006186FD /* libssl.a */,
 				188F020924E7816E006186FD /* Order.h */,
 				188F01F624E7816E006186FD /* Order.m */,
 			);
@@ -5715,6 +5719,7 @@
 		18A7AE0E2490BEA800A8EB89 /* 首页 */ = {
 			isa = PBXGroup;
 			children = (
+				F15859922F7419FB00C76D09 /* 新首页仅保留直播列表 */,
 				18F9545726DDBADB00A296F8 /* WYLiveShopHomeViewController.h */,
 				18F9545826DDBADB00A296F8 /* WYLiveShopHomeViewController.m */,
 				18F9545C26DDC08900A296F8 /* WYHomeShopColCell.h */,
@@ -7217,6 +7222,21 @@
 			path = "图片";
 			sourceTree = "<group>";
 		};
+		F15859922F7419FB00C76D09 /* 新首页仅保留直播列表 */ = {
+			isa = PBXGroup;
+			children = (
+				F158598A2F7419FB00C76D09 /* JJHomeLiveListCell.h */,
+				F158598B2F7419FB00C76D09 /* JJHomeLiveListCell.m */,
+				F158598C2F7419FB00C76D09 /* JJHomeLiveListHeader.h */,
+				F158598D2F7419FB00C76D09 /* JJHomeLiveListHeader.m */,
+				F158598E2F7419FB00C76D09 /* JJHomeLiveListVC.h */,
+				F158598F2F7419FB00C76D09 /* JJHomeLiveListVC.m */,
+				F15859902F7419FB00C76D09 /* JJHomeLiveListItemModel.h */,
+				F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */,
+			);
+			path = "新首页仅保留直播列表";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -8309,6 +8329,10 @@
 				18A2270224887B5B00C556E9 /* UIFont+FontAwesome.m in Sources */,
 				18E3B1FA26E1C7000020924E /* writeEvaluateViewController.m in Sources */,
 				18537B0A2F2B5BCD004920F1 /* RSADataSigner.m in Sources */,
+				F15859932F7419FB00C76D09 /* JJHomeLiveListVC.m in Sources */,
+				F15859942F7419FB00C76D09 /* JJHomeLiveListItemModel.m in Sources */,
+				F15859952F7419FB00C76D09 /* JJHomeLiveListCell.m in Sources */,
+				F15859962F7419FB00C76D09 /* JJHomeLiveListHeader.m in Sources */,
 				189006FD26D894CA00F6E939 /* TCommonPendencyCell.m in Sources */,
 				188F01F424E7813F006186FD /* applePay.m in Sources */,
 				18E3B10B26E1ABA50020924E /* WYSelectedStoreViewController.m in Sources */,
