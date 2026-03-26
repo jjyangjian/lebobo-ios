@@ -25,6 +25,8 @@
 #import "LinkmicItem.h"
 #import "LinkUserView.h"
 
+#import "JJShareLiveLinkView.h"
+
 #pragma mark - TRTC
 #import <TXLiteAVSDK_Professional/TRTCCloud.h>
 
@@ -852,12 +854,26 @@
 }
 #pragma mark -- 分享
 - (void)doShare{
-    if (!shareV) {
-        shareV = [[shareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
-        [self.view addSubview:shareV];
-    }else{
-        [shareV show];
-    }
+    //杨剑修改，分享
+//    self.stream = minstr([self.roomDic valueForKey:@"stream"]);
+//    self.uid = minstr([dic valueForKey:@"uid"]);
+    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
+    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+    JJShareLiveLinkView *shareView = JJShareLiveLinkView.new;
+    shareView.linkText = [NSString stringWithFormat:@"https://m.shenwei.info/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
+    shareView.doneBlock = ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD showSuccess:@"复制链接成功"];
+        });
+    };
+    [shareView show];
+
+//    if (!shareV) {
+//        shareV = [[shareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
+//        [self.view addSubview:shareV];
+//    }else{
+//        [shareV show];
+//    }
 }
 #pragma mark -- 底部商品按钮点击
 - (void)showgoodsShowView{

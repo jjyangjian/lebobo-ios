@@ -14,6 +14,7 @@
 #import <TXLiteAVSDK_Professional/TRTCCloud.h>
 #import "V8HorizontalPickerView.h"
 
+#import "JJShareLiveLinkView.h"
 
 
 
@@ -636,7 +637,8 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 }
 
--(void)txStartRtmp{
+// 备份原方法
+- (void)txStartRtmp{
     /*
     if(_txLivePublisher != nil)
     {
@@ -662,6 +664,21 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         [self pushLiveStateCode:pushStatus];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     }
+}
+
+//调整创建直播间-修改后
+-(void)__txStartRtmp{
+    // 替换为TRTC房间进入逻辑
+    [self trtcEnterRoomIfNeededThen:^(BOOL ok) {
+        if (ok) {
+            // 进入房间成功后更新状态
+            [self changePlayState:1];
+            [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+        } else {
+            // 进入房间失败处理
+            [_notification displayNotificationWithMessage:@"进入直播间失败" forDuration:5];
+        }
+    }];
 }
 -(void)pushLiveStateCode:(V2TXLiveCode)pushStatus {
     if (pushStatus == V2TXLIVE_OK) {
@@ -809,8 +826,8 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     });
     */
 }
-//推流成功后更新直播状态 1开播
--(void)changePlayState:(int)status{
+// 备份原方法
+- (void)__changePlayState:(int)status{
     
     NSDictionary *changelive = @{
                                  @"islive":@"1"
@@ -821,8 +838,25 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             //
             [[LinkmicManager shareInstance] livemicCdn];
         }
-    } fail:^{
-        
+    } fail:^{        
+    }];
+}
+
+//调整创建直播间-修改后
+//推流成功后更新直播状态 1开播
+-(void)changePlayState:(int)status{
+    
+    NSDictionary *changelive = @{
+                                 @"islive":@"1",
+                                 @"room_type":@"2" // 设置为小程序类型的房间
+                                 };
+    [WYToolClass postNetworkWithUrl:@"live/upLive" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+
+        if (code == 200) {
+            //
+            [[LinkmicManager shareInstance] livemicCdn];
+        }
+    } fail:^{        
     }];
 }
 
@@ -2380,12 +2414,24 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 分享
 - (void)doShare{
-    if (!shareV) {
-        shareV = [[shareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
-        [self.view addSubview:shareV];
-    }else{
-        [shareV show];
-    }
+    //杨剑修改，分享
+    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
+    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+    JJShareLiveLinkView *shareView = JJShareLiveLinkView.new;
+    shareView.linkText = [NSString stringWithFormat:@"https://m.shenwei.info/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
+    shareView.doneBlock = ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD showSuccess:@"复制链接成功"];
+        });
+    };
+    [shareView show];
+
+//    if (!shareV) {
+//        shareV = [[shareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
+//        [self.view addSubview:shareV];
+//    }else{
+//        [shareV show];
+//    }
 }
 #pragma mark -- 底部商品按钮点击
 - (void)showgoodsShowView{

@@ -1309,6 +1309,7 @@
 		F15859942F7419FB00C76D09 /* JJHomeLiveListItemModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */; };
 		F15859952F7419FB00C76D09 /* JJHomeLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598B2F7419FB00C76D09 /* JJHomeLiveListCell.m */; };
 		F15859962F7419FB00C76D09 /* JJHomeLiveListHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598D2F7419FB00C76D09 /* JJHomeLiveListHeader.m */; };
+		F17684CB2F75617400E60EFD /* JJShareLiveLinkView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3197,6 +3198,8 @@
 		F158598F2F7419FB00C76D09 /* JJHomeLiveListVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListVC.m; sourceTree = "<group>"; };
 		F15859902F7419FB00C76D09 /* JJHomeLiveListItemModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeLiveListItemModel.h; sourceTree = "<group>"; };
 		F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListItemModel.m; sourceTree = "<group>"; };
+		F17684C92F75617400E60EFD /* JJShareLiveLinkView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJShareLiveLinkView.h; sourceTree = "<group>"; };
+		F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJShareLiveLinkView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -6936,6 +6939,8 @@
 		18F9546C26DE043A00A296F8 /* 直播View */ = {
 			isa = PBXGroup;
 			children = (
+				F17684C92F75617400E60EFD /* JJShareLiveLinkView.h */,
+				F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */,
 				18F9546D26DE045700A296F8 /* WYHomeLiveView.h */,
 				18F9546E26DE045700A296F8 /* WYHomeLiveView.m */,
 			);
@@ -8580,6 +8585,7 @@
 				18A2270724887B5B00C556E9 /* UIImage+Util.m in Sources */,
 				1869F4F5249CA4D00061E185 /* jubaoVC.m in Sources */,
 				18B4BD7524B706B300449537 /* LogisticsMsgViewController.m in Sources */,
+				F17684CB2F75617400E60EFD /* JJShareLiveLinkView.m in Sources */,
 				18A2279B24887DD300C556E9 /* AddressListViewController.m in Sources */,
 				18A226EE24887B5B00C556E9 /* WYImageView.m in Sources */,
 				188F47B126E33E660017BF6A /* VideoCollectionCell.m in Sources */,
