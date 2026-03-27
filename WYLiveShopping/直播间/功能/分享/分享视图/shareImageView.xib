@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,7 +28,7 @@
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Sy-k7-dHC">
-                                    <rect key="frame" x="10" y="309" width="133" height="48"/>
+                                    <rect key="frame" x="10" y="309" width="129.5" height="48"/>
                                     <string key="text">分享人昵称
 邀请您一起看直播
 
@@ -66,10 +65,10 @@
                                     </userDefinedRuntimeAttributes>
                                 </imageView>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tWw-PF-hh7">
-                                    <rect key="frame" x="58" y="15" width="75.5" height="16"/>
+                                    <rect key="frame" x="58" y="15" width="74" height="16"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="乔知画小姐姐" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FHY-WL-Z2u">
-                                            <rect key="frame" x="7" y="2" width="61.5" height="12"/>
+                                            <rect key="frame" x="7" y="2" width="60" height="12"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -90,10 +89,10 @@
                                     </userDefinedRuntimeAttributes>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSL-wT-loD">
-                                    <rect key="frame" x="58" y="35" width="51" height="16"/>
+                                    <rect key="frame" x="58" y="35" width="50" height="16"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="直播中" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHM-Bg-Day">
-                                            <rect key="frame" x="13" y="2" width="31" height="12"/>
+                                            <rect key="frame" x="13" y="2" width="30" height="12"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -161,8 +160,8 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="直播带货用万岳直播" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7H-LB-Fpd">
-                            <rect key="frame" x="110.5" y="442" width="110.5" height="88"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="直播带货用播播乐直播" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7H-LB-Fpd">
+                            <rect key="frame" x="106" y="442" width="119.5" height="88"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -201,6 +200,7 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L7k-ZQ-C1f">
                             <rect key="frame" x="140.5" y="0.0" width="50" height="50"/>
                             <constraints>
+                                <constraint firstAttribute="width" secondItem="L7k-ZQ-C1f" secondAttribute="height" multiplier="1:1" id="lax-Qc-aOp"/>
                                 <constraint firstAttribute="width" secondItem="L7k-ZQ-C1f" secondAttribute="height" multiplier="1:1" id="tQe-Dc-HyN"/>
                             </constraints>
                             <state key="normal" image="share_pyq.png"/>
@@ -208,6 +208,7 @@
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KR3-C1-yfA">
                             <rect key="frame" x="251" y="0.0" width="50" height="50"/>
                             <constraints>
+                                <constraint firstAttribute="width" secondItem="KR3-C1-yfA" secondAttribute="height" multiplier="1:1" id="Hta-Z0-CZU"/>
                                 <constraint firstAttribute="width" secondItem="KR3-C1-yfA" secondAttribute="height" multiplier="1:1" id="ThE-xa-Tl8"/>
                             </constraints>
                             <state key="normal" image="share_保存.png"/>
@@ -217,13 +218,11 @@
                     <constraints>
                         <constraint firstItem="L7k-ZQ-C1f" firstAttribute="height" secondItem="HZd-RR-foW" secondAttribute="height" id="1Fh-dY-faW"/>
                         <constraint firstItem="L7k-ZQ-C1f" firstAttribute="centerX" secondItem="k1w-Hn-erd" secondAttribute="centerX" id="Ekr-lD-wMk"/>
-                        <constraint firstItem="KR3-C1-yfA" firstAttribute="width" secondItem="KR3-C1-yfA" secondAttribute="height" multiplier="1:1" id="Hta-Z0-CZU"/>
                         <constraint firstItem="KR3-C1-yfA" firstAttribute="height" secondItem="HZd-RR-foW" secondAttribute="height" id="KSf-mB-l9f"/>
                         <constraint firstItem="HZd-RR-foW" firstAttribute="height" secondItem="k1w-Hn-erd" secondAttribute="height" id="OJj-Bw-Bqm"/>
                         <constraint firstItem="KR3-C1-yfA" firstAttribute="centerX" secondItem="k1w-Hn-erd" secondAttribute="centerX" multiplier="5:3" id="Zev-Jt-ihA"/>
                         <constraint firstItem="KR3-C1-yfA" firstAttribute="centerY" secondItem="k1w-Hn-erd" secondAttribute="centerY" id="cwM-y4-urK"/>
                         <constraint firstItem="HZd-RR-foW" firstAttribute="centerX" secondItem="k1w-Hn-erd" secondAttribute="centerX" multiplier="1:3" id="fEK-Bc-1VI"/>
-                        <constraint firstItem="L7k-ZQ-C1f" firstAttribute="width" secondItem="L7k-ZQ-C1f" secondAttribute="height" multiplier="1:1" id="lax-Qc-aOp"/>
                         <constraint firstItem="HZd-RR-foW" firstAttribute="centerY" secondItem="k1w-Hn-erd" secondAttribute="centerY" id="mXd-xc-J68"/>
                         <constraint firstItem="L7k-ZQ-C1f" firstAttribute="centerY" secondItem="k1w-Hn-erd" secondAttribute="centerY" id="nMO-xv-wCy"/>
                         <constraint firstAttribute="height" constant="50" id="ssI-Tv-F0d"/>

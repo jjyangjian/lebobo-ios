@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,8 +33,8 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="万岳官方旗舰店" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frG-yn-nYi">
-                                <rect key="frame" x="63" y="21" width="100" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="播播乐官方旗舰店" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="frG-yn-nYi">
+                                <rect key="frame" x="63" y="21" width="111.5" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.84705882349999995" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -59,6 +59,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HNW-gC-ZS8">
                                 <rect key="frame" x="133.5" y="71" width="60" height="60.5"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="HNW-gC-ZS8" secondAttribute="height" multiplier="1:1" id="NTO-yY-KX1"/>
                                     <constraint firstAttribute="width" secondItem="HNW-gC-ZS8" secondAttribute="height" multiplier="1:1" id="X4w-9i-TdO"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -70,6 +71,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HBi-ha-DDb">
                                 <rect key="frame" x="203.5" y="71" width="60.5" height="60.5"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="HBi-ha-DDb" secondAttribute="height" multiplier="1:1" id="5F5-mP-H6h"/>
                                     <constraint firstAttribute="width" secondItem="HBi-ha-DDb" secondAttribute="height" multiplier="1:1" id="nu0-1i-cEr"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -81,6 +83,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RoM-tr-dF0">
                                 <rect key="frame" x="274" y="71" width="60.5" height="60.5"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" secondItem="RoM-tr-dF0" secondAttribute="height" multiplier="1:1" id="JUH-d6-9YQ"/>
                                     <constraint firstAttribute="width" secondItem="RoM-tr-dF0" secondAttribute="height" multiplier="1:1" id="UGJ-lW-3nm"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
@@ -90,7 +93,7 @@
                                 </userDefinedRuntimeAttributes>
                             </imageView>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="自营" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QX2-TO-nne">
-                                <rect key="frame" x="167" y="22" width="26" height="15"/>
+                                <rect key="frame" x="178.5" y="22" width="26" height="15"/>
                                 <color key="backgroundColor" red="1" green="0.16862745098039217" blue="0.16862745098039217" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="26" id="Ltm-Q9-uK1"/>
@@ -109,15 +112,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="vjX-gP-T4o" firstAttribute="width" secondItem="B9P-da-mjR" secondAttribute="width" multiplier="0.17" id="4rq-Qn-5Xi"/>
-                            <constraint firstItem="HBi-ha-DDb" firstAttribute="width" secondItem="HBi-ha-DDb" secondAttribute="height" multiplier="1:1" id="5F5-mP-H6h"/>
                             <constraint firstItem="vjX-gP-T4o" firstAttribute="top" secondItem="avX-gY-TYb" secondAttribute="bottom" constant="13" id="9ml-S6-Jwo"/>
                             <constraint firstItem="frG-yn-nYi" firstAttribute="leading" secondItem="avX-gY-TYb" secondAttribute="trailing" constant="8" id="AKc-Bf-BSY"/>
                             <constraint firstItem="RoM-tr-dF0" firstAttribute="centerY" secondItem="HBi-ha-DDb" secondAttribute="centerY" id="AbA-ba-xZZ"/>
                             <constraint firstItem="QX2-TO-nne" firstAttribute="leading" secondItem="frG-yn-nYi" secondAttribute="trailing" constant="4" id="ClB-hJ-Abl"/>
                             <constraint firstItem="HBi-ha-DDb" firstAttribute="width" secondItem="vjX-gP-T4o" secondAttribute="width" id="CwU-Te-cht"/>
-                            <constraint firstItem="RoM-tr-dF0" firstAttribute="width" secondItem="RoM-tr-dF0" secondAttribute="height" multiplier="1:1" id="JUH-d6-9YQ"/>
                             <constraint firstItem="vjX-gP-T4o" firstAttribute="leading" secondItem="frG-yn-nYi" secondAttribute="leading" id="Lhh-AL-ndU"/>
-                            <constraint firstItem="HNW-gC-ZS8" firstAttribute="width" secondItem="HNW-gC-ZS8" secondAttribute="height" multiplier="1:1" id="NTO-yY-KX1"/>
                             <constraint firstItem="RoM-tr-dF0" firstAttribute="leading" secondItem="HBi-ha-DDb" secondAttribute="trailing" constant="10" id="PCP-pG-FMq"/>
                             <constraint firstItem="QX2-TO-nne" firstAttribute="centerY" secondItem="frG-yn-nYi" secondAttribute="centerY" id="Q2g-uD-p8R"/>
                             <constraint firstItem="avX-gY-TYb" firstAttribute="leading" secondItem="B9P-da-mjR" secondAttribute="leading" constant="15" id="UBS-P9-Xo8"/>

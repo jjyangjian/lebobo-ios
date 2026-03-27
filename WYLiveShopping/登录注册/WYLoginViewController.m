@@ -90,7 +90,7 @@
     [self.view addSubview:logoImgView];
     UILabel *tLabel = [[UILabel alloc]init];
     tLabel.font = [UIFont boldSystemFontOfSize:20];
-    // tLabel.text = @"欢迎体验万岳直播带货系统";
+    // tLabel.text = @"欢迎体验播播乐直播带货系统";
     tLabel.text = @"欢迎体验播播乐";
     [self.view addSubview:tLabel];
     [tLabel mas_makeConstraints:^(MASConstraintMaker *make) {
