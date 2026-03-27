@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		133609BA916E4D01213AAB2C /* Pods_WYLiveShopping.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 548690B35DDB408036119479 /* Pods_WYLiveShopping.framework */; };
-		F17684D12F76600000E60EFD /* JJUserConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684D02F76600000E60EFD /* JJUserConfigManager.m */; };
 		180B665E24A03D7800C89494 /* mineProfitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180B665D24A03D7800C89494 /* mineProfitViewController.m */; };
 		180B666224A0463600C89494 /* profitHistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 180B666024A0463600C89494 /* profitHistoryCell.m */; };
 		180B666324A0463600C89494 /* profitHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180B666124A0463600C89494 /* profitHistoryCell.xib */; };
@@ -732,7 +731,6 @@
 		1890A08526EC4C5D00667E18 /* 复制链接@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1890A08326EC4C5C00667E18 /* 复制链接@2x.png */; };
 		1890A08926EC4C6F00667E18 /* publish_wx.png in Resources */ = {isa = PBXBuildFile; fileRef = 1890A08826EC4C6F00667E18 /* publish_wx.png */; };
 		18A226202488782900C556E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2261F2488782900C556E9 /* AppDelegate.m */; };
-		F17684CE2F765D7700E60EFD /* JJAppConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */; };
 		18A226262488782900C556E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A226252488782900C556E9 /* ViewController.m */; };
 		18A226292488782900C556E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18A226272488782900C556E9 /* Main.storyboard */; };
 		18A2262B2488782D00C556E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18A2262A2488782D00C556E9 /* Assets.xcassets */; };
@@ -1312,6 +1310,23 @@
 		F15859952F7419FB00C76D09 /* JJHomeLiveListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598B2F7419FB00C76D09 /* JJHomeLiveListCell.m */; };
 		F15859962F7419FB00C76D09 /* JJHomeLiveListHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = F158598D2F7419FB00C76D09 /* JJHomeLiveListHeader.m */; };
 		F17684CB2F75617400E60EFD /* JJShareLiveLinkView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */; };
+		F17684CE2F765D7700E60EFD /* JJAppConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */; };
+		F17684D02F76A6FE00E60EFD /* JJNoDataNormalView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CF2F76A6FE00E60EFD /* JJNoDataNormalView.m */; };
+		F17684D12F76600000E60EFD /* JJUserConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684D02F76600000E60EFD /* JJUserConfigManager.m */; };
+		F17684D52F76610000E60EFD /* JJMerchantHomeVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684D42F76610000E60EFD /* JJMerchantHomeVC.m */; };
+		F17684D92F76620000E60EFD /* JJHomeShopOrderModuleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684D72F76620000E60EFD /* JJHomeShopOrderModuleCell.m */; };
+		F17684DD2F76620000E60EFD /* JJHomeShopRevenueModuleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684DB2F76620000E60EFD /* JJHomeShopRevenueModuleCell.m */; };
+		F17684E12F76620000E60EFD /* JJHomeGoodsManagerModuleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684DF2F76620000E60EFD /* JJHomeGoodsManagerModuleCell.m */; };
+		F17684E52F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E32F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m */; };
+		F17684E82F76630000E60EFD /* JJMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E72F76630000E60EFD /* JJMineVC.m */; };
+		F17684EB2F76640000E60EFD /* JJStartLiveVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EA2F76640000E60EFD /* JJStartLiveVC.m */; };
+		F17684F42F76CCFB00E60EFD /* JJOrderReceivedListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EF2F76CCFB00E60EFD /* JJOrderReceivedListView.m */; };
+		F17684F52F76CCFB00E60EFD /* JJOrderBaseListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */; };
+		F17684F62F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EB2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m */; };
+		F17684F72F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684ED2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m */; };
+		F17684F82F76CCFB00E60EFD /* JJOrderRefundListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684F12F76CCFB00E60EFD /* JJOrderRefundListView.m */; };
+		F17684F92F76CCFB00E60EFD /* JJOrderShippedListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684F32F76CCFB00E60EFD /* JJOrderShippedListView.m */; };
+		F17684FA2F76CCFB00E60EFD /* JJOrderCompletedListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E92F76CCFB00E60EFD /* JJOrderCompletedListView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3204,8 +3219,38 @@
 		F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJShareLiveLinkView.m; sourceTree = "<group>"; };
 		F17684CC2F765D7500E60EFD /* JJAppConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJAppConfigManager.h; sourceTree = "<group>"; };
 		F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJAppConfigManager.m; sourceTree = "<group>"; };
+		F17684CE2F76A6FE00E60EFD /* JJNoDataNormalView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJNoDataNormalView.h; sourceTree = "<group>"; };
 		F17684CF2F76600000E60EFD /* JJUserConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJUserConfigManager.h; sourceTree = "<group>"; };
+		F17684CF2F76A6FE00E60EFD /* JJNoDataNormalView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJNoDataNormalView.m; sourceTree = "<group>"; };
 		F17684D02F76600000E60EFD /* JJUserConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJUserConfigManager.m; sourceTree = "<group>"; };
+		F17684D32F76610000E60EFD /* JJMerchantHomeVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJMerchantHomeVC.h; sourceTree = "<group>"; };
+		F17684D42F76610000E60EFD /* JJMerchantHomeVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJMerchantHomeVC.m; sourceTree = "<group>"; };
+		F17684D62F76620000E60EFD /* JJHomeShopOrderModuleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeShopOrderModuleCell.h; sourceTree = "<group>"; };
+		F17684D72F76620000E60EFD /* JJHomeShopOrderModuleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeShopOrderModuleCell.m; sourceTree = "<group>"; };
+		F17684DA2F76620000E60EFD /* JJHomeShopRevenueModuleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeShopRevenueModuleCell.h; sourceTree = "<group>"; };
+		F17684DB2F76620000E60EFD /* JJHomeShopRevenueModuleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeShopRevenueModuleCell.m; sourceTree = "<group>"; };
+		F17684DE2F76620000E60EFD /* JJHomeGoodsManagerModuleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeGoodsManagerModuleCell.h; sourceTree = "<group>"; };
+		F17684DF2F76620000E60EFD /* JJHomeGoodsManagerModuleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeGoodsManagerModuleCell.m; sourceTree = "<group>"; };
+		F17684E22F76620000E60EFD /* JJHomeMerchantBackendModuleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeMerchantBackendModuleCell.h; sourceTree = "<group>"; };
+		F17684E32F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeMerchantBackendModuleCell.m; sourceTree = "<group>"; };
+		F17684E62F76630000E60EFD /* JJMineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJMineVC.h; sourceTree = "<group>"; };
+		F17684E62F76CCFB00E60EFD /* JJOrderBaseListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderBaseListView.h; sourceTree = "<group>"; };
+		F17684E72F76630000E60EFD /* JJMineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJMineVC.m; sourceTree = "<group>"; };
+		F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderBaseListView.m; sourceTree = "<group>"; };
+		F17684E82F76CCFB00E60EFD /* JJOrderCompletedListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderCompletedListView.h; sourceTree = "<group>"; };
+		F17684E92F76640000E60EFD /* JJStartLiveVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJStartLiveVC.h; sourceTree = "<group>"; };
+		F17684E92F76CCFB00E60EFD /* JJOrderCompletedListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderCompletedListView.m; sourceTree = "<group>"; };
+		F17684EA2F76640000E60EFD /* JJStartLiveVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJStartLiveVC.m; sourceTree = "<group>"; };
+		F17684EA2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderPendingPaymentListView.h; sourceTree = "<group>"; };
+		F17684EB2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderPendingPaymentListView.m; sourceTree = "<group>"; };
+		F17684EC2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderPendingShipmentListView.h; sourceTree = "<group>"; };
+		F17684ED2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderPendingShipmentListView.m; sourceTree = "<group>"; };
+		F17684EE2F76CCFB00E60EFD /* JJOrderReceivedListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderReceivedListView.h; sourceTree = "<group>"; };
+		F17684EF2F76CCFB00E60EFD /* JJOrderReceivedListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderReceivedListView.m; sourceTree = "<group>"; };
+		F17684F02F76CCFB00E60EFD /* JJOrderRefundListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderRefundListView.h; sourceTree = "<group>"; };
+		F17684F12F76CCFB00E60EFD /* JJOrderRefundListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderRefundListView.m; sourceTree = "<group>"; };
+		F17684F22F76CCFB00E60EFD /* JJOrderShippedListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderShippedListView.h; sourceTree = "<group>"; };
+		F17684F32F76CCFB00E60EFD /* JJOrderShippedListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderShippedListView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5203,6 +5248,22 @@
 				F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */,
 				F17684CF2F76600000E60EFD /* JJUserConfigManager.h */,
 				F17684D02F76600000E60EFD /* JJUserConfigManager.m */,
+				F17684D32F76610000E60EFD /* JJMerchantHomeVC.h */,
+				F17684D42F76610000E60EFD /* JJMerchantHomeVC.m */,
+				F17684D62F76620000E60EFD /* JJHomeShopOrderModuleCell.h */,
+				F17684D72F76620000E60EFD /* JJHomeShopOrderModuleCell.m */,
+				F17684DA2F76620000E60EFD /* JJHomeShopRevenueModuleCell.h */,
+				F17684DB2F76620000E60EFD /* JJHomeShopRevenueModuleCell.m */,
+				F17684DE2F76620000E60EFD /* JJHomeGoodsManagerModuleCell.h */,
+				F17684DF2F76620000E60EFD /* JJHomeGoodsManagerModuleCell.m */,
+				F17684E22F76620000E60EFD /* JJHomeMerchantBackendModuleCell.h */,
+				F17684E32F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m */,
+				F17684E62F76630000E60EFD /* JJMineVC.h */,
+				F17684E72F76630000E60EFD /* JJMineVC.m */,
+				F17684E92F76640000E60EFD /* JJStartLiveVC.h */,
+				F17684EA2F76640000E60EFD /* JJStartLiveVC.m */,
+				F17684CE2F76A6FE00E60EFD /* JJNoDataNormalView.h */,
+				F17684CF2F76A6FE00E60EFD /* JJNoDataNormalView.m */,
 			);
 			sourceTree = "<group>";
 		};
@@ -5913,6 +5974,20 @@
 			isa = PBXGroup;
 			children = (
 				18B4BD4324B5CAAC00449537 /* order_down@2x.png */,
+				F17684E62F76CCFB00E60EFD /* JJOrderBaseListView.h */,
+				F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */,
+				F17684E82F76CCFB00E60EFD /* JJOrderCompletedListView.h */,
+				F17684E92F76CCFB00E60EFD /* JJOrderCompletedListView.m */,
+				F17684EA2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.h */,
+				F17684EB2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m */,
+				F17684EC2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.h */,
+				F17684ED2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m */,
+				F17684EE2F76CCFB00E60EFD /* JJOrderReceivedListView.h */,
+				F17684EF2F76CCFB00E60EFD /* JJOrderReceivedListView.m */,
+				F17684F02F76CCFB00E60EFD /* JJOrderRefundListView.h */,
+				F17684F12F76CCFB00E60EFD /* JJOrderRefundListView.m */,
+				F17684F22F76CCFB00E60EFD /* JJOrderShippedListView.h */,
+				F17684F32F76CCFB00E60EFD /* JJOrderShippedListView.m */,
 				18B4BD4024B5B7DC00449537 /* StoreOrderListViewController.h */,
 				18B4BD4124B5B7DC00449537 /* StoreOrderListViewController.m */,
 			);
@@ -8338,6 +8413,7 @@
 				188F47AC26E33E660017BF6A /* JPBufferView.m in Sources */,
 				189006D926D894CA00F6E939 /* THelper.m in Sources */,
 				18909F3C26EB2E3100667E18 /* YBLookVideoCell.m in Sources */,
+				F17684D02F76A6FE00E60EFD /* JJNoDataNormalView.m in Sources */,
 				18DBC87E24AF3A0C009D4022 /* promoterUserModel.m in Sources */,
 				18B4BD6324B6F88E00449537 /* MineSettingViewController.m in Sources */,
 				1890070426D894CA00F6E939 /* TContactListPickerCell.m in Sources */,
@@ -8463,6 +8539,13 @@
 				18A226202488782900C556E9 /* AppDelegate.m in Sources */,
 				F17684CE2F765D7700E60EFD /* JJAppConfigManager.m in Sources */,
 				F17684D12F76600000E60EFD /* JJUserConfigManager.m in Sources */,
+				F17684D52F76610000E60EFD /* JJMerchantHomeVC.m in Sources */,
+				F17684D92F76620000E60EFD /* JJHomeShopOrderModuleCell.m in Sources */,
+				F17684DD2F76620000E60EFD /* JJHomeShopRevenueModuleCell.m in Sources */,
+				F17684E12F76620000E60EFD /* JJHomeGoodsManagerModuleCell.m in Sources */,
+				F17684E52F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m in Sources */,
+				F17684E82F76630000E60EFD /* JJMineVC.m in Sources */,
+				F17684EB2F76640000E60EFD /* JJStartLiveVC.m in Sources */,
 				18C316BF2499CB5B0091F7CF /* optimizationModel.m in Sources */,
 				189006E326D894CA00F6E939 /* TScrollView.m in Sources */,
 				1890075726D894CA00F6E939 /* EMVoiceConverter.mm in Sources */,
@@ -8656,6 +8739,13 @@
 				18D68A1D249711DE00C9DE7D /* MineViewController.m in Sources */,
 				1890077826D8E41700F6E939 /* WYFindViewController.m in Sources */,
 				18909F3A26EB2E3100667E18 /* YBLookVideoVC.m in Sources */,
+				F17684F42F76CCFB00E60EFD /* JJOrderReceivedListView.m in Sources */,
+				F17684F52F76CCFB00E60EFD /* JJOrderBaseListView.m in Sources */,
+				F17684F62F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m in Sources */,
+				F17684F72F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m in Sources */,
+				F17684F82F76CCFB00E60EFD /* JJOrderRefundListView.m in Sources */,
+				F17684F92F76CCFB00E60EFD /* JJOrderShippedListView.m in Sources */,
+				F17684FA2F76CCFB00E60EFD /* JJOrderCompletedListView.m in Sources */,
 				18F953E226DC6CA900A296F8 /* WYAnliViewController.m in Sources */,
 				185E08DB26E0C4F2008A7B37 /* WYPublishViewViewController.m in Sources */,
 				1869F50E249CB99E0061E185 /* OrderCell.m in Sources */,

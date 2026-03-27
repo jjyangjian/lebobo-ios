@@ -29,7 +29,18 @@ typedef void (^networkFailBlock)(void);
  网络请求失败的回调
  */
 @property(nonatomic,copy)networkFailBlock failB;
+
+/**
+ get请求，需要校验token
+ */
 +(void)getQCloudWithUrl:(NSString *)url Suc:(networkSuccessBlock)successBlock Fail:(networkFailBlock)failBlock;
+
+/**
+ get请求，不需要校验token
+ */
++(void)getQCloudNoTokenWithUrl:(NSString *)url Suc:(networkSuccessBlock)successBlock Fail:(networkFailBlock)failBlock;
+
+
 /**
  网络请求
 

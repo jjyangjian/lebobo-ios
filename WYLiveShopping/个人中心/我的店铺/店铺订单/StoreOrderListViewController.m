@@ -7,210 +7,348 @@
 //
 
 #import "StoreOrderListViewController.h"
-#import "OrderCell.h"
 #import "OrderDetailsViewController.h"
-#import "ReturnOrderCell.h"
 #import "ReturnOrderDetailsViewController.h"
+#import "JJOrderPendingPaymentListView.h"
+#import "JJOrderPendingShipmentListView.h"
+#import "JJOrderShippedListView.h"
+#import "JJOrderReceivedListView.h"
+#import "JJOrderCompletedListView.h"
+#import "JJOrderRefundListView.h"
 
-@interface StoreOrderListViewController ()<UITableViewDelegate,UITableViewDataSource>{
-    NSMutableArray *dataArray;
-    int page;
+@interface StoreOrderListViewController () {
     NSMutableArray *btnArray;
-    UIView *moveLineV;
-    UIButton *otherButton;
-    UIView *otherBackView;
-    NSMutableArray *otherBtnArray;
-
 }
-@property (nonatomic,strong) UITableView *orderTableView;
-@property (nonatomic,strong) UIImageView *nothingImgView;
-@property (nonatomic,strong) NSString *orderType;
+
+@property (nonatomic, strong) UIScrollView *headerScrollView;
+@property (nonatomic, strong) UIStackView *headerStackView;
+@property (nonatomic, strong) UIView *contentView;
+
+@property (nonatomic, strong) JJOrderPendingPaymentListView *pendingPaymentView;
+@property (nonatomic, strong) JJOrderPendingShipmentListView *pendingShipmentView;
+@property (nonatomic, strong) JJOrderShippedListView *shippedListView;
+@property (nonatomic, strong) JJOrderReceivedListView *receivedListView;
+@property (nonatomic, strong) JJOrderCompletedListView *completedListView;
+@property (nonatomic, strong) JJOrderRefundListView *refundListView;
+
+@property (nonatomic, assign) NSInteger selectedIndex;
 
 @end
 
 @implementation StoreOrderListViewController
--(UITableView *)orderTableView{
-    if (!_orderTableView) {
-        _orderTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, self.naviView.bottom + 50, _window_width, _window_height-(64 +statusbarHeight + 50) -ShowDiff) style:1];
-        _orderTableView.delegate = self;
-        _orderTableView.dataSource = self;
-        _orderTableView.separatorStyle = 0;
-        _orderTableView.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
-        _orderTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-            page = 1;
-            [self requestData];
-        }];
-        _orderTableView.mj_footer = [MJRefreshBackFooter footerWithRefreshingBlock:^{
-            page ++;
-            [self requestData];
-        }];
-        if (@available(iOS 15.0, *)) {
-            _orderTableView.sectionHeaderTopPadding = 0;
-        } else {
-            // Fallback on earlier versions
-        }
 
-        [_orderTableView addSubview:self.nothingImgView];
-
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    if ([self.statusType isEqual:@"1"]) {
+        self.titleL.text = @"代销订单";
+    } else {
+        self.titleL.text = @"店铺订单";
     }
-    return _orderTableView;
-}
--(UIImageView *)nothingImgView{
-    if (!_nothingImgView) {
-        _nothingImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, _window_width, _window_width*0.55)];
-        _nothingImgView.image = [UIImage imageNamed:@"noOrder"];
-        _nothingImgView.contentMode = UIViewContentModeScaleAspectFit;
-        _nothingImgView.hidden = YES;
-    }
-    return _nothingImgView;
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    if ([_orderType isEqual:@"-3"]) {
-        return dataArray.count;
-    }
-    return 1;
+    
+    self.view.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
+    btnArray = [NSMutableArray array];
+    self.selectedIndex = 0;
+    
+    [self configUI];
+    [self requestCount];
+    [self showOrderViewAtIndex:0 shouldRequest:YES];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if ([_orderType isEqual:@"-3"]) {
-        orderModel *oModel = dataArray[section];
-        return oModel.goodsArray.count;
-    }
-    return dataArray.count;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([_orderType isEqual:@"-3"]) {
-        ReturnOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ReturnOrderCELL"];
-        if (!cell) {
-            cell = [[[NSBundle mainBundle] loadNibNamed:@"ReturnOrderCell" owner:nil options:nil] lastObject];
-        }
-        orderModel *oModel = dataArray[indexPath.section];
-        cell.model = oModel.goodsArray[indexPath.row];
-        return cell;
-
-    }else{
-        OrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCELL"];
-        if (!cell) {
-            cell = [[[NSBundle mainBundle] loadNibNamed:@"OrderCell" owner:nil options:nil] lastObject];
-            cell.store_nameL.hidden = YES;
-            cell.storeImgView.hidden = YES;
-            cell.leftBtn.hidden = YES;
-            [cell.rightBtn setTitle:@"查看详情" forState:0];
-            cell.rightBtn.userInteractionEnabled = NO;
-        }
-        orderModel *model = dataArray[indexPath.row];
-        cell.model = model;
-        cell.timeL.text = model.add_time;
-        cell.allPriceL.text = [NSString stringWithFormat:@"¥ %@",model.total_price];
-        if ([_statusType isEqual:@"1"]) {
-            cell.profitLabel.text = [NSString stringWithFormat:@"代销收益 ¥ %@",model.bring_price];
-        }
-        return cell;
-    }
-
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if ([_orderType isEqual:@"-3"]) {
-        return 80;
-    }
-
-    orderModel *model = dataArray[indexPath.row];
-    return model.rowH;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if ([_orderType isEqual:@"-3"]) {
-        return 43;
-    }
-    return 0.001;
-}
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if ([_orderType isEqual:@"-3"]) {
-
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, 43)];
+- (void)configUI {
+    {
+        UIView *view = [[UIView alloc] init];
         view.backgroundColor = [UIColor whiteColor];
-        view.clipsToBounds = NO;
-        orderModel *model = dataArray[section];
-        UILabel *label = [[UILabel alloc]init];
-        label.text = model.orderNums;
-        label.font = SYS_Font(14);
-        label.textColor = color32;
-        [view addSubview:label];
-        [label mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(view).offset(15);
-            make.centerY.equalTo(view);
+        [self.view addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.naviView.mas_bottom);
+            make.left.right.equalTo(self.view);
+            make.height.mas_equalTo(50);
         }];
-        [[WYToolClass sharedInstance] lineViewWithFrame:CGRectMake(0, 42, _window_width, 1) andColor:RGB_COLOR(@"#eeeeee", 1) andView:view];
         
-        UIImageView *statusImgV = [[UIImageView alloc]initWithFrame:CGRectMake(_window_width-65, 8, 50, 50)];
-        if ([model.refund_status isEqual:@"2"]) {
-            statusImgV.image = [UIImage imageNamed:@"已退款"];
-        }else{
-            statusImgV.image = [UIImage imageNamed:@"退款中"];
-        }
-        [view addSubview:statusImgV];
-
-        return view;
-    }
-    return nil;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    if ([_orderType isEqual:@"-3"]) {
-
-        return 48;
-    }
-    return 0.0001;
-}
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    if ([_orderType isEqual:@"-3"]) {
-
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, 43)];
-        view.backgroundColor = [UIColor whiteColor];
-        UILabel *totalLabel = [[UILabel alloc]init];
-        totalLabel.font = SYS_Font(14);
-        totalLabel.textColor = color32;
-        [view addSubview:totalLabel];
-        [totalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(view).offset(-15);
-            make.centerY.equalTo(view).offset(-2.5);
-        }];
-        orderModel *model = dataArray[section];
-        totalLabel.attributedText = [self getAttStrWithNums:model.total_num andTotalMoney:model.total_price];
-        if ([_statusType isEqual:@"1"]) {
-            UILabel *label = [[UILabel alloc]init];
-            label.text = [NSString stringWithFormat:@"代销收益 ¥ %@",model.bring_price];
-            label.font = SYS_Font(13);
-            label.textColor = color32;
-            [view addSubview:label];
-            [label mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(view).offset(15);
-                make.centerY.equalTo(view);
+        {
+            UIScrollView *scrollView = [[UIScrollView alloc] init];
+            scrollView.showsHorizontalScrollIndicator = NO;
+            scrollView.alwaysBounceHorizontal = YES;
+            [view addSubview:scrollView];
+            [scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(view);
             }];
+            self.headerScrollView = scrollView;
         }
-
-        [[WYToolClass sharedInstance]lineViewWithFrame:CGRectMake(0, 43, _window_width, 5) andColor:colorf0 andView:view];
-        return view;
+        
+        {
+            UIStackView *stackView = [[UIStackView alloc] init];
+            stackView.axis = UILayoutConstraintAxisHorizontal;
+            stackView.alignment = UIStackViewAlignmentFill;
+            stackView.distribution = UIStackViewDistributionFill;
+            stackView.spacing = 0;
+            [self.headerScrollView addSubview:stackView];
+            [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self.headerScrollView);
+                make.height.equalTo(self.headerScrollView);
+            }];
+            self.headerStackView = stackView;
+        }
+        
+        NSArray *array = @[@"待付款 0", @"待发货 0", @"已发货 0", @"已收货 0", @"已完成 0", @"退款 0"];
+        CGFloat buttonWidth = _window_width / 4.5;
+        
+        for (NSInteger i = 0; i < array.count; i++) {
+            {
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [btn setTitle:array[i] forState:UIControlStateNormal];
+                [btn setTitleColor:color96 forState:UIControlStateNormal];
+                [btn setTitleColor:JJAPPTHEMECOLOR forState:UIControlStateSelected];
+                btn.titleLabel.font = SYS_Font(15);
+                btn.tag = 1000 + i;
+                [btn addTarget:self action:@selector(typeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+                [self.headerStackView addArrangedSubview:btn];
+                [btn mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.width.mas_equalTo(buttonWidth);
+                }];
+                [btnArray addObject:btn];
+            }
+        }
+        
+        [self updateSelectedButtonAtIndex:0];
     }
-    return nil;
-}
-- (NSAttributedString *)getAttStrWithNums:(NSString *)nums andTotalMoney:(NSString *)money{
-    NSMutableAttributedString *mustr = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"共%@件商品 总金额：¥%@",nums,money]];
-    [mustr setAttributes:@{NSForegroundColorAttributeName:normalColors,NSFontAttributeName:[UIFont boldSystemFontOfSize:15]} range:NSMakeRange(mustr.length-money.length-1, money.length+1)];
-    return mustr;
+    
+    {
+        UIView *view = [[UIView alloc] init];
+        view.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
+        [self.view addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.naviView.mas_bottom).offset(50);
+            make.left.right.equalTo(self.view);
+            make.bottom.equalTo(self.view);
+        }];
+        self.contentView = view;
+    }
+    
+    {
+        JJOrderPendingPaymentListView *view = [[JJOrderPendingPaymentListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.pendingPaymentView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
+    
+    {
+        JJOrderPendingShipmentListView *view = [[JJOrderPendingShipmentListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.pendingShipmentView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
+    
+    {
+        JJOrderShippedListView *view = [[JJOrderShippedListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.shippedListView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
+    
+    {
+        JJOrderReceivedListView *view = [[JJOrderReceivedListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.receivedListView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
+    
+    {
+        JJOrderCompletedListView *view = [[JJOrderCompletedListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.completedListView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
+    
+    {
+        JJOrderRefundListView *view = [[JJOrderRefundListView alloc] init];
+        view.statusType = self.statusType;
+        [self.contentView addSubview:view];
+        [view mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
+        self.refundListView = view;
+        view.hidden = YES;
+        
+        __weak typeof(self) weakSelf = self;
+        view.selectBlock = ^(orderModel *model) {
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf handleOrderSelect:model];
+        };
+        view.refreshBlock = ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) return;
+            [strongSelf requestCount];
+        };
+    }
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)typeBtnClick:(UIButton *)sender {
+    NSInteger index = sender.tag - 1000;
+    if (index < 0 || index >= btnArray.count || sender.selected) {
+        return;
+    }
+    [self showOrderViewAtIndex:index shouldRequest:YES];
+}
+
+- (void)showOrderViewAtIndex:(NSInteger)index shouldRequest:(BOOL)shouldRequest {
+    self.selectedIndex = index;
+    [self updateSelectedButtonAtIndex:index];
+    
+    self.pendingPaymentView.hidden = index != 0;
+    self.pendingShipmentView.hidden = index != 1;
+    self.shippedListView.hidden = index != 2;
+    self.receivedListView.hidden = index != 3;
+    self.completedListView.hidden = index != 4;
+    self.refundListView.hidden = index != 5;
+    
+    if (shouldRequest) {
+        switch (index) {
+            case 0:
+                [self.pendingPaymentView requestFirstPageData];
+                break;
+            case 1:
+                [self.pendingShipmentView requestFirstPageData];
+                break;
+            case 2:
+                [self.shippedListView requestFirstPageData];
+                break;
+            case 3:
+                [self.receivedListView requestFirstPageData];
+                break;
+            case 4:
+                [self.completedListView requestFirstPageData];
+                break;
+            case 5:
+                [self.refundListView requestFirstPageData];
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+- (void)updateSelectedButtonAtIndex:(NSInteger)index {
+    for (NSInteger i = 0; i < btnArray.count; i++) {
+        UIButton *btn = btnArray[i];
+        BOOL selected = i == index;
+        btn.selected = selected;
+        btn.titleLabel.font = selected ? SYS_Font(16) : SYS_Font(15);
+    }
+    
+    if (index >= 0 && index < btnArray.count) {
+        UIButton *selectedButton = btnArray[index];
+        CGFloat minOffsetX = MAX(0, CGRectGetMidX(selectedButton.frame) - _window_width * 0.5);
+        CGFloat maxOffsetX = MAX(0, self.headerScrollView.contentSize.width - _window_width);
+        CGFloat targetOffsetX = MIN(minOffsetX, maxOffsetX);
+        [self.headerScrollView setContentOffset:CGPointMake(targetOffsetX, 0) animated:YES];
+    }
+}
+
+- (void)handleOrderSelect:(orderModel *)model {
     [MBProgressHUD showMessage:@""];
-    orderModel *model = dataArray[indexPath.row];
-    [WYToolClass getQCloudWithUrl:[NSString stringWithFormat:@"order/detail/%@?status=%@",model.orderNums,_statusType] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    NSString *orderType = @"0";
+    if (self.selectedIndex == 5) {
+        orderType = @"-3";
+    } else {
+        orderType = [NSString stringWithFormat:@"%ld", (long)self.selectedIndex];
+    }
+    
+    __weak typeof(self) weakSelf = self;
+    [WYToolClass getQCloudWithUrl:[NSString stringWithFormat:@"order/detail/%@?status=%@", model.orderNums, self.statusType] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         [MBProgressHUD hideHUD];
+        if (!strongSelf) return;
+        
         if (code == 200) {
-            if ([_orderType isEqual:@"-3"]) {
-                ReturnOrderDetailsViewController *vc = [[ReturnOrderDetailsViewController alloc]init];
+            if ([orderType isEqual:@"-3"]) {
+                ReturnOrderDetailsViewController *vc = [[ReturnOrderDetailsViewController alloc] init];
                 vc.orderMessage = info;
                 [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
-            }else{
-                OrderDetailsViewController *vc = [[OrderDetailsViewController alloc]init];
+            } else {
+                OrderDetailsViewController *vc = [[OrderDetailsViewController alloc] init];
                 vc.orderMessage = info;
                 vc.isCart = NO;
                 vc.orderType = 1;
@@ -218,227 +356,34 @@
             }
         }
     } Fail:^{
+        [MBProgressHUD hideHUD];
+    }];
+}
+
+- (void)requestCount {
+    __weak typeof(self) weakSelf = self;
+    [WYToolClass getQCloudWithUrl:[NSString stringWithFormat:@"order/data?status=%@", self.statusType] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
         
-    }];
-    
-}
-- (void)requestData{
-    [WYToolClass getQCloudWithUrl:[NSString stringWithFormat:@"order/list?type=%@&status=%@&page=%d",_orderType,_statusType,page] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        [_orderTableView.mj_header endRefreshing];
-        [_orderTableView.mj_footer endRefreshing];
         if (code == 200) {
-            if (page == 1) {
-                [dataArray removeAllObjects];
-            }
-            for (NSDictionary *dic in info) {
-                orderModel *modle = [[orderModel alloc]initWithDic:dic];
-                [dataArray addObject:modle];
-            }
-            if ([info count] < 20) {
-                [_orderTableView.mj_footer endRefreshingWithNoMoreData];
-            }
-            [_orderTableView reloadData];
-            if ([dataArray count] == 0) {
-                _nothingImgView.hidden = NO;
-            }else{
-                _nothingImgView.hidden = YES;
-            }
-
-        }
-    } Fail:^{
-        [_orderTableView.mj_header endRefreshing];
-        [_orderTableView.mj_footer endRefreshing];
-    }];
-
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    if ([_statusType isEqual:@"1"]) {
-        self.titleL.text = @"代销订单";
-    }else{
-        self.titleL.text = @"店铺订单";
-    }
-    self.view.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
-    btnArray = [NSMutableArray array];
-    dataArray = [NSMutableArray array];
-    otherBtnArray = [NSMutableArray array];
-    page = 1;
-    _orderType = @"0";
-    [self creatHedaerView];
-    [self.view addSubview:self.orderTableView];
-    [self creatOtherView];
-    [self requestCount];
-    [self requestData];
-
-}
-- (void)creatHedaerView{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, self.naviView.bottom, _window_width, 50)];
-    view.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:view];
-    NSArray *array = @[@"待付款 0",@"待发货 0",@"已发货 0",@"其他"];
-    for (int i = 0; i < array.count; i ++) {
-        UIButton *btn = [UIButton buttonWithType:0];
-        [btn setTitle:array[i] forState:0];
-        [btn setTitleColor:color96 forState:0];
-        [btn setTitleColor:color32 forState:UIControlStateSelected];
-        btn.titleLabel.font = SYS_Font(14);
-        [btn addTarget:self action:@selector(typeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake(_window_width/4*i, 0, _window_width/4, 50);
-        btn.tag = 1000 + i;
-        if (i == 3) {
-
-            [btn setImage:[UIImage imageNamed:@"order_down"] forState:0];
-            CGRect rect = [array[i] boundingRectWithSize:CGSizeMake(1000, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : SYS_Font(14)} context:nil];
-            btn.titleEdgeInsets = UIEdgeInsetsMake(0, -btn.imageView.image.size.width-2.5, 0, btn.imageView.image.size.width+2.5);
-            //button图片的偏移量，这个偏移量是相对于标题的
-            btn.imageEdgeInsets = UIEdgeInsetsMake(0, rect.size.width+2.5, 0, -rect.size.width-2.5);
-
-            otherButton = btn;
-        }
-        [view addSubview:btn];
-        [btnArray addObject:btn];
-        if (i == 0) {
-            moveLineV = [[UIView alloc]initWithFrame:CGRectMake(btn.centerX-10, 44, 20, 2)];
-            moveLineV.layer.cornerRadius = 1;
-            moveLineV.backgroundColor = normalColors;
-            [view addSubview:moveLineV];
+            NSArray<NSString *> *titles = @[
+                [NSString stringWithFormat:@"待付款 %@", minstr([info valueForKey:@"unpaid_count"])],
+                [NSString stringWithFormat:@"待发货 %@", minstr([info valueForKey:@"unshipped_count"])],
+                [NSString stringWithFormat:@"已发货 %@", minstr([info valueForKey:@"received_count"])],
+                [NSString stringWithFormat:@"已收货 %@", minstr([info valueForKey:@"evaluated_count"])],
+                [NSString stringWithFormat:@"已完成 %@", minstr([info valueForKey:@"complete_count"])],
+                [NSString stringWithFormat:@"退款 %@", minstr([info valueForKey:@"refund_count"])]
+            ];
             
-        }
-    }
-    
-}
-- (void)creatOtherView{
-    otherBackView = [[UIView alloc]initWithFrame:CGRectMake(0, self.naviView.bottom+50, _window_width, _window_height-(self.naviView.bottom+50))];
-    otherBackView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-    otherBackView.hidden = YES;
-    [self.view addSubview:otherBackView];
-    NSArray *array = @[@"已收货 0",@"已完成 0",@"退款 0"];
-    for (int i = 0; i < array.count; i ++) {
-        UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, i * 50, _window_width, 50)];
-        view.backgroundColor = [UIColor whiteColor];
-        [otherBackView addSubview:view];
-        UIButton *btn = [UIButton buttonWithType:0];
-        btn.frame = CGRectMake(15, 0, view.width-15, view.height);
-        [btn setTitle:array[i] forState:0];
-        [btn setTitleColor:color96 forState:0];
-        [btn setTitleColor:color32 forState:UIControlStateSelected];
-        btn.titleLabel.font = SYS_Font(14);
-        [btn addTarget:self action:@selector(otherBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        btn.tag = 2000 + i;
-        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        [view addSubview:btn];
-        
-        [otherBtnArray addObject:btn];
-    }
-
-}
-- (void)typeBtnClick:(UIButton *)sender{
-    if (sender == otherButton) {
-        otherBackView.hidden = !otherBackView.hidden;
-    }else{
-        if (sender.selected) {
-            return;
-        }
-        [UIView animateWithDuration:0.3 animations:^{
-            moveLineV.centerX = sender.centerX;
-        }];
-        [otherButton setTitle:@"其他" forState:0];
-        CGRect rect = [otherButton.titleLabel.text boundingRectWithSize:CGSizeMake(1000, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : SYS_Font(14)} context:nil];
-        otherButton.titleEdgeInsets = UIEdgeInsetsMake(0, -otherButton.imageView.image.size.width-2.5, 0, otherButton.imageView.image.size.width+2.5);
-        //button图片的偏移量，这个偏移量是相对于标题的
-        otherButton.imageEdgeInsets = UIEdgeInsetsMake(0, rect.size.width+2.5, 0, -rect.size.width-2.5);
-
-        otherButton.selected = NO;
-        otherBackView.hidden = YES;
-        for (UIButton *btn in btnArray) {
-            if (sender == btn) {
-                btn.selected = YES;
-            }else{
-                btn.selected = NO;
-            }
-        }
-        for (UIButton *btn in otherBtnArray) {
-            btn.selected = NO;
-        }
-        _orderType = [NSString stringWithFormat:@"%ld",sender.tag - 1000];
-        page = 1;
-        [self requestData];
-        
-    }
-}
-- (void)otherBtnClick:(UIButton *)sender{
-    if (sender.selected) {
-        otherBackView.hidden = YES;
-    }else{
-        [UIView animateWithDuration:0.3 animations:^{
-            moveLineV.centerX = otherButton.centerX;
-        }];
-        [otherButton setTitle:sender.titleLabel.text forState:0];
-        CGRect rect = [otherButton.titleLabel.text boundingRectWithSize:CGSizeMake(1000, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : SYS_Font(14)} context:nil];
-        otherButton.titleEdgeInsets = UIEdgeInsetsMake(0, -otherButton.imageView.image.size.width-2.5, 0, otherButton.imageView.image.size.width+2.5);
-        //button图片的偏移量，这个偏移量是相对于标题的
-        otherButton.imageEdgeInsets = UIEdgeInsetsMake(0, rect.size.width+2.5, 0, -rect.size.width-2.5);
-        otherButton.selected = YES;
-        otherBackView.hidden = YES;
-        for (UIButton *btn in btnArray) {
-            btn.selected = NO;
-        }
-        for (UIButton *btn in otherBtnArray) {
-            if (sender == btn) {
-                btn.selected = YES;
-            }else{
-                btn.selected = NO;
-            }
-        }
-        if (sender.tag == 2002) {
-            _orderType = @"-3";
-        }else{
-            _orderType = [NSString stringWithFormat:@"%ld",sender.tag - 2000 + 3];
-        }
-        page = 1;
-        [self requestData];
-
-    }
-}
-- (void)requestCount{
-    [WYToolClass getQCloudWithUrl:[NSString stringWithFormat:@"order/data?status=%@",_statusType] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        if (code == 200) {
-            for (int i = 0; i < btnArray.count - 1; i ++) {
+            for (NSInteger i = 0; i < MIN(btnArray.count, titles.count); i++) {
                 UIButton *btn = btnArray[i];
-                if (i == 0) {
-                    [btn setTitle:[NSString stringWithFormat:@"待付款 %@",minstr([info valueForKey:@"unpaid_count"])] forState:0];
-                }else if (i == 1){
-                    [btn setTitle:[NSString stringWithFormat:@"待发货 %@",minstr([info valueForKey:@"unshipped_count"])] forState:0];
-                }else{
-                    [btn setTitle:[NSString stringWithFormat:@"已发货 %@",minstr([info valueForKey:@"received_count"])] forState:0];
-                }
+                [btn setTitle:titles[i] forState:UIControlStateNormal];
             }
-            for (int i = 0; i < otherBtnArray.count - 1; i ++) {
-                UIButton *btn = otherBtnArray[i];
-                if (i == 0) {
-                    [btn setTitle:[NSString stringWithFormat:@"已收货 %@",minstr([info valueForKey:@"evaluated_count"])] forState:0];
-                }else if (i == 1){
-                    [btn setTitle:[NSString stringWithFormat:@"已完成 %@",minstr([info valueForKey:@"complete_count"])] forState:0];
-                }else{
-                    [btn setTitle:[NSString stringWithFormat:@"退款 %@",minstr([info valueForKey:@"refund_count"])] forState:0];
-                }
-            }
-
         }
     } Fail:^{
         
     }];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

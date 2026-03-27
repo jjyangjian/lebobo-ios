@@ -9,6 +9,7 @@
 #import "AdminGoodsViewController.h"
 #import "AddGoodsCell.h"
 #import "GoodsDetailsViewController.h"
+#import "../../../JJNoDataNormalView.h"
 
 @interface AdminGoodsViewController ()<UITableViewDelegate,UITableViewDataSource,AddGoodsCellDelegate>{
     NSMutableArray *dataArray;
@@ -16,7 +17,7 @@
     NSString *keywords;
 }
 @property (nonatomic,strong) UITableView *goodsTableView;
-@property (nonatomic,strong) UIImageView *nothingImgView;
+@property (nonatomic,strong) JJNoDataNormalView *noDataView;
 
 @end
 
@@ -46,18 +47,8 @@
         } else {
             // Fallback on earlier versions
         }
-        [_goodsTableView addSubview:self.nothingImgView];
     }
     return _goodsTableView;
-}
--(UIImageView *)nothingImgView{
-    if (!_nothingImgView) {
-        _nothingImgView = [[UIImageView alloc]initWithFrame:CGRectMake(_window_width*0.11, 40, _window_width*0.78, _window_width*0.78*0.81)];
-        _nothingImgView.image = [UIImage imageNamed:@"noShops"];
-        _nothingImgView.contentMode = UIViewContentModeScaleAspectFit;
-        _nothingImgView.hidden = YES;
-    }
-    return _nothingImgView;
 }
 
 - (void)viewDidLoad {
@@ -66,6 +57,14 @@
     page = 1;
     _keywordStr = @"";
     [self.view addSubview:self.goodsTableView];
+    {
+        JJNoDataNormalView *noDataView = [[JJNoDataNormalView alloc] initWithFrame:self.goodsTableView.bounds];
+        noDataView.hidden = YES;
+        noDataView.label.text = @"暂无商品信息";
+        noDataView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.goodsTableView.backgroundView = noDataView;
+        self.noDataView = noDataView;
+    }
     [self requestData];
 }
 - (void)requestData{
@@ -90,9 +89,9 @@
             }
             [_goodsTableView reloadData];
             if (dataArray.count == 0) {
-                _nothingImgView.hidden = NO;
+                self.noDataView.hidden = NO;
             }else{
-                _nothingImgView.hidden = YES;
+                self.noDataView.hidden = YES;
             }
         }
     } Fail:^{

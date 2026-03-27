@@ -7,19 +7,13 @@
 //
 #import "WYTabBarController.h"
 #import "WYLiveShopHomeViewController.h"
-#import "JJHomeLiveListVC.h"
-
-#import "MineViewController.h"
-#import "ClassificationViewController.h"
-#import "OptimizationViewController.h"
+#import "JJMerchantHomeVC.h"
+#import "JJMineVC.h"
+#import "JJStartLiveVC.h"
 //#import "ZYTabBar.h"
-#import "LivebroadViewController.h"
-#import "ApplyShopViewController.h"
 #import <MHBeautySDK/MHSDK.h>
 //#import "homeViewController.h"
 //@import CoreLocation;
-#import "WYCarViewController.h"
-#import "WYFindViewController.h"
 #import "JJAppConfigManager.h"
 #import "JJUserConfigManager.h"
 #import <TXLiteAVSDK_Professional/TXLiveBase.h>
@@ -55,13 +49,6 @@
 //
 //    }
 //}
-- (void)doAuth{
-    //申请开通店铺
-    ApplyShopViewController *vc = [[ApplyShopViewController alloc]init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
-
-}
-
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
@@ -115,22 +102,13 @@
 #pragma mark  在这里更换 左右tabbar的image
 - (void)setUpAllChildVc {
 //    WYLiveShopHomeViewController *home = [WYLiveShopHomeViewController new];
-    JJHomeLiveListVC *home = [JJHomeLiveListVC new];
+    JJMerchantHomeVC *home = [JJMerchantHomeVC new];
+    JJStartLiveVC *startLive = [JJStartLiveVC new];
+    JJMineVC *mine = [JJMineVC new];
 
-    
-    
-    WYFindViewController *find = [WYFindViewController new];
-    MineViewController *mine = [MineViewController new];
-    ClassificationViewController *class  = [ClassificationViewController new];
-    WYCarViewController *cart  = [[WYCarViewController alloc] init];
-    cart.isTabbar = YES;
-//
     [self setUpOneChildVcWithVc:home Image:@"tab_home" selectedImage:@"tab_home_sel" title:@"首页" andTag:0];
-    [self setUpOneChildVcWithVc:class Image:@"tab_class" selectedImage:@"tab_class_sel" title:@"分类" andTag:1];
-    [self setUpOneChildVcWithVc:find Image:@"tab_find" selectedImage:@"tab_find_sel" title:@"发现" andTag:2];
-    [self setUpOneChildVcWithVc:cart Image:@"tab_cart" selectedImage:@"tab_cart_sel" title:@"购物车" andTag:3];
-
-    [self setUpOneChildVcWithVc:mine Image:@"tab_mine" selectedImage:@"tab_mine_sel" title:@"我的" andTag:4];
+    [self setUpOneChildVcWithVc:startLive Image:@"tab_class" selectedImage:@"tab_class_sel" title:@"开始直播" andTag:1];
+    [self setUpOneChildVcWithVc:mine Image:@"tab_mine" selectedImage:@"tab_mine_sel" title:@"我的" andTag:2];
 }
 #pragma mark - 初始化设置tabBar上面单个按钮的方法
 /**
@@ -148,11 +126,11 @@
 {
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:Vc];
     UIImage *myImage = [UIImage imageNamed:image];
-    myImage = [myImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    myImage = [myImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     //tabBarItem，是系统提供模型，专门负责tabbar上按钮的文字以及图片展示
     Vc.tabBarItem.image = myImage;
     UIImage *mySelectedImage = [UIImage imageNamed:selectedImage];
-    mySelectedImage = [mySelectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    mySelectedImage = [mySelectedImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     Vc.tabBarItem.selectedImage = mySelectedImage;
     Vc.tabBarItem.title = title;
     Vc.navigationController.navigationBar.hidden = YES;
@@ -166,13 +144,13 @@
 -(void)setCusTintColor {
     if (@available(iOS 13.0, *)) {
 //        ZYTabBar *tabBar = [ZYTabBar appearance];
-        [self.tabBar setTintColor:normalColors];
+        [self.tabBar setTintColor:JJAPPTHEMECOLOR];
         [self.tabBar setUnselectedItemTintColor:RGB_COLOR(@"#c8c8c8", 1)];
     } else {
     // Override point for customization after application launch.
         [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:RGB_COLOR(@"#c8c8c8", 1)} forState:UIControlStateNormal];
         // 选中状态的标题颜色
-        [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:normalColors} forState:UIControlStateSelected];
+        [[UITabBarItem appearance] setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:10], NSForegroundColorAttributeName:JJAPPTHEMECOLOR} forState:UIControlStateSelected];
     }
 
 }
@@ -218,14 +196,12 @@
     
     UINavigationController *nav = (UINavigationController *)viewController;
     UIViewController *VC =nav.topViewController;
-    if ([VC isKindOfClass:[WYLiveShopHomeViewController class]]) {
-                
+    if ([VC isKindOfClass:[JJMerchantHomeVC class]]) {
         return YES;
-    }else{
-        if (![Config getOwnID] || [[Config getOwnID] intValue] == 0) {
-            [[WYToolClass sharedInstance] showLoginView];
-            return NO;
-        }
+    }
+    if (![Config getOwnID] || [[Config getOwnID] intValue] == 0) {
+        [[WYToolClass sharedInstance] showLoginView];
+        return NO;
     }
     return YES;
     

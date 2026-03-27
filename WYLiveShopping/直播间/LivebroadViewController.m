@@ -2413,18 +2413,43 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 }
 #pragma mark -- 分享
-- (void)doShare{
-    //杨剑修改，分享
-    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
-    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+
+- (void)showShareAlert:(NSString *)linkText{
     JJShareLiveLinkView *shareView = JJShareLiveLinkView.new;
-    shareView.linkText = [NSString stringWithFormat:@"https://m.shenwei.info/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
+    shareView.linkText = linkText;
     shareView.doneBlock = ^{
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
             [MBProgressHUD showSuccess:@"复制链接成功"];
         });
     };
     [shareView show];
+}
+
+- (void)doShare{
+    //杨剑修改，分享
+    [MBProgressHUD showMessage:@""];
+    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
+    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+    NSString *restApiPath = [NSString stringWithFormat:@"/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
+    [WYToolClass getQCloudNoTokenWithUrl:@"/frontend" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        [MBProgressHUD hideHUD];
+        NSString *restApi = @"https://m.shenwei.info";
+        if (code == 200) {
+            NSString *newRestApi = minstr([info valueForKey:@"frontend_url"] );
+            if (newRestApi.length > 10){
+                restApi = newRestApi;
+            }
+        }
+        NSString *linkText = [NSString stringWithFormat:@"%@%@",restApi,restApiPath];
+        [self showShareAlert:linkText];
+    } Fail:^{
+        [MBProgressHUD hideHUD];
+        NSString *linkText = [NSString stringWithFormat:@"https://m.shenwei.info%@",restApiPath];
+        [self showShareAlert:linkText];
+    }];
+
+    
+    
 
 //    if (!shareV) {
 //        shareV = [[shareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];

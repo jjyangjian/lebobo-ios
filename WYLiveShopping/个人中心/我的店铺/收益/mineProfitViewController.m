@@ -27,26 +27,26 @@
 
 @implementation mineProfitViewController
 - (void)creatHeaderView{
-    UIImageView *backImgV = [[UIImageView alloc]initWithFrame:CGRectMake(15, 64+statusbarHeight + 10, _window_width-30, (_window_width-30)*0.478)];
-    backImgV.image = [UIImage imageNamed:@"收益背景"];
-    [self.view addSubview:backImgV];
+    UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(15, 64+statusbarHeight + 10, _window_width-30, (_window_width-30)*0.478)];
+    backView.backgroundColor = JJAPPTHEMECOLOR;
+    [self.view addSubview:backView];
     NSArray *array = @[@"今日收益(元)",@"总收益(元)",@"已结算(元)",@"未结算(元)"];
     for (int i = 0; i < array.count; i ++) {
         UILabel *label = [[UILabel alloc]init];
         label.font = SYS_Font(12);
         label.textColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
         label.text = array[i];
-        [backImgV addSubview:label];
+        [backView addSubview:label];
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             if (i%2 == 0) {
-                make.left.equalTo(backImgV).offset(25);
+                make.left.equalTo(backView).offset(25);
             }else{
-                make.right.equalTo(backImgV).offset(-25);
+                make.right.equalTo(backView).offset(-25);
             }
             if (i/2 == 0) {
-                make.centerY.equalTo(backImgV).multipliedBy(0.39);
+                make.centerY.equalTo(backView).multipliedBy(0.39);
             }else{
-                make.centerY.equalTo(backImgV).multipliedBy(1.3);
+                make.centerY.equalTo(backView).multipliedBy(1.3);
             }
         }];
         
@@ -54,7 +54,7 @@
         label2.font = SYS_Font(12);
         label2.textColor = [UIColor whiteColor];
         label2.attributedText = [self setAttText:@"0.00"];
-        [backImgV addSubview:label2];
+        [backView addSubview:label2];
         [label2 mas_makeConstraints:^(MASConstraintMaker *make) {
             if (i%2 == 0) {
                 make.left.equalTo(label);
@@ -98,10 +98,10 @@
         [bottomView addSubview:btn];
         if (i == 1) {
             btn.layer.borderWidth = 1;
-            btn.layer.borderColor = normalColors.CGColor;
-            [btn setTitleColor:normalColors forState:0];
+            btn.layer.borderColor = JJAPPTHEMECOLOR.CGColor;
+            [btn setTitleColor:JJAPPTHEMECOLOR forState:0];
         }else{
-            [btn setBackgroundColor:normalColors];
+            [btn setBackgroundColor:JJAPPTHEMECOLOR];
         }
     }
     UILabel *label = [[UILabel alloc]init];

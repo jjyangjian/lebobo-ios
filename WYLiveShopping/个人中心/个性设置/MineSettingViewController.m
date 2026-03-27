@@ -9,12 +9,16 @@
 #import "MineSettingViewController.h"
 #import <SDWebImage/SDImageCache.h>
 #import "WYRoomManagerVC.h"
-@interface MineSettingViewController ()<UITableViewDelegate,UITableViewDataSource>{
-    NSArray *itemArray;
-    UITableView *setTable;
-    float MBCache;
 
-}
+static NSString * const JJSettingCellId = @"JJSettingCell";
+
+@interface MineSettingViewController ()<UITableViewDelegate,UITableViewDataSource>
+
+@property (nonatomic, strong) UITableView *setTable;
+@property (nonatomic, strong) UIButton *deleteAccountButton;
+@property (nonatomic, strong) NSArray<NSString *> *firstSectionItems;
+@property (nonatomic, strong) NSArray<NSString *> *secondSectionItems;
+@property (nonatomic, assign) float cacheSize;
 
 @end
 
@@ -23,61 +27,124 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.titleL.text = @"设置";
-    self.view.backgroundColor = colorf0;
-//    itemArray = @[YZMsg(@"切换语言"),YZMsg(@"联系我们"),YZMsg(@"版本更新"),YZMsg(@"清除缓存")];
-    itemArray = @[@"房间管理",@"联系我们",@"版本更新",@"清除缓存"];
+    self.view.backgroundColor = RGB_COLOR(@"#ECECEC", 1);
+
+    self.firstSectionItems = @[@"房间管理", @"联系我们", @"版本更新", @"清除缓存"];
+    self.secondSectionItems = @[@"退出登录"];
 
     NSUInteger bytesCache = [[SDImageCache sharedImageCache] totalDiskSize];
-    //换算成 MB (注意iOS中的字节之间的换算是1000不是1024)
-    MBCache = bytesCache/1000/1000;
-    setTable = [[UITableView alloc]initWithFrame:CGRectMake(0, 64+statusbarHeight, _window_width, 50*itemArray.count+1) style:0];
-    setTable.delegate =self;
-    setTable.dataSource =self;
-    setTable.scrollEnabled = NO;
-    [self.view addSubview:setTable];
-    
-    UIButton *logOutBtn = [UIButton buttonWithType:0];
-    logOutBtn.frame = CGRectMake(0, setTable.bottom+60, _window_width, 50);
-    [logOutBtn setBackgroundColor:[UIColor whiteColor]];
-    [logOutBtn setTitle:@"退出登录" forState:0];
-    [logOutBtn setTitleColor:RGB_COLOR(@"#FD4A4A", 1) forState:0];
-    logOutBtn.titleLabel.font = SYS_Font(12);
-    [logOutBtn addTarget:self action:@selector(logOutBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:logOutBtn];
+    self.cacheSize = bytesCache / 1000.0 / 1000.0;
 
+    [self buildUI];
 }
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return itemArray.count;
-}
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"setCell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"setCell"];
-        cell.textLabel.font = SYS_Font(12);
-        cell.detailTextLabel.font = SYS_Font(12);
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+- (void)buildUI {
+    self.setTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.setTable.delegate = self;
+    self.setTable.dataSource = self;
+    self.setTable.backgroundColor = RGB_COLOR(@"#ECECEC", 1);
+    self.setTable.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.setTable.showsVerticalScrollIndicator = NO;
+    self.setTable.alwaysBounceVertical = YES;
+    self.setTable.tableFooterView = [UIView new];
+    self.setTable.sectionHeaderHeight = 0.001;
+    self.setTable.sectionFooterHeight = 0.001;
+    if (@available(iOS 15.0, *)) {
+        self.setTable.sectionHeaderTopPadding = 0;
     }
-    cell.textLabel.text = itemArray[indexPath.row];
-    if (indexPath.row == 0 || indexPath.row == 1 ) {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accessoryImage"]];
-    }else{
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        if (indexPath.row == 2) {
-            NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];//本地的版本号
-            cell.detailTextLabel.text = build;
-        }else{
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2fMB",MBCache];
+    [self.view addSubview:self.setTable];
+
+    self.deleteAccountButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.deleteAccountButton setTitle:@"注销账号" forState:UIControlStateNormal];
+    [self.deleteAccountButton setTitleColor:RGB_COLOR(@"#FD4A4A", 1) forState:UIControlStateNormal];
+    self.deleteAccountButton.titleLabel.font = SYS_Font(14);
+    [self.deleteAccountButton addTarget:self action:@selector(showDeleteAccountAlert) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.deleteAccountButton];
+
+    [self.setTable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.naviView.mas_bottom);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.deleteAccountButton.mas_top).offset(-16);
+    }];
+
+    [self.deleteAccountButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.view);
+        make.bottom.equalTo(self.view.mas_bottom).offset(-(ShowDiff + 20));
+        make.height.mas_equalTo(20);
+    }];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return section == 0 ? self.firstSectionItems.count : self.secondSectionItems.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 56;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return section == 0 ? 0.001 : 12;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.001;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view = [[UIView alloc] init];
+    view.backgroundColor = RGB_COLOR(@"#ECECEC", 1);
+    return view;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return [UIView new];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:JJSettingCellId];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:JJSettingCellId];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.textLabel.font = SYS_Font(16);
+        cell.textLabel.textColor = color32;
+        cell.detailTextLabel.font = SYS_Font(14);
+        cell.detailTextLabel.textColor = color64;
+    }
+    cell.backgroundColor = [UIColor whiteColor];
+    cell.separatorInset = UIEdgeInsetsMake(0, 15, 0, 15);
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.accessoryView = nil;
+    cell.detailTextLabel.text = @"";
+
+    if (indexPath.section == 0) {
+        cell.textLabel.text = self.firstSectionItems[indexPath.row];
+        if (indexPath.row == 0 || indexPath.row == 1) {
+            cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"accessoryImage"]];
+        } else if (indexPath.row == 2) {
+            NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+            cell.detailTextLabel.text = build ?: @"";
+        } else {
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2fMB", self.cacheSize];
         }
+    } else {
+        cell.textLabel.text = self.secondSectionItems[indexPath.row];
+        cell.detailTextLabel.text = @"";
     }
 
     return cell;
 }
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 1) {
+        [self logOutBtnClick];
+        return;
+    }
+
     switch (indexPath.row) {
         case 0:
             [self roomManager];
@@ -91,61 +158,57 @@
         case 3:
             [self clearCrash];
             break;
-
         default:
             break;
     }
 }
-- (void)roomManager{
+
+- (void)roomManager {
     WYRoomManagerVC *roomVC = [WYRoomManagerVC new];
     [self.navigationController pushViewController:roomVC animated:YES];
 }
-- (void)logOutBtnClick{
+
+- (void)logOutBtnClick {
     [[WYToolClass sharedInstance] quitLogin];
 }
-- (void)gunayuwomen{
 
-    WYWebViewController *web = [[WYWebViewController alloc]init];
+- (void)gunayuwomen {
+    WYWebViewController *web = [[WYWebViewController alloc] init];
     web.urls = [NSString stringWithFormat:@"%@//appapi/page/detail?id=1",h5url];
     [self.navigationController pushViewController:web animated:YES];
 }
-- (void)checkBuild{
-//    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-//    NSNumber *app_build = [infoDictionary objectForKey:@"CFBundleVersion"];//本地
-//    NSNumber *build = (NSNumber *)[common ipa_ver];//远程
-//    NSComparisonResult r = [app_build compare:build];
-//    if (r == NSOrderedAscending || r == NSOrderedDescending) {//可改为if(r == -1L)
-//        UIAlertController *alertupdate = [UIAlertController alertControllerWithTitle:@"提示" message:[common ipa_des] preferredStyle:UIAlertControllerStyleAlert];
-//        UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"使用旧版" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-//        }];
-//        UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"前往更新" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            [[UIApplication sharedApplication]openURL:[NSURL URLWithString:[common app_ios]]];
-//        }];
-//        [alertupdate addAction:action1];
-//        [alertupdate addAction:action2];
-//        [self presentViewController:alertupdate animated:YES completion:nil];
-//
-//    }else if(r == NSOrderedSame) {//可改为if(r == 0L)
-        [MBProgressHUD showError:@"当前已是最新版本"];
-        
-//    }
 
+- (void)checkBuild {
+    [MBProgressHUD showError:@"当前已是最新版本"];
 }
-- (void)clearCrash{
+
+- (void)clearCrash {
     [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
-    MBCache = 0;
-    [setTable reloadData];
+    self.cacheSize = 0;
+    [self.setTable reloadData];
     [MBProgressHUD showError:@"缓存已清除"];
 }
 
-/*
-#pragma mark - Navigation
+- (void)showDeleteAccountAlert {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"注销账号" message:@"如需注销账号请在输入框内输入\n“确定注销账号”" preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.placeholder = @"确定注销账号";
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    }];
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"注销" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *inputText = alertController.textFields.firstObject.text ?: @"";
+        if (![inputText isEqualToString:@"确定注销账号"]) {
+            [MBProgressHUD showError:@"输入内容不正确"];
+            return;
+        }
+        [MBProgressHUD showError:@"注销功能暂未接入"];
+    }];
+    [confirmAction setValue:[UIColor redColor] forKey:@"titleTextColor"];
+    [alertController addAction:cancelAction];
+    [alertController addAction:confirmAction];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
-*/
 
 @end

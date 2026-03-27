@@ -12,7 +12,16 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+    // 设置按钮颜色和字号
+    _rightBtn.backgroundColor = JJAPPTHEMECOLOR;
+    _rightBtn.titleLabel.font = SYS_Font(15);
+    _leftBtn.titleLabel.font = SYS_Font(15);
+    _statusLabel.font = SYS_Font(16);
+    _allPriceL.font = SYS_Font(14);
+    _tipsL.font = SYS_Font(14);
+    _profitLabel.font = SYS_Font(14);
+    _timeL.font = SYS_Font(16);
+    _store_nameL.font = SYS_Font(16);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

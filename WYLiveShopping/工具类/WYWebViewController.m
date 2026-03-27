@@ -29,7 +29,7 @@
     [self.view addSubview:self.WKWebView];
     self.progresslayer = [[CALayer alloc]init];
     self.progresslayer.frame = CGRectMake(0, 0, _window_width*0.1, 2);
-    self.progresslayer.backgroundColor = normalColors.CGColor;
+    self.progresslayer.backgroundColor = JJAPPTHEMECOLOR.CGColor;
     [self.WKWebView.layer addSublayer:self.progresslayer];
     
     [self.WKWebView addObserver:self forKeyPath:@"estimatedProgress" options:NSKeyValueObservingOptionNew context:nil];

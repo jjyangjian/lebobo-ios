@@ -103,6 +103,7 @@
 
 //app主色调s
 #define normalColors RGB_COLOR(@"#FF5121",1)
+#define JJAPPTHEMECOLOR RGB_COLOR(@"#F6B37A",1)
 
 //各种字体颜色
 #define color32 RGB_COLOR(@"#323232",1)

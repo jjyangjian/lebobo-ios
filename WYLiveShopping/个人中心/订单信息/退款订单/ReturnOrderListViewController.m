@@ -10,12 +10,13 @@
 #import "ReturnOrderCell.h"
 #import "orderModel.h"
 #import "ReturnOrderDetailsViewController.h"
+#import "../../../JJNoDataNormalView.h"
 @interface ReturnOrderListViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSMutableArray *dataArray;
     int page;
 }
 @property (nonatomic,strong) UITableView *orderTableView;
-@property (nonatomic,strong) UIImageView *nothingImgView;
+@property (nonatomic,strong) JJNoDataNormalView *noDataView;
 
 @end
 
@@ -41,19 +42,8 @@
             // Fallback on earlier versions
         }
 
-        [_orderTableView addSubview:self.nothingImgView];
-
     }
     return _orderTableView;
-}
--(UIImageView *)nothingImgView{
-    if (!_nothingImgView) {
-        _nothingImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, _window_width, _window_width*0.55)];
-        _nothingImgView.image = [UIImage imageNamed:@"noOrder"];
-        _nothingImgView.contentMode = UIViewContentModeScaleAspectFit;
-        _nothingImgView.hidden = YES;
-    }
-    return _nothingImgView;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return dataArray.count;
@@ -162,6 +152,13 @@
     dataArray = [NSMutableArray array];
     page = 1;
     [self.view addSubview:self.orderTableView];
+    {
+        JJNoDataNormalView *noDataView = [[JJNoDataNormalView alloc] initWithFrame:self.orderTableView.bounds];
+        noDataView.hidden = YES;
+        noDataView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.orderTableView.backgroundView = noDataView;
+        self.noDataView = noDataView;
+    }
     [self requestData];
 }
 - (void)requestData{
@@ -181,9 +178,9 @@
             }
             [_orderTableView reloadData];
             if ([dataArray count] == 0) {
-                _nothingImgView.hidden = NO;
+                self.noDataView.hidden = NO;
             }else{
-                _nothingImgView.hidden = YES;
+                self.noDataView.hidden = YES;
             }
 
         }

@@ -69,6 +69,34 @@ static AFHTTPSessionManager *httpManager = nil;
         
     }];
 }
++(void)getQCloudNoTokenWithUrl:(NSString *)url Suc:(networkSuccessBlock)successBlock Fail:(networkFailBlock)failBlock{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@%@",purl,url];
+    NSLog(@"请求URL=：%@",requestUrl);
+    requestUrl = [requestUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+//    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    [[WYToolClass httpManager] GET:requestUrl parameters:nil headers:@{} progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [MBProgressHUD hideHUD];
+        NSLog(@"返回数据：%@",responseObject);
+        int code = [[NSString stringWithFormat:@"%@",[responseObject objectForKey:@"status"]] intValue];
+        NSDictionary *data = [responseObject valueForKey:@"data"];
+        NSString *msg = minstr([responseObject valueForKey:@"msg"]);
+        //回调
+        successBlock(code,data,msg);
+        if (code != 200) {
+            [MBProgressHUD showError:msg];
+        }
+        if (code == 410000 || code == 410001 || code == 410002) {
+            [[WYToolClass sharedInstance] quitLogin];
+        }
+
+        
+    }failure:^(NSURLSessionDataTask *task, NSError *error)     {
+        [MBProgressHUD hideHUD];
+        [MBProgressHUD showError:@"网络错误"];
+        failBlock();
+        
+    }];
+}
 
 /**
  网络请求

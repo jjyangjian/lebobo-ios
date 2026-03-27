@@ -12,7 +12,8 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
+    // 设置商品名字号和粗度
+    _nameL.font = [UIFont systemFontOfSize:16 weight:UIFontWeightMedium];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
