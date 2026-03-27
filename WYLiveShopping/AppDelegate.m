@@ -7,15 +7,13 @@
 //
 
 #import "AppDelegate.h"
-#import <Bugly/Bugly.h>
 #import <AlipaySDK/AlipaySDK.h>
 #import <WXApi.h>
+#import "JJAppConfigManager.h"
 #import "WYLoginViewController.h"
 #import "WYTabBarController.h"
-#import <Bugly/Bugly.h>
 #import "EBBannerView.h"
 #import <TXLiteAVSDK_Professional/TXLiveBase.h>
-#import <TXLiteAVSDK_Professional/V2TXLivePremier.h>
 
 @interface AppDelegate ()<WXApiDelegate, TXLiveBaseDelegate>
 {
@@ -28,19 +26,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [IQKeyboardManager sharedManager].enable = YES;
-    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
-    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;
+    [JJAppConfigManager configIQKeyboardManager];
 //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"isStartCall"];
     
-    [Bugly startWithAppId:BuglyId];
-    [self registNotification];
-    [self thirdPlant];
+    [JJAppConfigManager configBugly];
+    [JJAppConfigManager configNotificationsWithApplication:application appDelegate:self];
+    [JJAppConfigManager configShareSDK];
 
-    [TXLiveBase sharedInstance].delegate = self;
-    [V2TXLivePremier setLicence:LicenceURL key:LicenceKey];
-    [V2TXLivePremier setObserver:self];
-    NSLog(@"[V2TXLivePremier getSDKVersionStr] = %@",[V2TXLivePremier getSDKVersionStr]);
+    [JJAppConfigManager configVRtxLiveParamWithAppDelegate:self];
     self.window = [[UIWindow alloc]initWithFrame:CGRectMake(0,0,_window_width, _window_height)];
 
     if ([Config getOwnID] && [[Config getOwnID] integerValue] > 0) {
@@ -57,39 +50,6 @@
 
     return YES;
 }
-- (void)setTXIMSetting{
-    [[TUIKit sharedInstance] setupWithAppId:[[common tx_sdkappid] integerValue]]; // SDKAppID 可以在 即时通信 IM 控制台中获取
-    TUIKitConfig *config = TUIKitConfig.defaultConfig;
-    config.avatarType = 1;
-    config.defaultAvatarImage = [WYToolClass getAppIcon];//[UIImage imageNamed:@"wy-default-header"]
-    if ([Config getOwnUserTXIMSign]) {
-        [self IMLogin];
-    }
-
-}
-- (void)IMLogin{
-    [[TUIKit sharedInstance] login:[Config getOwnID] userSig:[Config getOwnUserTXIMSign] succ:^{
-        NSLog(@"IM登录成功");
-    } fail:^(int code, NSString *msg) {
-        NSLog(@"IM登录失败 \n code=%d \n msg=%@",code,msg);
-//        [[WYToolClass sharedInstance] quitLogin];
-    }];
-}
-
-- (void)registNotification
-{
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-    {
-        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
-    }
-    else
-    {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
-    }
-    
-    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onTotalUnreadCountChanged:) name:TUIKitNotification_onTotalUnreadMessageCountChanged object:nil];
-}
 - (void)onTotalUnreadCountChanged:(NSNotification *)notice
 {
     id object = notice.object;
@@ -98,13 +58,6 @@
     }
     NSUInteger total = [object integerValue];
     _unReadCount = total;
-}
--(void)thirdPlant{
-    [ShareSDK registPlatforms:^(SSDKRegister *platformsRegister) {
-        [platformsRegister setupQQWithAppId:QQAppId appkey:QQAppKey enableUniversalLink:NO universalLink:QQUniversalLink];
-        [platformsRegister setupWeChatWithAppId:WechatAppId appSecret:WechatAppSecret universalLink:WechatUniversalLink];
-    }];
-    
 }
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

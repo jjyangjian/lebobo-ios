@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		133609BA916E4D01213AAB2C /* Pods_WYLiveShopping.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 548690B35DDB408036119479 /* Pods_WYLiveShopping.framework */; };
+		F17684D12F76600000E60EFD /* JJUserConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684D02F76600000E60EFD /* JJUserConfigManager.m */; };
 		180B665E24A03D7800C89494 /* mineProfitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 180B665D24A03D7800C89494 /* mineProfitViewController.m */; };
 		180B666224A0463600C89494 /* profitHistoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 180B666024A0463600C89494 /* profitHistoryCell.m */; };
 		180B666324A0463600C89494 /* profitHistoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 180B666124A0463600C89494 /* profitHistoryCell.xib */; };
@@ -731,6 +732,7 @@
 		1890A08526EC4C5D00667E18 /* 复制链接@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1890A08326EC4C5C00667E18 /* 复制链接@2x.png */; };
 		1890A08926EC4C6F00667E18 /* publish_wx.png in Resources */ = {isa = PBXBuildFile; fileRef = 1890A08826EC4C6F00667E18 /* publish_wx.png */; };
 		18A226202488782900C556E9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2261F2488782900C556E9 /* AppDelegate.m */; };
+		F17684CE2F765D7700E60EFD /* JJAppConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */; };
 		18A226262488782900C556E9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A226252488782900C556E9 /* ViewController.m */; };
 		18A226292488782900C556E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18A226272488782900C556E9 /* Main.storyboard */; };
 		18A2262B2488782D00C556E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18A2262A2488782D00C556E9 /* Assets.xcassets */; };
@@ -3200,6 +3202,10 @@
 		F15859912F7419FB00C76D09 /* JJHomeLiveListItemModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeLiveListItemModel.m; sourceTree = "<group>"; };
 		F17684C92F75617400E60EFD /* JJShareLiveLinkView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJShareLiveLinkView.h; sourceTree = "<group>"; };
 		F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJShareLiveLinkView.m; sourceTree = "<group>"; };
+		F17684CC2F765D7500E60EFD /* JJAppConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJAppConfigManager.h; sourceTree = "<group>"; };
+		F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJAppConfigManager.m; sourceTree = "<group>"; };
+		F17684CF2F76600000E60EFD /* JJUserConfigManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJUserConfigManager.h; sourceTree = "<group>"; };
+		F17684D02F76600000E60EFD /* JJUserConfigManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJUserConfigManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5193,6 +5199,10 @@
 				18A2261C2488782900C556E9 /* Products */,
 				14E395D556A808B68654CD3A /* Pods */,
 				56508D8DDE5728BB3FD366D8 /* Frameworks */,
+				F17684CC2F765D7500E60EFD /* JJAppConfigManager.h */,
+				F17684CD2F765D7600E60EFD /* JJAppConfigManager.m */,
+				F17684CF2F76600000E60EFD /* JJUserConfigManager.h */,
+				F17684D02F76600000E60EFD /* JJUserConfigManager.m */,
 			);
 			sourceTree = "<group>";
 		};
@@ -8451,6 +8461,8 @@
 				189006F226D894CA00F6E939 /* TAddCollectionCell.m in Sources */,
 				18E3B13626E1BFA40020924E /* courseClassViewController.m in Sources */,
 				18A226202488782900C556E9 /* AppDelegate.m in Sources */,
+				F17684CE2F765D7700E60EFD /* JJAppConfigManager.m in Sources */,
+				F17684D12F76600000E60EFD /* JJUserConfigManager.m in Sources */,
 				18C316BF2499CB5B0091F7CF /* optimizationModel.m in Sources */,
 				189006E326D894CA00F6E939 /* TScrollView.m in Sources */,
 				1890075726D894CA00F6E939 /* EMVoiceConverter.mm in Sources */,

@@ -20,6 +20,8 @@
 //@import CoreLocation;
 #import "WYCarViewController.h"
 #import "WYFindViewController.h"
+#import "JJAppConfigManager.h"
+#import "JJUserConfigManager.h"
 #import <TXLiteAVSDK_Professional/TXLiveBase.h>
 
 @interface WYTabBarController ()<UITabBarDelegate,UITabBarControllerDelegate>//ZYTabBarDelegate
@@ -76,7 +78,14 @@
     [self setUpAllChildVc];
     [self setCusTintColor];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self getHomeConfig];
+    [JJAppConfigManager configHomeConfigWithCompletion:^{
+        if ([common tx_sdkappid]) {
+            [JJAppConfigManager configTXIM];
+            if ([Config getOwnUserTXIMSign]) {
+                [JJUserConfigManager configIMLogin];
+            }
+        }
+    }];
     
 //    [self setTXIMSetting];
     NSLog(@"[TXLiveBase getSDKVersionStr] = %@",[TXLiveBase getSDKVersionStr]);
@@ -221,47 +230,6 @@
     return YES;
     
 }
-- (void)getHomeConfig{
-    [WYToolClass getQCloudWithUrl:@"config" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        if (code == 200) {
-            liveCommon *commons = [[liveCommon alloc]initWithDic:info];
-            [common saveProfile:commons];
-            if ([common tx_sdkappid]) {
-                [self setTXIMSetting];
-            }
-            
-            if (isMHSDK) {
-                // [[MHSDK shareInstance] init:[WYToolClass decrypt:minstr([info valueForKey:@"beauty_ios"])]];
-                // [[MHSDK shareInstance]initWithAppID:[WYToolClass decrypt:minstr([info valueForKey:@""])] key:[WYToolClass decrypt:minstr([info valueForKey:@""])]];
-                // rk_mh
-                // [[MHSDK shareInstance]initWithAppID:@"560eea6e00899acf3864b537e77c1ef8" key:@"2e99eefa36718a3459bcd49779e5b6fa"];
-            }
-
-        }
-    } Fail:^{
-        
-    }];
-}
-- (void)setTXIMSetting{
-//    dispatch_once(<#dispatch_once_t * _Nonnull predicate#>, <#^(void)block#>)
-    [[TUIKit sharedInstance] setupWithAppId:[[common tx_sdkappid] integerValue]]; // SDKAppID 可以在 即时通信 IM 控制台中获取
-    TUIKitConfig *config = TUIKitConfig.defaultConfig;
-    config.avatarType = 1;
-    config.defaultAvatarImage = [WYToolClass getAppIcon];//[UIImage imageNamed:@"wy-default-header"]
-    if ([Config getOwnUserTXIMSign]) {
-        [self IMLogin];
-    }
-
-}
-- (void)IMLogin{
-    [[TUIKit sharedInstance] login:[Config getOwnID] userSig:[Config getOwnUserTXIMSign] succ:^{
-        NSLog(@"IM登录成功");
-    } fail:^(int code, NSString *msg) {
-        NSLog(@"IM登录失败 \n code=%d \n msg=%@",code,msg);
-//        [[WYToolClass sharedInstance] quitLogin];
-    }];
-}
-
 //-(NSArray *)imgParr
 //{
 //    if (!_imgParr) {
