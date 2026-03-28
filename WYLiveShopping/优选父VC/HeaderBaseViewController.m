@@ -11,7 +11,7 @@
 #import "GoodsSearchViewController.h"
 #import "WYCarViewController.h"
 //#import "TUIConversationListController.h"
-#import "WYSignInViewController.h"
+#import "SWSignInViewController.h"
 
 @interface HeaderBaseViewController ()<TUIConversationListControllerListener>
 
@@ -71,7 +71,7 @@
 }
 
 - (void)doCar{
-    WYSignInViewController *vc = [[WYSignInViewController alloc]init];
+    SWSignInViewController *vc = [[SWSignInViewController alloc]init];
     [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 - (void)doSearch{

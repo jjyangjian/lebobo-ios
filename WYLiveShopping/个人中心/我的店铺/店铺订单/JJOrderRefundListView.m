@@ -4,10 +4,7 @@
 #import "MJRefresh.h"
 #import "JJNoDataNormalView.h"
 
-@interface JJOrderRefundListView () <UITableViewDelegate, UITableViewDataSource> {
-    NSMutableArray *dataArray;
-    int page;
-}
+@interface JJOrderRefundListView () <UITableViewDelegate, UITableViewDataSource> 
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) JJNoDataNormalView *noDataView;
@@ -19,8 +16,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        dataArray = [NSMutableArray array];
-        page = 1;
+        self.dataArray = NSMutableArray.new;
+        self.page = 1;
         [self configUI];
     }
     return self;
@@ -36,11 +33,11 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         tableView.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
         tableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-            page = 1;
+            self.page = 1;
             [self requestData];
         }];
         tableView.mj_footer = [MJRefreshBackFooter footerWithRefreshingBlock:^{
-            page++;
+            self.page++;
             [self requestData];
         }];
         if (@available(iOS 15.0, *)) {
@@ -67,12 +64,12 @@
 }
 
 - (void)requestFirstPageData {
-    page = 1;
+    self.page = 1;
     [self requestData];
 }
 
 - (void)requestData {
-    NSString *url = [NSString stringWithFormat:@"order/list?type=-3&status=%@&page=%d", self.statusType, page];
+    NSString *url = [NSString stringWithFormat:@"order/list?type=-3&status=%@&page=%d", self.statusType, self.page];
     __weak typeof(self) weakSelf = self;
     [WYToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
@@ -82,13 +79,13 @@
         [strongSelf.tableView.mj_footer endRefreshing];
 
         if (code == 200) {
-            if (page == 1) {
-                [dataArray removeAllObjects];
+            if (strongSelf.page == 1) {
+                [strongSelf.dataArray removeAllObjects];
                 [strongSelf.tableView.mj_footer resetNoMoreData];
             }
             for (NSDictionary *dic in info) {
                 orderModel *model = [[orderModel alloc] initWithDic:dic];
-                [dataArray addObject:model];
+                [strongSelf.dataArray addObject:model];
             }
             if ([info count] < 20) {
                 [strongSelf.tableView.mj_footer endRefreshingWithNoMoreData];
@@ -96,7 +93,7 @@
             [strongSelf.tableView reloadData];
             [strongSelf updateNoDataViewHidden];
 
-            if (page == 1 && strongSelf.refreshBlock) {
+            if (strongSelf.page == 1 && strongSelf.refreshBlock) {
                 strongSelf.refreshBlock();
             }
         }
@@ -110,15 +107,15 @@
 }
 
 - (void)updateNoDataViewHidden {
-    self.noDataView.hidden = dataArray.count > 0;
+    self.noDataView.hidden = self.dataArray.count > 0;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return dataArray.count;
+    return self.dataArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    orderModel *oModel = dataArray[section];
+    orderModel *oModel = self.dataArray[section];
     return oModel.goodsArray.count;
 }
 
@@ -128,7 +125,7 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"ReturnOrderCell" owner:nil options:nil] lastObject];
     }
 
-    orderModel *oModel = dataArray[indexPath.section];
+    orderModel *oModel = self.dataArray[indexPath.section];
     cell.model = oModel.goodsArray[indexPath.row];
 
     return cell;
@@ -147,7 +144,7 @@
     view.backgroundColor = [UIColor whiteColor];
     view.clipsToBounds = NO;
 
-    orderModel *model = dataArray[section];
+    orderModel *model = self.dataArray[section];
 
     {
         UILabel *label = [[UILabel alloc] init];
@@ -199,7 +196,7 @@
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor whiteColor];
 
-    orderModel *model = dataArray[section];
+    orderModel *model = self.dataArray[section];
 
     {
         UILabel *totalLabel = [[UILabel alloc] init];
@@ -249,8 +246,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (self.selectBlock && indexPath.section < dataArray.count) {
-        self.selectBlock(dataArray[indexPath.section]);
+    if (self.selectBlock && indexPath.section < self.dataArray.count) {
+        self.selectBlock(self.dataArray[indexPath.section]);
     }
 }
 

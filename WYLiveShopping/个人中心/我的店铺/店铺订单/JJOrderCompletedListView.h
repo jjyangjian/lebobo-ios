@@ -7,19 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@class orderModel;
+#import "orderModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface JJOrderCompletedListView : UIView
-
+@property (nonatomic, assign) int page;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) NSString *statusType;
 @property (nonatomic, copy) void (^selectBlock)(orderModel *model);
 @property (nonatomic, copy) void (^refreshBlock)(void);
-
 - (void)requestFirstPageData;
-
 @end
 
 NS_ASSUME_NONNULL_END

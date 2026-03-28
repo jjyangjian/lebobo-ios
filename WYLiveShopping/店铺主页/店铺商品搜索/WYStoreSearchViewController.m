@@ -66,7 +66,7 @@
 //        flow.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
 //        flow.headerReferenceSize = CGSizeMake(_window_width, _window_height);
         _goodsCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,64+statusbarHeight, _window_width, _window_height-(64+statusbarHeight)) collectionViewLayout:_flow];
-        [_goodsCollectionView registerNib:[UINib nibWithNibName:@"WYHomeShopColCell" bundle:nil] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
+        [_goodsCollectionView registerClass:[WYHomeShopColCell class] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
         [_goodsCollectionView registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"homeClollectionHeaderView"];
 
         _goodsCollectionView.delegate =self;

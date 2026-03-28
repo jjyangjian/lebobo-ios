@@ -212,7 +212,6 @@
 		18537B0A2F2B5BCD004920F1 /* RSADataSigner.m in Sources */ = {isa = PBXBuildFile; fileRef = 18537B022F2B5BCC004920F1 /* RSADataSigner.m */; };
 		185A431226EF22F9006A051E /* HomeMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 185A431126EF22F9006A051E /* HomeMenuView.m */; };
 		185A431626EF230D006A051E /* HomeMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 185A431526EF230D006A051E /* HomeMenuView.xib */; };
-		185A431A26EF31F3006A051E /* home_menu_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 185A431926EF31F3006A051E /* home_menu_back.png */; };
 		185A431E26F02FFD006A051E /* goods_live_tips.png in Resources */ = {isa = PBXBuildFile; fileRef = 185A431D26F02FFD006A051E /* goods_live_tips.png */; };
 		185A433326F09310006A051E /* WYStoreSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 185A433226F0930F006A051E /* WYStoreSearchViewController.m */; };
 		185A433926F18B65006A051E /* home-video-palys.png in Resources */ = {isa = PBXBuildFile; fileRef = 185A433826F18B65006A051E /* home-video-palys.png */; };
@@ -373,7 +372,7 @@
 		188F024724E7B8A0006186FD /* LWLCollectionViewHorizontalLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F024624E7B8A0006186FD /* LWLCollectionViewHorizontalLayout.m */; };
 		188F024B24E7BDB8006186FD /* liwuModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F024A24E7BDB8006186FD /* liwuModel.m */; };
 		188F468D26E2087D0017BF6A /* WYMineCourseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F468C26E2087D0017BF6A /* WYMineCourseViewController.m */; };
-		188F469326E2094E0017BF6A /* WYGetCouponViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F469226E2094E0017BF6A /* WYGetCouponViewController.m */; };
+		188F469326E2094E0017BF6A /* SWGetCouponViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F469226E2094E0017BF6A /* SWGetCouponViewController.m */; };
 		188F469B26E211380017BF6A /* WYMineAttStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F469A26E211380017BF6A /* WYMineAttStoreViewController.m */; };
 		188F46A326E211FB0017BF6A /* WYStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 188F46A126E211FB0017BF6A /* WYStoreCell.m */; };
 		188F46A426E211FB0017BF6A /* WYStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 188F46A226E211FB0017BF6A /* WYStoreCell.xib */; };
@@ -976,7 +975,6 @@
 		18C316EC249B17D40091F7CF /* tab_yx@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316DC249B17D30091F7CF /* tab_yx@2x.png */; };
 		18C316ED249B17D40091F7CF /* tab_class_sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316DD249B17D30091F7CF /* tab_class_sel@2x.png */; };
 		18C316EE249B17D40091F7CF /* tab_home@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316DE249B17D40091F7CF /* tab_home@3x.png */; };
-		18C316F0249B1BB40091F7CF /* home_阴影.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316EF249B1BB30091F7CF /* home_阴影.png */; };
 		18C316F4249B36010091F7CF /* mine_right@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316F2249B36000091F7CF /* mine_right@3x.png */; };
 		18C316F5249B36010091F7CF /* mine_right@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C316F3249B36010091F7CF /* mine_right@2x.png */; };
 		18C316F8249B4CAD0091F7CF /* LivePlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18C316F7249B4CAD0091F7CF /* LivePlayerViewController.m */; };
@@ -1043,7 +1041,6 @@
 		18D68A1424970D0900C9DE7D /* home_message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D68A1224970D0900C9DE7D /* home_message@2x.png */; };
 		18D68A1724970D2900C9DE7D /* 购物车@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D68A1524970D2900C9DE7D /* 购物车@3x.png */; };
 		18D68A1824970D2900C9DE7D /* 购物车@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18D68A1624970D2900C9DE7D /* 购物车@2x.png */; };
-		18D68A1D249711DE00C9DE7D /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D68A1C249711DE00C9DE7D /* MineViewController.m */; };
 		18D68A202497120200C9DE7D /* OptimizationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D68A1F2497120200C9DE7D /* OptimizationViewController.m */; };
 		18D68A232497121B00C9DE7D /* ClassificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D68A222497121B00C9DE7D /* ClassificationViewController.m */; };
 		18D68A2624971A5800C9DE7D /* HomeLiveModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D68A2524971A5800C9DE7D /* HomeLiveModel.m */; };
@@ -1126,9 +1123,7 @@
 		18E3B11326E1ACD60020924E /* selectedStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B11126E1ACD60020924E /* selectedStoreCell.m */; };
 		18E3B11426E1ACD60020924E /* selectedStoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18E3B11226E1ACD60020924E /* selectedStoreCell.xib */; };
 		18E3B11A26E1B3940020924E /* WYAllLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B11926E1B3940020924E /* WYAllLiveViewController.m */; };
-		18E3B12226E1B88A0020924E /* WYAllVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B12126E1B88A0020924E /* WYAllVideoViewController.m */; };
 		18E3B12726E1B8DC0020924E /* WYClassVideoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B12626E1B8DC0020924E /* WYClassVideoListViewController.m */; };
-		18E3B12D26E1BEE90020924E /* WYLiveCourseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B12C26E1BEE90020924E /* WYLiveCourseViewController.m */; };
 		18E3B13626E1BFA40020924E /* courseClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B13226E1BFA20020924E /* courseClassViewController.m */; };
 		18E3B13726E1BFA40020924E /* courseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B13326E1BFA30020924E /* courseModel.m */; };
 		18E3B14626E1C03C0020924E /* WYLiveCourseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18E3B14426E1C03C0020924E /* WYLiveCourseCell.m */; };
@@ -1200,12 +1195,9 @@
 		18F9541326DC8C3B00A296F8 /* WYAnliModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9541226DC8C3B00A296F8 /* WYAnliModel.m */; };
 		18F9541F26DCBA1F00A296F8 /* relationGoodsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9541E26DCBA1F00A296F8 /* relationGoodsView.m */; };
 		18F9542326DCBA2A00A296F8 /* relationGoodsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18F9542226DCBA2A00A296F8 /* relationGoodsView.xib */; };
-		18F9545226DCDA8A00A296F8 /* WYSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9545126DCDA8900A296F8 /* WYSignInViewController.m */; };
-		18F9545926DDBADB00A296F8 /* WYLiveShopHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9545826DDBADB00A296F8 /* WYLiveShopHomeViewController.m */; };
+		18F9545226DCDA8A00A296F8 /* SWSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9545126DCDA8900A296F8 /* SWSignInViewController.m */; };
 		18F9545F26DDC08900A296F8 /* WYHomeShopColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9545D26DDC08900A296F8 /* WYHomeShopColCell.m */; };
-		18F9546026DDC08900A296F8 /* WYHomeShopColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18F9545E26DDC08900A296F8 /* WYHomeShopColCell.xib */; };
 		18F9546626DDD2AD00A296F8 /* WYWaterFallLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9546526DDD2AC00A296F8 /* WYWaterFallLayout.m */; };
-		18F9546F26DE045700A296F8 /* WYHomeLiveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F9546E26DE045700A296F8 /* WYHomeLiveView.m */; };
 		18F9547626DE09C200A296F8 /* home_scan@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F9547426DE09C100A296F8 /* home_scan@3x.png */; };
 		18F9547726DE09C200A296F8 /* home_scan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F9547526DE09C100A296F8 /* home_scan@2x.png */; };
 		18F9547C26DE148C00A296F8 /* wy-more@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 18F9547A26DE148800A296F8 /* wy-more@3x.png */; };
@@ -1321,7 +1313,6 @@
 		F17684E82F76630000E60EFD /* JJMineVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E72F76630000E60EFD /* JJMineVC.m */; };
 		F17684EB2F76640000E60EFD /* JJStartLiveVC.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EA2F76640000E60EFD /* JJStartLiveVC.m */; };
 		F17684F42F76CCFB00E60EFD /* JJOrderReceivedListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EF2F76CCFB00E60EFD /* JJOrderReceivedListView.m */; };
-		F17684F52F76CCFB00E60EFD /* JJOrderBaseListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */; };
 		F17684F62F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684EB2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m */; };
 		F17684F72F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684ED2F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m */; };
 		F17684F82F76CCFB00E60EFD /* JJOrderRefundListView.m in Sources */ = {isa = PBXBuildFile; fileRef = F17684F12F76CCFB00E60EFD /* JJOrderRefundListView.m */; };
@@ -1628,7 +1619,6 @@
 		185A431026EF22F9006A051E /* HomeMenuView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HomeMenuView.h; sourceTree = "<group>"; };
 		185A431126EF22F9006A051E /* HomeMenuView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HomeMenuView.m; sourceTree = "<group>"; };
 		185A431526EF230D006A051E /* HomeMenuView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeMenuView.xib; sourceTree = "<group>"; };
-		185A431926EF31F3006A051E /* home_menu_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home_menu_back.png; sourceTree = "<group>"; };
 		185A431D26F02FFD006A051E /* goods_live_tips.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = goods_live_tips.png; sourceTree = "<group>"; };
 		185A433126F0930F006A051E /* WYStoreSearchViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYStoreSearchViewController.h; sourceTree = "<group>"; };
 		185A433226F0930F006A051E /* WYStoreSearchViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYStoreSearchViewController.m; sourceTree = "<group>"; };
@@ -1854,8 +1844,8 @@
 		188F024A24E7BDB8006186FD /* liwuModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = liwuModel.m; sourceTree = "<group>"; };
 		188F468B26E2087D0017BF6A /* WYMineCourseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYMineCourseViewController.h; sourceTree = "<group>"; };
 		188F468C26E2087D0017BF6A /* WYMineCourseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYMineCourseViewController.m; sourceTree = "<group>"; };
-		188F469126E2094E0017BF6A /* WYGetCouponViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYGetCouponViewController.h; sourceTree = "<group>"; };
-		188F469226E2094E0017BF6A /* WYGetCouponViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYGetCouponViewController.m; sourceTree = "<group>"; };
+		188F469126E2094E0017BF6A /* SWGetCouponViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWGetCouponViewController.h; sourceTree = "<group>"; };
+		188F469226E2094E0017BF6A /* SWGetCouponViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWGetCouponViewController.m; sourceTree = "<group>"; };
 		188F469926E211380017BF6A /* WYMineAttStoreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYMineAttStoreViewController.h; sourceTree = "<group>"; };
 		188F469A26E211380017BF6A /* WYMineAttStoreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYMineAttStoreViewController.m; sourceTree = "<group>"; };
 		188F46A026E211FB0017BF6A /* WYStoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYStoreCell.h; sourceTree = "<group>"; };
@@ -2748,7 +2738,6 @@
 		18C316DC249B17D30091F7CF /* tab_yx@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_yx@2x.png"; sourceTree = "<group>"; };
 		18C316DD249B17D30091F7CF /* tab_class_sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_class_sel@2x.png"; sourceTree = "<group>"; };
 		18C316DE249B17D40091F7CF /* tab_home@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_home@3x.png"; sourceTree = "<group>"; };
-		18C316EF249B1BB30091F7CF /* home_阴影.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_阴影.png"; sourceTree = "<group>"; };
 		18C316F2249B36000091F7CF /* mine_right@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mine_right@3x.png"; sourceTree = "<group>"; };
 		18C316F3249B36010091F7CF /* mine_right@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mine_right@2x.png"; sourceTree = "<group>"; };
 		18C316F6249B4CAD0091F7CF /* LivePlayerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LivePlayerViewController.h; sourceTree = "<group>"; };
@@ -2831,8 +2820,6 @@
 		18D68A1224970D0900C9DE7D /* home_message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_message@2x.png"; sourceTree = "<group>"; };
 		18D68A1524970D2900C9DE7D /* 购物车@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "购物车@3x.png"; sourceTree = "<group>"; };
 		18D68A1624970D2900C9DE7D /* 购物车@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "购物车@2x.png"; sourceTree = "<group>"; };
-		18D68A1B249711DE00C9DE7D /* MineViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MineViewController.h; sourceTree = "<group>"; };
-		18D68A1C249711DE00C9DE7D /* MineViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MineViewController.m; sourceTree = "<group>"; usesTabs = 0; };
 		18D68A1E2497120200C9DE7D /* OptimizationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OptimizationViewController.h; sourceTree = "<group>"; };
 		18D68A1F2497120200C9DE7D /* OptimizationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptimizationViewController.m; sourceTree = "<group>"; };
 		18D68A212497121B00C9DE7D /* ClassificationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassificationViewController.h; sourceTree = "<group>"; };
@@ -2939,12 +2926,8 @@
 		18E3B11226E1ACD60020924E /* selectedStoreCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = selectedStoreCell.xib; sourceTree = "<group>"; };
 		18E3B11826E1B3940020924E /* WYAllLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYAllLiveViewController.h; sourceTree = "<group>"; };
 		18E3B11926E1B3940020924E /* WYAllLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYAllLiveViewController.m; sourceTree = "<group>"; };
-		18E3B12026E1B88A0020924E /* WYAllVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYAllVideoViewController.h; sourceTree = "<group>"; };
-		18E3B12126E1B88A0020924E /* WYAllVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYAllVideoViewController.m; sourceTree = "<group>"; };
 		18E3B12526E1B8DC0020924E /* WYClassVideoListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYClassVideoListViewController.h; sourceTree = "<group>"; };
 		18E3B12626E1B8DC0020924E /* WYClassVideoListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYClassVideoListViewController.m; sourceTree = "<group>"; };
-		18E3B12B26E1BEE90020924E /* WYLiveCourseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYLiveCourseViewController.h; sourceTree = "<group>"; };
-		18E3B12C26E1BEE90020924E /* WYLiveCourseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYLiveCourseViewController.m; sourceTree = "<group>"; };
 		18E3B13226E1BFA20020924E /* courseClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = courseClassViewController.m; sourceTree = "<group>"; };
 		18E3B13326E1BFA30020924E /* courseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = courseModel.m; sourceTree = "<group>"; };
 		18E3B13426E1BFA30020924E /* courseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = courseModel.h; sourceTree = "<group>"; };
@@ -3049,17 +3032,12 @@
 		18F9541D26DCBA1F00A296F8 /* relationGoodsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = relationGoodsView.h; sourceTree = "<group>"; };
 		18F9541E26DCBA1F00A296F8 /* relationGoodsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = relationGoodsView.m; sourceTree = "<group>"; };
 		18F9542226DCBA2A00A296F8 /* relationGoodsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = relationGoodsView.xib; sourceTree = "<group>"; };
-		18F9545026DCDA8900A296F8 /* WYSignInViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYSignInViewController.h; sourceTree = "<group>"; };
-		18F9545126DCDA8900A296F8 /* WYSignInViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYSignInViewController.m; sourceTree = "<group>"; };
-		18F9545726DDBADB00A296F8 /* WYLiveShopHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYLiveShopHomeViewController.h; sourceTree = "<group>"; };
-		18F9545826DDBADB00A296F8 /* WYLiveShopHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYLiveShopHomeViewController.m; sourceTree = "<group>"; };
+		18F9545026DCDA8900A296F8 /* SWSignInViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWSignInViewController.h; sourceTree = "<group>"; };
+		18F9545126DCDA8900A296F8 /* SWSignInViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWSignInViewController.m; sourceTree = "<group>"; };
 		18F9545C26DDC08900A296F8 /* WYHomeShopColCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYHomeShopColCell.h; sourceTree = "<group>"; };
 		18F9545D26DDC08900A296F8 /* WYHomeShopColCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYHomeShopColCell.m; sourceTree = "<group>"; };
-		18F9545E26DDC08900A296F8 /* WYHomeShopColCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WYHomeShopColCell.xib; sourceTree = "<group>"; };
 		18F9546426DDD2AC00A296F8 /* WYWaterFallLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYWaterFallLayout.h; sourceTree = "<group>"; };
 		18F9546526DDD2AC00A296F8 /* WYWaterFallLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYWaterFallLayout.m; sourceTree = "<group>"; };
-		18F9546D26DE045700A296F8 /* WYHomeLiveView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WYHomeLiveView.h; sourceTree = "<group>"; };
-		18F9546E26DE045700A296F8 /* WYHomeLiveView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WYHomeLiveView.m; sourceTree = "<group>"; };
 		18F9547426DE09C100A296F8 /* home_scan@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_scan@3x.png"; sourceTree = "<group>"; };
 		18F9547526DE09C100A296F8 /* home_scan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home_scan@2x.png"; sourceTree = "<group>"; };
 		18F9547A26DE148800A296F8 /* wy-more@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "wy-more@3x.png"; sourceTree = "<group>"; };
@@ -3234,9 +3212,7 @@
 		F17684E22F76620000E60EFD /* JJHomeMerchantBackendModuleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJHomeMerchantBackendModuleCell.h; sourceTree = "<group>"; };
 		F17684E32F76620000E60EFD /* JJHomeMerchantBackendModuleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJHomeMerchantBackendModuleCell.m; sourceTree = "<group>"; };
 		F17684E62F76630000E60EFD /* JJMineVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJMineVC.h; sourceTree = "<group>"; };
-		F17684E62F76CCFB00E60EFD /* JJOrderBaseListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderBaseListView.h; sourceTree = "<group>"; };
 		F17684E72F76630000E60EFD /* JJMineVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJMineVC.m; sourceTree = "<group>"; };
-		F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderBaseListView.m; sourceTree = "<group>"; };
 		F17684E82F76CCFB00E60EFD /* JJOrderCompletedListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJOrderCompletedListView.h; sourceTree = "<group>"; };
 		F17684E92F76640000E60EFD /* JJStartLiveVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JJStartLiveVC.h; sourceTree = "<group>"; };
 		F17684E92F76CCFB00E60EFD /* JJOrderCompletedListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JJOrderCompletedListView.m; sourceTree = "<group>"; };
@@ -4278,8 +4254,8 @@
 		188F469026E209280017BF6A /* 领券中心 */ = {
 			isa = PBXGroup;
 			children = (
-				188F469126E2094E0017BF6A /* WYGetCouponViewController.h */,
-				188F469226E2094E0017BF6A /* WYGetCouponViewController.m */,
+				188F469126E2094E0017BF6A /* SWGetCouponViewController.h */,
+				188F469226E2094E0017BF6A /* SWGetCouponViewController.m */,
 			);
 			path = "领券中心";
 			sourceTree = "<group>";
@@ -5568,8 +5544,6 @@
 		18A2277424887DB300C556E9 /* 个人中心 */ = {
 			isa = PBXGroup;
 			children = (
-				18D68A1B249711DE00C9DE7D /* MineViewController.h */,
-				18D68A1C249711DE00C9DE7D /* MineViewController.m */,
 				188F46A726E216560017BF6A /* 我的积分 */,
 				188F469826E211180017BF6A /* 关注店铺 */,
 				188F468A26E208640017BF6A /* 我的课程 */,
@@ -5794,11 +5768,8 @@
 			isa = PBXGroup;
 			children = (
 				F15859922F7419FB00C76D09 /* 新首页仅保留直播列表 */,
-				18F9545726DDBADB00A296F8 /* WYLiveShopHomeViewController.h */,
-				18F9545826DDBADB00A296F8 /* WYLiveShopHomeViewController.m */,
 				18F9545C26DDC08900A296F8 /* WYHomeShopColCell.h */,
 				18F9545D26DDC08900A296F8 /* WYHomeShopColCell.m */,
-				18F9545E26DDC08900A296F8 /* WYHomeShopColCell.xib */,
 				18F9544F26DCDA6100A296F8 /* 签到 */,
 				18D68A1024970CFB00C9DE7D /* 图片 */,
 				187C35F626FEEEBD002BC79F /* 直播cell+model */,
@@ -5974,8 +5945,6 @@
 			isa = PBXGroup;
 			children = (
 				18B4BD4324B5CAAC00449537 /* order_down@2x.png */,
-				F17684E62F76CCFB00E60EFD /* JJOrderBaseListView.h */,
-				F17684E72F76CCFB00E60EFD /* JJOrderBaseListView.m */,
 				F17684E82F76CCFB00E60EFD /* JJOrderCompletedListView.h */,
 				F17684E92F76CCFB00E60EFD /* JJOrderCompletedListView.m */,
 				F17684EA2F76CCFB00E60EFD /* JJOrderPendingPaymentListView.h */,
@@ -6414,7 +6383,6 @@
 			children = (
 				185A433C26F19408006A051E /* home-living.png */,
 				185A433826F18B65006A051E /* home-video-palys.png */,
-				185A431926EF31F3006A051E /* home_menu_back.png */,
 				18F9548C26DE296900A296F8 /* home-xihuan.png */,
 				18F9548026DE1A6800A296F8 /* home-signin.png */,
 				18F9547B26DE148B00A296F8 /* wy-more@2x.png */,
@@ -6425,7 +6393,6 @@
 				18D68A1124970D0900C9DE7D /* home_message@3x.png */,
 				18D68A1624970D2900C9DE7D /* 购物车@2x.png */,
 				18D68A1524970D2900C9DE7D /* 购物车@3x.png */,
-				18C316EF249B1BB30091F7CF /* home_阴影.png */,
 				18F9547526DE09C100A296F8 /* home_scan@2x.png */,
 				18F9547426DE09C100A296F8 /* home_scan@3x.png */,
 			);
@@ -6727,8 +6694,6 @@
 			isa = PBXGroup;
 			children = (
 				1890A07E26EC492F00667E18 /* no-video.png */,
-				18E3B12026E1B88A0020924E /* WYAllVideoViewController.h */,
-				18E3B12126E1B88A0020924E /* WYAllVideoViewController.m */,
 				18E3B12526E1B8DC0020924E /* WYClassVideoListViewController.h */,
 				18E3B12626E1B8DC0020924E /* WYClassVideoListViewController.m */,
 			);
@@ -6739,8 +6704,6 @@
 			isa = PBXGroup;
 			children = (
 				18E3B14A26E1C4510020924E /* 课程详情 */,
-				18E3B12B26E1BEE90020924E /* WYLiveCourseViewController.h */,
-				18E3B12C26E1BEE90020924E /* WYLiveCourseViewController.m */,
 				18E3B13526E1BFA30020924E /* courseClassViewController.h */,
 				18E3B13226E1BFA20020924E /* courseClassViewController.m */,
 				18E3B14326E1C03C0020924E /* WYLiveCourseCell.h */,
@@ -7004,8 +6967,8 @@
 				18F954E026DF1D9C00A296F8 /* 图片 */,
 				18F954D826DF149900A296F8 /* 签到成功 */,
 				18F9549026DE344800A296F8 /* 日历 */,
-				18F9545026DCDA8900A296F8 /* WYSignInViewController.h */,
-				18F9545126DCDA8900A296F8 /* WYSignInViewController.m */,
+				18F9545026DCDA8900A296F8 /* SWSignInViewController.h */,
+				18F9545126DCDA8900A296F8 /* SWSignInViewController.m */,
 			);
 			path = "签到";
 			sourceTree = "<group>";
@@ -7026,8 +6989,6 @@
 			children = (
 				F17684C92F75617400E60EFD /* JJShareLiveLinkView.h */,
 				F17684CA2F75617400E60EFD /* JJShareLiveLinkView.m */,
-				18F9546D26DE045700A296F8 /* WYHomeLiveView.h */,
-				18F9546E26DE045700A296F8 /* WYHomeLiveView.m */,
 			);
 			path = "直播View";
 			sourceTree = "<group>";
@@ -7525,7 +7486,6 @@
 				1890A07226EB54C100667E18 /* [抠鼻].png in Resources */,
 				185FBBF626F3503400DECB2B /* scancode_pic@3x.png in Resources */,
 				18F954E326DF1DAB00A296F8 /* sign_sel@2x.png in Resources */,
-				185A431A26EF31F3006A051E /* home_menu_back.png in Resources */,
 				18E3B0FE26E0D4970020924E /* wy_page_image@3x.png in Resources */,
 				1890A02926EB54C000667E18 /* [高兴].png in Resources */,
 				18C8B15424A3399B006F6B94 /* VIPidentifi@3x.png in Resources */,
@@ -8044,7 +8004,6 @@
 				185E090526E0C6F8008A7B37 /* JPVideoPlayer.bundle in Resources */,
 				188C096B24EE165A00CDF9AC /* moviePlay_title.png in Resources */,
 				185E08BA26E0B6E7008A7B37 /* video_topic@3x.png in Resources */,
-				18C316F0249B1BB40091F7CF /* home_阴影.png in Resources */,
 				18DBC8B724B02F86009D4022 /* rankUserCell.xib in Resources */,
 				18F954C926DE344900A296F8 /* Calendar_上@2x.png in Resources */,
 				187E204F270053D800634A92 /* tab_find_sel@3x.png in Resources */,
@@ -8120,7 +8079,6 @@
 				18B4BD7924B71AD800449537 /* promoter.png in Resources */,
 				18403F8624A9BBF3002700DA /* 客服@2x.png in Resources */,
 				18B9570726D638A700E1CB49 /* earlybird.png in Resources */,
-				18F9546026DDC08900A296F8 /* WYHomeShopColCell.xib in Resources */,
 				18E3B1A926E1C4520020924E /* rate_menu_back.png in Resources */,
 				18E3B1DA26E1C6120020924E /* screen_close@3x.png in Resources */,
 				1890A00E26EB54C000667E18 /* [爱心].png in Resources */,
@@ -8340,7 +8298,6 @@
 				18E3B12726E1B8DC0020924E /* WYClassVideoListViewController.m in Sources */,
 				188F01F024E78122006186FD /* RechargeViewController.m in Sources */,
 				18149A4C24AC1F710013A785 /* submitGoodsCell.m in Sources */,
-				18E3B12226E1B88A0020924E /* WYAllVideoViewController.m in Sources */,
 				183112A6249DD94F00FC3EB4 /* LiveSearchViewController.m in Sources */,
 				185E090226E0C6F8008A7B37 /* JPVideoPlayerResourceLoader.m in Sources */,
 				18B4BCDB24B30C6100449537 /* OrderDetailsViewController.m in Sources */,
@@ -8383,7 +8340,6 @@
 				18F673DF24A05D7800818F22 /* GoodsAdminViewController.m in Sources */,
 				18B4BD4824B6B95800449537 /* MyCollectedGoodsViewController.m in Sources */,
 				189006D526D894CA00F6E939 /* NSString+TUICommon.m in Sources */,
-				18E3B12D26E1BEE90020924E /* WYLiveCourseViewController.m in Sources */,
 				186E223224A97DE400060077 /* ReplyCell.m in Sources */,
 				183112AA249DE42F00FC3EB4 /* GoodsSearchViewController.m in Sources */,
 				183E63AD248DCF3A00B37D7F /* startLiveClassCell.m in Sources */,
@@ -8528,7 +8484,7 @@
 				18B9542926D61EF400E1CB49 /* UILabel+RKLabel.m in Sources */,
 				188F477926E33E650017BF6A /* detailmodel.m in Sources */,
 				1890073626D894CA00F6E939 /* TUIGroupMemberController.m in Sources */,
-				18F9545226DCDA8A00A296F8 /* WYSignInViewController.m in Sources */,
+				18F9545226DCDA8A00A296F8 /* SWSignInViewController.m in Sources */,
 				1835BCDD248E36E000F20EB2 /* liveGoodsCell.m in Sources */,
 				18149A6E24AD66730013A785 /* useCouponCell.m in Sources */,
 				18A226EF24887B5B00C556E9 /* WYWebViewController.m in Sources */,
@@ -8586,7 +8542,6 @@
 				18DBC89A24B024CB009D4022 /* promoterRankViewController.m in Sources */,
 				18B4BD5024B6C15200449537 /* collectGoodsModel.m in Sources */,
 				18E3B1FE26E1C7000020924E /* evaluateModel.m in Sources */,
-				18F9546F26DE045700A296F8 /* WYHomeLiveView.m in Sources */,
 				1835BCCE248E1DD900F20EB2 /* userPopupView.m in Sources */,
 				189006E226D894CA00F6E939 /* TUIImageViewController.m in Sources */,
 				185E08BF26E0B6E7008A7B37 /* WYVideoClassVC.m in Sources */,
@@ -8665,14 +8620,13 @@
 				18C8B14E24A32546006F6B94 /* HZPhotoBrowser.m in Sources */,
 				189006EA26D894CA00F6E939 /* TCommonSwitchCell.m in Sources */,
 				1890070F26D894CA00F6E939 /* TUIVoiceMessageCellData.m in Sources */,
-				188F469326E2094E0017BF6A /* WYGetCouponViewController.m in Sources */,
+				188F469326E2094E0017BF6A /* SWGetCouponViewController.m in Sources */,
 				18A226F824887B5B00C556E9 /* UIView+LBExtension.m in Sources */,
 				18BCC1A824A0884A003D650C /* adminAddViewController.m in Sources */,
 				1835BCD9248E36CB00F20EB2 /* liveGoodsView.m in Sources */,
 				188F477426E33E650017BF6A /* XLCircle.m in Sources */,
 				1890075B26D894CA00F6E939 /* TUIKitConfig.m in Sources */,
 				18A226F124887B5B00C556E9 /* MXBADelegate.m in Sources */,
-				18F9545926DDBADB00A296F8 /* WYLiveShopHomeViewController.m in Sources */,
 				185E090926E0C6F8008A7B37 /* JPVideoPlayerSupportUtils.m in Sources */,
 				189006E026D894CA00F6E939 /* TDateEditController.m in Sources */,
 				18F953FA26DC7AD400A296F8 /* WYAnliDetailsViewController.m in Sources */,
@@ -8736,11 +8690,9 @@
 				188F469B26E211380017BF6A /* WYMineAttStoreViewController.m in Sources */,
 				1890074426D894CA00F6E939 /* TUIMessageDataProviderService.m in Sources */,
 				188F477826E33E650017BF6A /* commCell.m in Sources */,
-				18D68A1D249711DE00C9DE7D /* MineViewController.m in Sources */,
 				1890077826D8E41700F6E939 /* WYFindViewController.m in Sources */,
 				18909F3A26EB2E3100667E18 /* YBLookVideoVC.m in Sources */,
 				F17684F42F76CCFB00E60EFD /* JJOrderReceivedListView.m in Sources */,
-				F17684F52F76CCFB00E60EFD /* JJOrderBaseListView.m in Sources */,
 				F17684F62F76CCFB00E60EFD /* JJOrderPendingPaymentListView.m in Sources */,
 				F17684F72F76CCFB00E60EFD /* JJOrderPendingShipmentListView.m in Sources */,
 				F17684F82F76CCFB00E60EFD /* JJOrderRefundListView.m in Sources */,

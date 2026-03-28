@@ -192,7 +192,7 @@
         _goodsCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0, 64+statusbarHeight+90, _window_width, _window_height-(64+statusbarHeight+90)) collectionViewLayout:_waterLayout];
 //        [_goodsCollectionView registerNib:[UINib nibWithNibName:@"classGoodsVVVCell" bundle:nil] forCellWithReuseIdentifier:@"classGoodsVVVCELL"];
         [_goodsCollectionView registerNib:[UINib nibWithNibName:@"classGoodsHHHCell" bundle:nil] forCellWithReuseIdentifier:@"classGoodsHHHCELL"];
-        [_goodsCollectionView registerNib:[UINib nibWithNibName:@"WYHomeShopColCell" bundle:nil] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
+        [_goodsCollectionView registerClass:[WYHomeShopColCell class] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
 
         _goodsCollectionView.delegate = self;
         _goodsCollectionView.dataSource = self;

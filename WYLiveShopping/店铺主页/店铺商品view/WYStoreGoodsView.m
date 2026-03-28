@@ -65,7 +65,7 @@
         _flow.flowLayoutStyle = 0;
 
         _goodsCollectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(0,0, self.width, self.height) collectionViewLayout:_flow];
-        [_goodsCollectionView registerNib:[UINib nibWithNibName:@"WYHomeShopColCell" bundle:nil] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
+        [_goodsCollectionView registerClass:[WYHomeShopColCell class] forCellWithReuseIdentifier:@"WYHomeShopColCELL"];
 
         _goodsCollectionView.delegate =self;
         _goodsCollectionView.dataSource = self;

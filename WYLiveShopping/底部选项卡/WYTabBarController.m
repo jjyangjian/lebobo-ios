@@ -6,7 +6,6 @@
 //  Copyright © 2016年 张永强. All rights reserved.
 //
 #import "WYTabBarController.h"
-#import "WYLiveShopHomeViewController.h"
 #import "JJMerchantHomeVC.h"
 #import "JJMineVC.h"
 #import "JJStartLiveVC.h"
@@ -102,7 +101,6 @@
 
 #pragma mark  在这里更换 左右tabbar的image
 - (void)setUpAllChildVc {
-//    WYLiveShopHomeViewController *home = [WYLiveShopHomeViewController new];
     JJMerchantHomeVC *home = [JJMerchantHomeVC new];
     JJHomeLiveListVC *liveList = [JJHomeLiveListVC new];
     JJStartLiveVC *startLive = [JJStartLiveVC new];
