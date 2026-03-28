@@ -6,11 +6,19 @@
 //  Copyright © 2026 IOS1. All rights reserved.
 //
 
-#import "JJOrderBaseListView.h"
+#import <UIKit/UIKit.h>
+
+@class orderModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JJOrderCompletedListView : JJOrderBaseListView
+@interface JJOrderCompletedListView : UIView
+
+@property (nonatomic, strong) NSString *statusType;
+@property (nonatomic, copy) void (^selectBlock)(orderModel *model);
+@property (nonatomic, copy) void (^refreshBlock)(void);
+
+- (void)requestFirstPageData;
 
 @end
 
