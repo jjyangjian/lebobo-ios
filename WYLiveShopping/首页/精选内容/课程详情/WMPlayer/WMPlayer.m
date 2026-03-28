@@ -15,7 +15,7 @@
 #import "WMPlayer.h"
 #import "Masonry.h"
 //#import "WYTVListViewController.h"
-#import "WYReatTypeView.h"
+#import "SWReatTypeView.h"
 
 
 
@@ -64,9 +64,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 //wmPlayer内部一个UIView，所有的控件统一管理在此view中
 @property (nonatomic,strong) UIView     *contentView;
 //亮度调节的view
-@property (nonatomic,strong) WMLightView * lightView;
+@property (nonatomic,strong) SWWMLightView * lightView;
 //这个用来显示滑动屏幕时的时间
-@property (nonatomic,strong) FastForwardView * FF_View;
+@property (nonatomic,strong) SWFastForwardView * FF_View;
 //显示播放时间的UILabel+加载失败的UILabel+播放视频的title
 @property (nonatomic,strong) UILabel   *leftTimeLabel,*rightTimeLabel,*titleLabel,*loadFailedLabel,*horseLabel;
 //控制全屏和播放暂停按钮
@@ -92,7 +92,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 //弹幕宽度
 @property (nonatomic,assign) CGFloat horseLabelWidth;
 //倍速选择
-@property (nonatomic,strong) WYReatTypeView *reatTypeView;
+@property (nonatomic,strong) SWReatTypeView *reatTypeView;
 
 @end
 
@@ -112,14 +112,14 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }
     return self;
 }
--(instancetype)initPlayerModel:(WMPlayerModel *)playerModel{
+-(instancetype)initPlayerModel:(SWWMPlayerModel *)playerModel{
     self = [super init];
     if (self) {
         self.playerModel = playerModel;
     }
     return self;
 }
-+(instancetype)playerWithModel:(WMPlayerModel *)playerModel{
++(instancetype)playerWithModel:(SWWMPlayerModel *)playerModel{
     WMPlayer *player = [[WMPlayer alloc] initPlayerModel:playerModel];
     return player;
 }
@@ -150,10 +150,10 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     self.backgroundColor = [UIColor blackColor];
 
     //创建fastForwardView，快进⏩和快退的view
-    self.FF_View = [[FastForwardView alloc] init];
+    self.FF_View = [[SWFastForwardView alloc] init];
     self.FF_View.hidden = YES;
     [self.contentView addSubview:self.FF_View];
-    self.lightView =[[WMLightView alloc] init];
+    self.lightView =[[SWWMLightView alloc] init];
     [self.contentView addSubview:self.lightView];
     //设置默认值
     self.enableVolumeGesture = YES;
@@ -304,18 +304,18 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     self.horseLabel = [UILabel new];
     self.horseLabel.textColor = [UIColor whiteColor];
-//    if ([[Config getLogin_Type] isEqual:@"0"]) {
-//        self.horseLabel.text = [Config getmobile];
+//    if ([[SWConfig getLogin_Type] isEqual:@"0"]) {
+//        self.horseLabel.text = [SWConfig getmobile];
 //    }else{
-        self.horseLabel.text = [Config getOwnNicename];
+        self.horseLabel.text = [SWConfig getOwnNicename];
 //    }
     self.horseLabel.font = SYS_Font(13);
-    _horseLabelWidth = [[WYToolClass sharedInstance] widthOfString:self.horseLabel.text andFont:SYS_Font(13) andHeight:15];
+    _horseLabelWidth = [[SWToolClass sharedInstance] widthOfString:self.horseLabel.text andFont:SYS_Font(13) andHeight:15];
     self.horseLabel.size = CGSizeMake(_horseLabelWidth+5, 15);
     self.horseLabel.hidden = YES;
     [self.contentView addSubview:self.horseLabel];
 
-    self.reatTypeView = [[[NSBundle mainBundle] loadNibNamed:@"WYReatTypeView" owner:nil options:nil] lastObject];
+    self.reatTypeView = [[[NSBundle mainBundle] loadNibNamed:@"SWReatTypeView" owner:nil options:nil] lastObject];
     _reatTypeView.buttonArray = [NSMutableArray array];
     [_reatTypeView.buttonArray addObject:_reatTypeView.twoButton];
     [_reatTypeView.buttonArray addObject:_reatTypeView.oneFiveButton];
@@ -349,7 +349,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [self.singleTap requireGestureRecognizerToFail:doubleTap];//如果双击成立，则取消单击手势（双击的时候不会走单击事件）
     [self.contentView addGestureRecognizer:doubleTap];
     
-//    if ([[common getVideo_lamp_stuas] isEqual:@"1"]) {
+//    if ([[SWCommon getVideo_lamp_stuas] isEqual:@"1"]) {
 //        danmuTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(showHorseLabel) userInfo:nil repeats:YES];
 //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //            [self showHorseLabel];
@@ -462,7 +462,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 - (void)doshowTVList:(UIButton *)sender{
 //    WYTVListViewController *vc = [[WYTVListViewController alloc]init];
 //    vc.playUrl = _playerModel.videoURL.absoluteString;
-//    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+//    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 -(void)setRate:(CGFloat)rate{
     _rate = rate;
@@ -778,7 +778,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }
 }
 //重写playerModel的setter方法，处理自己的逻辑
--(void)setPlayerModel:(WMPlayerModel *)playerModel{    
+-(void)setPlayerModel:(SWWMPlayerModel *)playerModel{    
     if (_playerModel==playerModel) {
         return;
     }
@@ -1190,7 +1190,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         }
 //        int32_t timeScale = self.player.currentItem.asset.duration.timescale;
         //currentItem.asset.duration.timescale计算的时候严重堵塞主线程，慎用
-        /* A timescale of 1 means you can only specify whole seconds to seek to. The timescale is the number of parts per second. Use 600 for video, as Apple recommends, since it is a product of the common video frame rates like 50, 60, 25 and 24 frames per second*/
+        /* A timescale of 1 means you can only specify whole seconds to seek to. The timescale is the number of parts per second. Use 600 for video, as Apple recommends, since it is a product of the SWCommon video frame rates like 50, 60, 25 and 24 frames per second*/
         __weak typeof(self) weakSelf = self;
 
         [self.player seekToTime:CMTimeMakeWithSeconds(seekTime, self.currentItem.currentTime.timescale) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero completionHandler:^(BOOL finished) {

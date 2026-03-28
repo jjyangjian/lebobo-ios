@@ -1,8 +1,8 @@
-#import "WYBaseViewController.h"
+#import "SWBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface JJStartLiveVC : WYBaseViewController
+@interface JJStartLiveVC : SWBaseViewController
 
 @end
 

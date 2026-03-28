@@ -160,7 +160,7 @@ extern "C" {
  * flag is that when the particular C compiler library routine is used, and
  * the library is linked with a different compiler, the library is missing.
  * This mostly happens when the library is built with gcc and then linked
- * using normal cc.  This would be a common occurrence because gcc normally
+ * using normal cc.  This would be a SWCommon occurrence because gcc normally
  * produces code that is 2 times faster than system compilers for the big
  * number stuff. For machines with only one compiler (or shared libraries),
  * this should be on.  Again this in only really a problem on machines using

@@ -67,7 +67,7 @@ typedef void(^JPVideoPlayerCalculateSizeCompletion)(NSUInteger fileCount, NSUInt
 #pragma mark - Singleton and initialization
 
 /**
- *  Cache Config object - storing all kind of settings.
+ *  Cache SWConfig object - storing all kind of settings.
  */
 @property (nonatomic, readonly) JPVideoPlayerCacheConfiguration *cacheConfiguration;
 

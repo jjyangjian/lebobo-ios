@@ -1,6 +1,6 @@
 #import "JJOrderRefundListView.h"
-#import "ReturnOrderCell.h"
-#import "orderModel.h"
+#import "SWReturnOrderCell.h"
+#import "SWOrderModel.h"
 #import "MJRefresh.h"
 #import "JJNoDataNormalView.h"
 
@@ -71,7 +71,7 @@
 - (void)requestData {
     NSString *url = [NSString stringWithFormat:@"order/list?type=-3&status=%@&page=%d", self.statusType, self.page];
     __weak typeof(self) weakSelf = self;
-    [WYToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
 
@@ -84,7 +84,7 @@
                 [strongSelf.tableView.mj_footer resetNoMoreData];
             }
             for (NSDictionary *dic in info) {
-                orderModel *model = [[orderModel alloc] initWithDic:dic];
+                SWOrderModel *model = [[SWOrderModel alloc] initWithDic:dic];
                 [strongSelf.dataArray addObject:model];
             }
             if ([info count] < 20) {
@@ -115,17 +115,17 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    orderModel *oModel = self.dataArray[section];
+    SWOrderModel *oModel = self.dataArray[section];
     return oModel.goodsArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ReturnOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ReturnOrderCELL"];
+    SWReturnOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ReturnOrderCELL"];
     if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"ReturnOrderCell" owner:nil options:nil] lastObject];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"SWReturnOrderCell" owner:nil options:nil] lastObject];
     }
 
-    orderModel *oModel = self.dataArray[indexPath.section];
+    SWOrderModel *oModel = self.dataArray[indexPath.section];
     cell.model = oModel.goodsArray[indexPath.row];
 
     return cell;
@@ -144,7 +144,7 @@
     view.backgroundColor = [UIColor whiteColor];
     view.clipsToBounds = NO;
 
-    orderModel *model = self.dataArray[section];
+    SWOrderModel *model = self.dataArray[section];
 
     {
         UILabel *label = [[UILabel alloc] init];
@@ -196,7 +196,7 @@
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor whiteColor];
 
-    orderModel *model = self.dataArray[section];
+    SWOrderModel *model = self.dataArray[section];
 
     {
         UILabel *totalLabel = [[UILabel alloc] init];

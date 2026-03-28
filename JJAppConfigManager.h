@@ -3,15 +3,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class AppDelegate;
+@class SWAppDelegate;
 
 @interface JJAppConfigManager : NSObject
 
 + (void)configIQKeyboardManager;
 + (void)configBugly;
-+ (void)configNotificationsWithApplication:(UIApplication *)application appDelegate:(AppDelegate *)appDelegate;
++ (void)configNotificationsWithApplication:(UIApplication *)application appDelegate:(SWAppDelegate *)appDelegate;
 + (void)configShareSDK;
-+ (void)configVRtxLiveParamWithAppDelegate:(AppDelegate *)appDelegate;
++ (void)configVRtxLiveParamWithAppDelegate:(SWAppDelegate *)appDelegate;
 + (void)configHomeConfigWithCompletion:(void (^ __nullable)(void))completion;
 + (void)configTXIM;
 

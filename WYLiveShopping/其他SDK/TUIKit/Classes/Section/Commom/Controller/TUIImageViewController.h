@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "TUIImageMessageCell.h"
 
-@interface TUIImageViewController : WYBaseViewController
+@interface TUIImageViewController : SWBaseViewController
 @property (nonatomic, strong) TUIImageMessageCellData *data;
 @end

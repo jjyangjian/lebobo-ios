@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  4、未读消息数（若有未读消息的话）
  *  5、会话时间（最新消息的收到/发出时间）
  */
-@interface TUIConversationListController : WYBaseViewController
+@interface TUIConversationListController : SWBaseViewController
 
 /**
  *  消息列表。

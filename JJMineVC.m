@@ -1,6 +1,6 @@
 #import "JJMineVC.h"
-#import "MineSettingViewController.h"
-#import "EditMsgViewController.h"
+#import "SWMineSettingVC.h"
+#import "SWEditMsgVC.h"
 
 static NSString * const JJMineProfileCellId = @"JJMineProfileCell";
 static NSString * const JJMineMenuCellId = @"JJMineMenuCell";
@@ -72,23 +72,23 @@ typedef NS_ENUM(NSInteger, JJMineMenuType) {
     self.avatarButton.layer.masksToBounds = YES;
     self.avatarButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.avatarButton addTarget:self action:@selector(openEditProfile) forControlEvents:UIControlEventTouchUpInside];
-    [self.avatarButton sd_setImageWithURL:[NSURL URLWithString:[Config getavatar]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"mine_默认头像"]];
+    [self.avatarButton sd_setImageWithURL:[NSURL URLWithString:[SWConfig getavatar]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"mine_默认头像"]];
 
     self.nicknameLabel = [[UILabel alloc] init];
     self.nicknameLabel.font = [UIFont boldSystemFontOfSize:18];
     self.nicknameLabel.textColor = color32;
-    self.nicknameLabel.text = [Config getOwnNicename];
+    self.nicknameLabel.text = [SWConfig getOwnNicename];
 
     self.userIdLabel = [[UILabel alloc] init];
     self.userIdLabel.font = SYS_Font(13);
     self.userIdLabel.textColor = color64;
-    self.userIdLabel.text = [self displayUserIdText:[Config getOwnID]];
+    self.userIdLabel.text = [self displayUserIdText:[SWConfig getOwnID]];
 
     self.serviceURL = @"";
 }
 
 - (void)refreshUserInfoIfNeeded {
-    if (![Config getOwnID] || [[Config getOwnID] intValue] == 0) {
+    if (![SWConfig getOwnID] || [[SWConfig getOwnID] intValue] == 0) {
         [self.avatarButton setImage:[UIImage imageNamed:@"mine_默认头像"] forState:UIControlStateNormal];
         self.nicknameLabel.text = @"";
         self.userIdLabel.text = @"ID:";
@@ -201,22 +201,22 @@ typedef NS_ENUM(NSInteger, JJMineMenuType) {
     if (![self ensureLogin]) {
         return;
     }
-    EditMsgViewController *vc = [[EditMsgViewController alloc] init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    SWEditMsgVC *vc = [[SWEditMsgVC alloc] init];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)openAboutPage {
-    WYWebViewController *web = [[WYWebViewController alloc] init];
+    SWWebViewController *web = [[SWWebViewController alloc] init];
     web.urls = [NSString stringWithFormat:@"%@//appapi/page/detail?id=1", h5url];
-    [[MXBADelegate sharedAppDelegate] pushViewController:web animated:YES];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:web animated:YES];
 }
 
 - (void)openSettingPage {
     if (![self ensureLogin]) {
         return;
     }
-    MineSettingViewController *vc = [[MineSettingViewController alloc] init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    SWMineSettingVC *vc = [[SWMineSettingVC alloc] init];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)openServicePage {
@@ -224,19 +224,19 @@ typedef NS_ENUM(NSInteger, JJMineMenuType) {
         return;
     }
     if (self.serviceURL.length > 6) {
-        WYWebViewController *web = [[WYWebViewController alloc] init];
+        SWWebViewController *web = [[SWWebViewController alloc] init];
         web.urls = self.serviceURL;
-        [[MXBADelegate sharedAppDelegate] pushViewController:web animated:YES];
+        [[SWMXBADelegate sharedAppDelegate] pushViewController:web animated:YES];
     } else {
         [MBProgressHUD showError:@"客服暂未上线"];
     }
 }
 
 - (void)requestUserInfo {
-    [WYToolClass getQCloudWithUrl:@"user" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:@"user" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            LiveUser *user = [[LiveUser alloc] initWithDic:info];
-            [Config saveProfile:user];
+            SWLiveUser *user = [[SWLiveUser alloc] initWithDic:info];
+            [SWConfig saveProfile:user];
             [self.avatarButton sd_setImageWithURL:[NSURL URLWithString:minstr([info valueForKey:@"avatar"])] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"mine_默认头像"]];
             self.nicknameLabel.text = minstr([info valueForKey:@"nickname"]);
             self.userIdLabel.text = [self displayUserIdText:minstr([info valueForKey:@"uid"])];
@@ -256,8 +256,8 @@ typedef NS_ENUM(NSInteger, JJMineMenuType) {
 }
 
 - (BOOL)ensureLogin {
-    if (![Config getOwnID] || [[Config getOwnID] intValue] == 0) {
-        [[WYToolClass sharedInstance] showLoginView];
+    if (![SWConfig getOwnID] || [[SWConfig getOwnID] intValue] == 0) {
+        [[SWToolClass sharedInstance] showLoginView];
         return NO;
     }
     return YES;

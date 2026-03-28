@@ -14,9 +14,9 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "WMPlayerModel.h"
-#import "FastForwardView.h"
-#import "WMLightView.h"
+#import "SWWMPlayerModel.h"
+#import "SWFastForwardView.h"
+#import "SWWMLightView.h"
 //****************************宏*********************************
 #define WMPlayerSrcName(file) [@"WMPlayer.bundle" stringByAppendingPathComponent:file]
 #define WMPlayerFrameworkSrcName(file) [@"Frameworks/WMPlayer.framework/WMPlayer.bundle" stringByAppendingPathComponent:file]
@@ -90,7 +90,7 @@ typedef NS_ENUM(NSUInteger,WMControlType) {
 /**
  播放器对应的model
  */
-@property (nonatomic,strong) WMPlayerModel   *playerModel;
+@property (nonatomic,strong) SWWMPlayerModel   *playerModel;
 /**
  返回按钮的样式
  */
@@ -152,7 +152,7 @@ typedef NS_ENUM(NSUInteger,WMControlType) {
  @param playerModel 播放model
  @return 播放器实例
  */
--(instancetype)initPlayerModel:(WMPlayerModel *)playerModel;
+-(instancetype)initPlayerModel:(SWWMPlayerModel *)playerModel;
 
 /**
  自定义类方法+初始化方式（+方法）
@@ -160,7 +160,7 @@ typedef NS_ENUM(NSUInteger,WMControlType) {
  @param playerModel 播放model
  @return 播放器实例
  */
-+(instancetype)playerWithModel:(WMPlayerModel *)playerModel;
++(instancetype)playerWithModel:(SWWMPlayerModel *)playerModel;
 
 /**
  播放

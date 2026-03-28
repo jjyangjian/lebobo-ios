@@ -699,7 +699,7 @@
     V2TIMMessage *msg = nil;
     if([data isKindOfClass:[TUITextMessageCellData class]]){
         TUITextMessageCellData *text = (TUITextMessageCellData *)data;
-        if (!text.identifier || [text.identifier isEqual:[Config getOwnID]]) {
+        if (!text.identifier || [text.identifier isEqual:[SWConfig getOwnID]]) {
             text.textColor = [UIColor whiteColor];
         }else{
             text.textColor = color32;

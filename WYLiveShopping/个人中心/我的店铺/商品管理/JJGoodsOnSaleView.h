@@ -4,13 +4,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "liveGoodsModel.h"
+#import "SWLiveGoodsModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^JJGoodsViewRefreshBlock)(void);
-typedef void(^JJGoodsViewSelectBlock)(liveGoodsModel *model);
-typedef void(^JJGoodsViewActionBlock)(liveGoodsModel *model, NSString *actionType);
+typedef void(^JJGoodsViewSelectBlock)(SWLiveGoodsModel *model);
+typedef void(^JJGoodsViewActionBlock)(SWLiveGoodsModel *model, NSString *actionType);
 
 @interface JJGoodsOnSaleView : UIView
 

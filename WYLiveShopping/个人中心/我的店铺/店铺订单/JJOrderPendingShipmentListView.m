@@ -1,6 +1,6 @@
 #import "JJOrderPendingShipmentListView.h"
-#import "OrderCell.h"
-#import "orderModel.h"
+#import "SWOrderCell.h"
+#import "SWOrderModel.h"
 #import "MJRefresh.h"
 #import "JJNoDataNormalView.h"
 
@@ -71,7 +71,7 @@
 - (void)requestData {
     NSString *url = [NSString stringWithFormat:@"order/list?type=1&status=%@&page=%d", self.statusType, self.page];
     __weak typeof(self) weakSelf = self;
-    [WYToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
 
@@ -84,7 +84,7 @@
                 [strongSelf.tableView.mj_footer resetNoMoreData];
             }
             for (NSDictionary *dic in info) {
-                orderModel *model = [[orderModel alloc] initWithDic:dic];
+                SWOrderModel *model = [[SWOrderModel alloc] initWithDic:dic];
                 [strongSelf.dataArray addObject:model];
             }
             if ([info count] < 20) {
@@ -115,9 +115,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    OrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCELL"];
+    SWOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"OrderCELL"];
     if (!cell) {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"OrderCell" owner:nil options:nil] lastObject];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"SWOrderCell" owner:nil options:nil] lastObject];
         cell.store_nameL.hidden = YES;
         cell.storeImgView.hidden = YES;
         cell.leftBtn.hidden = YES;
@@ -125,7 +125,7 @@
         cell.rightBtn.userInteractionEnabled = NO;
     }
 
-    orderModel *model = self.dataArray[indexPath.row];
+    SWOrderModel *model = self.dataArray[indexPath.row];
     cell.model = model;
     cell.timeL.text = model.add_time;
     cell.allPriceL.text = [NSString stringWithFormat:@"¥ %@", model.total_price];
@@ -138,7 +138,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    orderModel *model = self.dataArray[indexPath.row];
+    SWOrderModel *model = self.dataArray[indexPath.row];
     return model.rowH;
 }
 

@@ -1,7 +1,7 @@
 #import "JJMerchantHomeVC.h"
-#import "StoreOrderListViewController.h"
-#import "mineProfitViewController.h"
-#import "GoodsAdminViewController.h"
+#import "SWStoreOrderListVC.h"
+#import "SWMineProfitVC.h"
+#import "SWGoodsAdminVC.h"
 #import "JJHomeShopOrderModuleCell.h"
 #import "JJHomeShopRevenueModuleCell.h"
 #import "JJHomeGoodsManagerModuleCell.h"
@@ -163,20 +163,20 @@ typedef NS_ENUM(NSInteger, JJMerchantHomeModuleType) {
 }
 
 - (void)openStoreOrderPage {
-    StoreOrderListViewController *vc = [[StoreOrderListViewController alloc] init];
+    SWStoreOrderListVC *vc = [[SWStoreOrderListVC alloc] init];
     vc.statusType = @"2";
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)openStoreRevenuePage {
-    mineProfitViewController *vc = [[mineProfitViewController alloc] init];
+    SWMineProfitVC *vc = [[SWMineProfitVC alloc] init];
     vc.ptofitType = 1;
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)openGoodsManagerPage {
-    GoodsAdminViewController *vc = [[GoodsAdminViewController alloc] init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    SWGoodsAdminVC *vc = [[SWGoodsAdminVC alloc] init];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)copyMerchantURL {
@@ -211,7 +211,7 @@ typedef NS_ENUM(NSInteger, JJMerchantHomeModuleType) {
 }
 
 - (void)requestShopOrderData:(dispatch_block_t)completion {
-    [WYToolClass getQCloudWithUrl:@"order/data?status=2" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:@"order/data?status=2" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             self.unshippedCount = minstr([info valueForKey:@"unshipped_count"]);
             self.receivedCount = minstr([info valueForKey:@"received_count"]);
@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, JJMerchantHomeModuleType) {
 }
 
 - (void)requestShopRevenue:(dispatch_block_t)completion {
-    [WYToolClass getQCloudWithUrl:@"shopcash" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:@"shopcash" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             self.todayRevenue = minstr([info valueForKey:@"shop_t"]);
             self.totalRevenue = minstr([info valueForKey:@"shop_total"]);
@@ -246,7 +246,7 @@ typedef NS_ENUM(NSInteger, JJMerchantHomeModuleType) {
 }
 
 - (NSString *)currentShopURL {
-    NSString *shopURL = [common shop_url];
+    NSString *shopURL = [SWCommon shop_url];
     if (!shopURL || [shopURL isEqualToString:@"(null)"]) {
         return @"";
     }

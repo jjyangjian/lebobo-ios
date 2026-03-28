@@ -163,7 +163,7 @@ static NSString *kConversationCell_ReuseId = @"TConversationCell";
         });
     };
 //    chat.title = conversationCell.convData.title;
-    [[MXBADelegate sharedAppDelegate] pushViewController:chat animated:YES];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:chat animated:YES];
 
 //    for (id<TUIConversationListControllerListener> delegate in [TUIKitListenerManager sharedInstance].convListeners) {
 //        if (delegate && [delegate respondsToSelector:@selector(conversationListController:didSelectConversation:)]) {

@@ -32,7 +32,7 @@ target 'WYLiveShopping' do
   pod 'Qiniu','8.3.0'
   #AT 功能
   pod 'HPGrowingTextView','1.1'
-  pod 'MJExtension','3.3.0'
+  # pod 'MJExtension','3.3.0' # AI检测没用到此第三方
   pod 'EBBannerView','1.1.2'
 #  pod 'TXLiteAVSDK_Smart','~> 6.7.7754'
 #  pod 'TXLiteAVSDK_Smart','9.1.10564' #'9.1.10566'
@@ -50,7 +50,7 @@ pod 'TXLiteAVSDK_Professional','11.9.15963'
   pod 'ZFPlayer/ijkplayer'
   pod 'ZFPlayer/AVPlayer'
 
-  pod 'SSZipArchive','2.2.3'
+  # pod 'SSZipArchive','2.2.3' # AI检测没用到此第三方
   pod 'CWStatusBarNotification','2.3.5'
   #SVGAPlayer
   pod 'SVGAPlayer','2.5.7'

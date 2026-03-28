@@ -11,7 +11,7 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "TUISearchResultCell.h"
 #import "TUISearchResultCellModel.h"
-#import "CreatGroupAvatar.h"
+#import "SWCreatGroupAvatar.h"
 #import "UIColor+TUIDarkMode.h"
 
 @interface TUISearchResultCell ()
@@ -114,7 +114,7 @@
         // 群组, 则将群组默认头像修改成上次使用的头像
         NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", cellModel.groupID];
         NSInteger member = [NSUserDefaults.standardUserDefaults integerForKey:key];
-        UIImage *avatar = [CreatGroupAvatar getCacheAvatarForGroup:cellModel.groupID number:(UInt32)member];
+        UIImage *avatar = [SWCreatGroupAvatar getCacheAvatarForGroup:cellModel.groupID number:(UInt32)member];
         if (avatar) {
             cellModel.avatarImage = avatar;
         }
@@ -126,7 +126,7 @@
         if (cellModel.groupID.length > 0) { //群组
             // fix: 由于getCacheGroupAvatar需要请求网络，断网时，由于并没有设置headImageView，此时当前会话发消息，会话会上移，复用了第一条会话的头像，导致头像错乱
             self.avatarView.image = cellModel.avatarImage;
-            [CreatGroupAvatar getCacheGroupAvatar:cellModel.groupID callback:^(UIImage *avatar) {
+            [SWCreatGroupAvatar getCacheGroupAvatar:cellModel.groupID callback:^(UIImage *avatar) {
                 @strongify(self)
                 if (avatar != nil) { //已缓存群组头像
                     self.avatarView.image = avatar;
@@ -136,7 +136,7 @@
                                           placeholderImage:cellModel.avatarImage];
                     
                     // 异步实时获取头像
-                    [CreatGroupAvatar fetchGroupAvatars:cellModel.groupID placeholder:cellModel.avatarImage callback:^(BOOL success, UIImage *image, NSString *groupID) {
+                    [SWCreatGroupAvatar fetchGroupAvatars:cellModel.groupID placeholder:cellModel.avatarImage callback:^(BOOL success, UIImage *image, NSString *groupID) {
                         @strongify(self)
                         if ([groupID isEqualToString:self.cellModel.groupID]) {
                             // 需要判断下，防止复用问题

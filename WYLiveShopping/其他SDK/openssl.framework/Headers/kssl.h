@@ -136,7 +136,7 @@ typedef struct kssl_err_st {
 
 /*-     Context for passing
  *              (1) Kerberos session key to SSL, and
- *              (2)     Config data between application and SSL lib
+ *              (2)     SWConfig data between application and SSL lib
  */
 typedef struct kssl_ctx_st {
     /*      used by:    disposition:            */

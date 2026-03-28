@@ -1,5 +1,5 @@
 #import "JJAppConfigManager.h"
-#import "AppDelegate.h"
+#import "SWAppDelegate.h"
 #import <Bugly/Bugly.h>
 #import <TXLiteAVSDK_Professional/TXLiveBase.h>
 #import <TXLiteAVSDK_Professional/V2TXLivePremier.h>
@@ -16,7 +16,7 @@
     [Bugly startWithAppId:BuglyId];
 }
 
-+ (void)configNotificationsWithApplication:(UIApplication *)application appDelegate:(AppDelegate *)appDelegate {
++ (void)configNotificationsWithApplication:(UIApplication *)application appDelegate:(SWAppDelegate *)appDelegate {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
         [application registerForRemoteNotifications];
@@ -34,7 +34,7 @@
     }];
 }
 
-+ (void)configVRtxLiveParamWithAppDelegate:(AppDelegate *)appDelegate {
++ (void)configVRtxLiveParamWithAppDelegate:(SWAppDelegate *)appDelegate {
     [TXLiveBase sharedInstance].delegate = appDelegate;
     [V2TXLivePremier setLicence:LicenceURL key:LicenceKey];
     [V2TXLivePremier setObserver:(id)appDelegate];
@@ -42,10 +42,10 @@
 }
 
 + (void)configHomeConfigWithCompletion:(void (^ __nullable)(void))completion {
-    [WYToolClass getQCloudWithUrl:@"config" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:@"config" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            liveCommon *commons = [[liveCommon alloc] initWithDic:info];
-            [common saveProfile:commons];
+            SWLiveCommon *commons = [[SWLiveCommon alloc] initWithDic:info];
+            [SWCommon saveProfile:commons];
             if (completion) {
                 completion();
             }
@@ -55,10 +55,10 @@
 }
 
 + (void)configTXIM {
-    [[TUIKit sharedInstance] setupWithAppId:[[common tx_sdkappid] integerValue]];
+    [[TUIKit sharedInstance] setupWithAppId:[[SWCommon tx_sdkappid] integerValue]];
     TUIKitConfig *config = TUIKitConfig.defaultConfig;
     config.avatarType = 1;
-    config.defaultAvatarImage = [WYToolClass getAppIcon];
+    config.defaultAvatarImage = [SWToolClass getAppIcon];
 }
 
 @end

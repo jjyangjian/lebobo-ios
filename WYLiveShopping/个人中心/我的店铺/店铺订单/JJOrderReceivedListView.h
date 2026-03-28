@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "orderModel.h"
+#import "SWOrderModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) int page;
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) NSString *statusType;
-@property (nonatomic, copy) void (^selectBlock)(orderModel *model);
+@property (nonatomic, copy) void (^selectBlock)(SWOrderModel *model);
 @property (nonatomic, copy) void (^refreshBlock)(void);
 - (void)requestFirstPageData;
 

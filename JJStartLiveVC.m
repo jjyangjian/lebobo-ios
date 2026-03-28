@@ -1,6 +1,6 @@
 #import "JJStartLiveVC.h"
-#import "LivebroadViewController.h"
-#import "ApplyShopViewController.h"
+#import "SWLivebroadViewController.h"
+#import "SWApplyShopVC.h"
 
 @interface JJStartLiveVC ()
 
@@ -45,7 +45,7 @@
 }
 
 - (void)updateButtonTitle {
-    NSString *buttonTitle = [[Config getIsShop] isEqualToString:@"1"] ? @"开始直播" : @"开通店铺";
+    NSString *buttonTitle = [[SWConfig getIsShop] isEqualToString:@"1"] ? @"开始直播" : @"开通店铺";
     [self.startLiveButton setTitle:buttonTitle forState:UIControlStateNormal];
 }
 
@@ -54,10 +54,10 @@
         return;
     }
 
-    if ([[Config getIsShop] isEqualToString:@"1"]) {
-        [[WYToolClass sharedInstance] removeSusPlayer];
-        LivebroadViewController *vc = [[LivebroadViewController alloc] init];
-        [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    if ([[SWConfig getIsShop] isEqualToString:@"1"]) {
+        [[SWToolClass sharedInstance] removeSusPlayer];
+        SWLivebroadViewController *vc = [[SWLivebroadViewController alloc] init];
+        [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
         return;
     }
 
@@ -68,8 +68,8 @@
     [alertContro addAction:cancleAction];
 
     UIAlertAction *sureAction = [UIAlertAction actionWithTitle:@"前往认证" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        ApplyShopViewController *vc = [[ApplyShopViewController alloc] init];
-        [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+        SWApplyShopVC *vc = [[SWApplyShopVC alloc] init];
+        [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
     }];
     [sureAction setValue:JJAPPTHEMECOLOR forKey:@"_titleTextColor"];
     [alertContro addAction:sureAction];
@@ -77,8 +77,8 @@
 }
 
 - (BOOL)ensureLogin {
-    if (![Config getOwnID] || [[Config getOwnID] intValue] == 0) {
-        [[WYToolClass sharedInstance] showLoginView];
+    if (![SWConfig getOwnID] || [[SWConfig getOwnID] intValue] == 0) {
+        [[SWToolClass sharedInstance] showLoginView];
         return NO;
     }
     return YES;

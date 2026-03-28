@@ -17,7 +17,7 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
-// 默认的屏幕方向（当前ViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
+// 默认的屏幕方向（当前SWViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return UIInterfaceOrientationPortrait;
 }
@@ -75,7 +75,7 @@
         return [vc supportedInterfaceOrientations];
     }
 }
-// 默认的屏幕方向（当前ViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
+// 默认的屏幕方向（当前SWViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     UIViewController *vc = self.viewControllers[self.selectedIndex];
     if ([vc isKindOfClass:UINavigationController.class]) {
@@ -96,7 +96,7 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return [self.topViewController supportedInterfaceOrientations];
 }
-// 默认的屏幕方向（当前ViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
+// 默认的屏幕方向（当前SWViewController必须是通过模态出来的UIViewController（模态带导航的无效）方式展现出来的，才会调用这个方法）
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return [self.topViewController preferredInterfaceOrientationForPresentation];
 }

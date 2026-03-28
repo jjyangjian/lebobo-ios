@@ -14,35 +14,35 @@
 #import "MBProgressHUD+MJ.h"
 #import "AFNetworking.h"
 #import "Masonry.h"
-#import "WYToolClass.h"
+#import "SWToolClass.h"
 #import <MJRefresh/MJRefresh.h>
-#import "WYBaseViewController.h"
+#import "SWBaseViewController.h"
 #import <IQKeyboardManager/IQKeyboardManager.h>
 #import "UIView+ITTAdditions.h"
 #import "UIView+LBExtension.h"
 #import "UIView+Additions.h"
 #import "UIView+WPFExtension.h"
 #import <ShareSDK/ShareSDK.h>
-#import "Config.h"
-#import "common.h"
-#import "WYWebViewController.h"
-#import "MXBADelegate.h"
-#import "cityDefault.h"
+#import "SWConfig.h"
+#import "SWCommon.h"
+#import "SWWebViewController.h"
+#import "SWMXBADelegate.h"
+#import "SWCityDefault.h"
 #import "TZImagePickerController.h"
 #import "SDWebImageManager.h"
 #import "UIImageView+WebCache.h"
 #import "UIButton+WebCache.h"
-#import "WYAlertView.h"
+#import "SWAlertView.h"
 #import <WebKit/WebKit.h>
 #import "THeader.h"
 #import <ImSDK_Plus/ImSDK_Plus.h>
 #import "TUIKit.h"
-#import "LinkmicManager.h"
+#import "SWLinkmicManager.h"
 #endif
 
-#define YZMsg(key) [[RookieTools shareInstance] getStringForKey:key withTable:@"InfoPlist"]
+#define YZMsg(key) [[SWRookieTools shareInstance] getStringForKey:key withTable:@"InfoPlist"]
 #define CurrentLanguage @"will_show_language"
-#define getImagename(a) [NSString stringWithFormat:@"%@_%@",a,[Config canshu]]
+#define getImagename(a) [NSString stringWithFormat:@"%@_%@",a,[SWConfig canshu]]
 #define lagType [[NSUserDefaults standardUserDefaults] objectForKey:CurrentLanguage]
 
 #define ZH_CN @"zh-Hans"
@@ -86,7 +86,7 @@
 //#define LicenceURL @"https://license.vod2.myqcloud.com/license/v2/1300846245_1/v_cube.license"
 //#define LicenceKey @"512e9149eccf4e7fbf2e9d21531ed2c8"
 
-#define isMHSDK [common MHSDKUseState]
+#define isMHSDK [SWCommon MHSDKUseState]
 
 
 //适配iphoneX

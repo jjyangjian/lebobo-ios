@@ -7,11 +7,11 @@
 //
 
 #import "DataSigner.h"
-#import "RSADataSigner.h"
-#import "MD5DataSigner.h"
+#import "SWRSADataSigner.h"
+#import "SWMD5DataSigner.h"
 
 id<DataSigner> CreateRSADataSigner(NSString *privateKey) {
 	
-	return [[RSADataSigner alloc] initWithPrivateKey:privateKey];
+	return [[SWRSADataSigner alloc] initWithPrivateKey:privateKey];
 	
 }

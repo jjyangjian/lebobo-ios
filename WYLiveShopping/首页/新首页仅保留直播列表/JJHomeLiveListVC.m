@@ -9,10 +9,10 @@
 #import "JJHomeLiveListVC.h"
 #import "JJHomeLiveListCell.h"
 #import "JJHomeLiveListHeader.h"
-#import "ScanCodeViewController.h"
-#import "WYAllLiveViewController.h"
-#import "HomeLiveModel.h"
-#import "LivePlayerViewController.h"
+#import "SWScanCodeVC.h"
+#import "SWAllLiveVC.h"
+#import "SWHomeLiveModel.h"
+#import "SWLivePlayerViewController.h"
 
 @interface JJHomeLiveListVC () <UITableViewDelegate, UITableViewDataSource>
 
@@ -65,7 +65,7 @@
 
     {
         UIButton *iconBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [iconBtn setImage:[WYToolClass getAppIcon] forState:UIControlStateNormal];
+        [iconBtn setImage:[SWToolClass getAppIcon] forState:UIControlStateNormal];
         [iconBtn setCornerRadius:15];
         iconBtn.frame = CGRectMake(15, statusbarHeight + 27, 30, 30);
         [navi addSubview:iconBtn];
@@ -80,7 +80,7 @@
         scanBtn.titleLabel.font = SYS_Font(9);
         [scanBtn addTarget:self action:@selector(doScan) forControlEvents:UIControlEventTouchUpInside];
         [navi addSubview:scanBtn];
-        scanBtn = [WYToolClass setUpImgDownText:scanBtn];
+        scanBtn = [SWToolClass setUpImgDownText:scanBtn];
         scanBtn.size = CGSizeMake(35, 35);
         self.scanBtn = scanBtn;
     }
@@ -88,7 +88,7 @@
 
 - (void)requestData {
     [MBProgressHUD showMessage:@""];
-    [WYToolClass getQCloudWithUrl:@"homeindex" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:@"homeindex" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [self.tableview.mj_header endRefreshing];
         [MBProgressHUD hideHUD];
         if (code == 200) {
@@ -106,22 +106,22 @@
 }
 
 - (void)doScan {
-    ScanCodeViewController *vc = [[ScanCodeViewController alloc] init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    SWScanCodeVC *vc = [[SWScanCodeVC alloc] init];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
 - (void)allLivesVC {
-    WYAllLiveViewController *vc = [[WYAllLiveViewController alloc] init];
-    [[MXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+    SWAllLiveVC *vc = [[SWAllLiveVC alloc] init];
+    [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 
-- (void)checkLive:(HomeLiveModel *)model {
-    [WYToolClass postNetworkWithUrl:@"live/check" andParameter:@{@"stream" : model.stream} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+- (void)checkLive:(SWHomeLiveModel *)model {
+    [SWToolClass postNetworkWithUrl:@"live/check" andParameter:@{@"stream" : model.stream} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD hideHUD];
         if (code == 200) {
-            LivePlayerViewController *player = [[LivePlayerViewController alloc] init];
+            SWLivePlayerViewController *player = [[SWLivePlayerViewController alloc] init];
             player.roomDic = [model.originDic mutableCopy];
-            [[MXBADelegate sharedAppDelegate] pushViewController:player animated:YES];
+            [[SWMXBADelegate sharedAppDelegate] pushViewController:player animated:YES];
         } else {
             [MBProgressHUD showError:msg];
         }
@@ -149,7 +149,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    HomeLiveModel *model = [[HomeLiveModel alloc] initWithDic:self.liveItems[indexPath.row]];
+    SWHomeLiveModel *model = [[SWHomeLiveModel alloc] initWithDic:self.liveItems[indexPath.row]];
     [self checkLive:model];
 }
 
