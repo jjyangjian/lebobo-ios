@@ -9,7 +9,7 @@
 #import "SWMineBalanceVC.h"
 #import "SWRecommendView.h"
 #import "SWButton.h"
-#import "SWHomeViewController.h"
+#import "SWHoverPageScrollView.h"
 #import "SWBilldetailsVC.h"
 
 @interface SWMineBalanceVC ()

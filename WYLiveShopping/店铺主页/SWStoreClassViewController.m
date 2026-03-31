@@ -7,9 +7,25 @@
 //
 
 #import "SWStoreClassViewController.h"
-#import "SWFootprintVC.h"
 #import "SWStoreClassColtCell.h"
 #import "SWStoreSearchViewController.h"
+
+@interface SWStoreClassHeaderView : UICollectionReusableView
+@property (nonatomic, strong) UILabel *nameL;
+@end
+
+@implementation SWStoreClassHeaderView
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = RGB_COLOR(@"#FAFAFA", 1);
+        _nameL = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, _window_width - 60, 24)];
+        _nameL.font = [UIFont boldSystemFontOfSize:14];
+        _nameL.textColor = RGB_COLOR(@"#333333", 1);
+        [self addSubview:_nameL];
+    }
+    return self;
+}
+@end
 
 @interface SWStoreClassViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSMutableArray *dataArray;
@@ -84,7 +100,7 @@
 
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, _window_width - 30, _window_height - (75 + statusbarHeight + ShowDiff + 48)) collectionViewLayout:flow];
     [self.collectionView registerNib:[UINib nibWithNibName:@"SWStoreClassColtCell" bundle:nil] forCellWithReuseIdentifier:@"WYStoreClassColtCELL"];
-    [self.collectionView registerClass:[SWFootprintHeader class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"StoreClassHeaderView"];
+    [self.collectionView registerClass:[SWStoreClassHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"StoreClassHeaderView"];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = RGB_COLOR(@"#FAFAFA", 1);
@@ -133,7 +149,7 @@
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     if ([kind isEqualToString:UICollectionElementKindSectionHeader]) {
-        SWFootprintHeader *header = (SWFootprintHeader *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"StoreClassHeaderView" forIndexPath:indexPath];
+        SWStoreClassHeaderView *header = (SWStoreClassHeaderView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"StoreClassHeaderView" forIndexPath:indexPath];
         NSDictionary *dictionary = self.dataArray[indexPath.section];
         header.nameL.text = minstr([dictionary valueForKey:@"cate_name"]);
         return header;

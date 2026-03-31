@@ -8,7 +8,6 @@
 
 #import "SWLiveForGoodsMoreViewController.h"
 #import "SWAnliCell.h"
-#import "SWAnliDetailsVC.h"
 #import "SWLivePlayerViewController.h"
 
 @interface SWLiveForGoodsMoreViewController ()<UITableViewDelegate,UITableViewDataSource>{

@@ -39,7 +39,6 @@
 
 /// 页面组件与业务模块
 #import "SWStartLiveClassVC.h"
-#import "SWUtils.h"
 #import "SWChatMsgCell.h"
 #import "SWUserPopupView.h"
 #import "SWLiveGoodsView.h"

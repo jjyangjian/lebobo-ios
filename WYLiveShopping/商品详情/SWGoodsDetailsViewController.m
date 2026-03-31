@@ -7,7 +7,7 @@
 //
 
 #import "SWGoodsDetailsViewController.h"
-#import "SWHomeViewController.h"
+#import "SWHoverPageScrollView.h"
 #import "SWHZPhotoBrowser.h"
 #import "SWDetailesGoodCell.h"
 #import "SWProductView.h"

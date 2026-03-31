@@ -10,7 +10,6 @@
 #import "SWWHUCalendarItem.h"
 #import "SWWHUCalendarCal.h"
 #import "SWWHUCalDrawView.h"
-#import "SWWHUCalendarYMSelectView.h"
 #import "WHUCalendarMarcro.h"
 #define WHUCalendarView_TopView_Height 35.0f
 #define WHUCalendarView_WeekView_Height 30.0f
@@ -42,7 +41,6 @@ typedef NS_ENUM(NSUInteger, WHUCalendarViewMonthOption) {
     NSDictionary* _dataDic;
     UITapGestureRecognizer* _collectionTapGes;
     UIPanGestureRecognizer* _collectionPanGes;
-    SWWHUCalendarYMSelectView* _pickerView;
     
     NSLayoutConstraint* _calviewBottomGapCts;
     
@@ -216,7 +214,7 @@ typedef NS_ENUM(NSUInteger, WHUCalendarViewMonthOption) {
     if(_currentDate!=nil){
         if(_weekView.subviews.count>0){
         WHUCalendarView_WeakSelf weakSelf=self;
-        [_calDrawView.calcal getCalendarMapWith:_pickerView.selectdDateStr completion:^(NSDictionary* dic){
+        [_calDrawView.calcal getCalendarMapWith:_selectedDateString completion:^(NSDictionary* dic){
             WHUCalendarView_StrongSelf self=weakSelf;
             self->_dataDic=dic;
             [self reloadData];
@@ -254,7 +252,6 @@ typedef NS_ENUM(NSUInteger, WHUCalendarViewMonthOption) {
         basicAnimation.cumulative = NO;
         basicAnimation.repeatCount = 0;
         [CATransaction setCompletionBlock:^{
-            _pickerView.hidden=YES;
             if(complitionBlk!=nil){
                 complitionBlk();
             }
@@ -277,7 +274,6 @@ typedef NS_ENUM(NSUInteger, WHUCalendarViewMonthOption) {
         _collectionTapGes.enabled=NO;
     }
     else{
-        _pickerView.hidden=NO;
         _curMonthLbl.text=@"选择年份月份";
         _yLeftBtn.hidden=NO;
         _yRightBtn.hidden=NO;
@@ -381,7 +377,7 @@ typedef NS_ENUM(NSUInteger, WHUCalendarViewMonthOption) {
     if(btn.tag==4000){
         [self toggleBtnState:^{
             WHUCalendarView_WeakSelf weakself=self;
-            [_calDrawView.calcal getCalendarMapWith:_pickerView.selectdDateStr completion:^(NSDictionary* dic){
+            [_calDrawView.calcal getCalendarMapWith:_selectedDateString completion:^(NSDictionary* dic){
                 WHUCalendarView_StrongSelf self=weakself;
                 self->_dataDic=dic;
                 [self reloadData];

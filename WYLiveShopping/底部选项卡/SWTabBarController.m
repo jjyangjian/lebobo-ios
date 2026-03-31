@@ -9,10 +9,8 @@
 #import "JJMerchantHomeVC.h"
 #import "JJMineVC.h"
 #import "JJStartLiveVC.h"
-//#import "JJHomeLiveListVC.h"
 //#import "SWZYTabBar.h"
 #import <MHBeautySDK/MHSDK.h>
-//#import "SWHomeViewController.h"
 //@import CoreLocation;
 #import "JJAppConfigManager.h"
 #import "JJUserConfigManager.h"
@@ -102,7 +100,6 @@
 #pragma mark  在这里更换 左右tabbar的image
 - (void)setUpAllChildVc {
     JJMerchantHomeVC *home = [JJMerchantHomeVC new];
-//    JJHomeLiveListVC *liveList = [JJHomeLiveListVC new];
     JJStartLiveVC *startLive = [JJStartLiveVC new];
     JJMineVC *mine = [JJMineVC new];
 

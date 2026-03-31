@@ -21,7 +21,6 @@
 #import "UIView+ITTAdditions.h"
 #import "UIView+LBExtension.h"
 #import "UIView+Additions.h"
-#import "UIView+WPFExtension.h"
 #import <ShareSDK/ShareSDK.h>
 #import "SWConfig.h"
 #import "SWCommon.h"

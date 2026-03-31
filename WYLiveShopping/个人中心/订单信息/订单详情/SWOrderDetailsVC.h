@@ -7,7 +7,6 @@
 //
 
 #import "SWBaseViewController.h"
-#import "SWOrderModel.h"
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^controlOrderSucess)();
 @interface SWOrderDetailsVC : SWBaseViewController

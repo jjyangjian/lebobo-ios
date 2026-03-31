@@ -11,7 +11,6 @@
 #import "SWPublishShareV.h"
 #import "JPVideoPlayerKit.h"
 #import "SWVideoClassVC.h"
-#import "SWVideoAddGoodsVC.h"
 #import <Qiniu/QiniuSDK.h>
 #import "SWAddGoodsViewController.h"
 

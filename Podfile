@@ -22,8 +22,7 @@ target 'WYLiveShopping' do
 #  pod 'OpenSSL-for-iOS', '~> 1.0.2.d.1'
   #  #键盘管理
   pod 'IQKeyboardManager','6.5.5'
-  #  轮播图
-  pod 'SDCycleScrollView', '~> 1.82'
+  #  轮播图（未使用，已移除）
   #  提示语展示框
   pod 'MBProgressHUD','1.2.0'
   #图片选择器

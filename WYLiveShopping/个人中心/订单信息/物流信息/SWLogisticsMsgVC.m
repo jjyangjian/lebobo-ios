@@ -8,7 +8,7 @@
 
 #import "SWLogisticsMsgVC.h"
 #import "SWRecommendView.h"
-#import "SWHomeViewController.h"
+#import "SWHoverPageScrollView.h"
 #import "SWCartModel.h"
 
 @interface SWLogisticsMsgVC ()
