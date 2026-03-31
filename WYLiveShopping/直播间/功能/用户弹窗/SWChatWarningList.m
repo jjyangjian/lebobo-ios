@@ -59,8 +59,8 @@
     if (self) {
         [self.dataArray removeAllObjects];
         [self.dataArray addObjectsFromArray:array];
-        NSDictionary *dic = @{@"name":@"取消"};
-        [self.dataArray addObject:dic];
+        NSDictionary *cancelMap = @{@"name":@"取消"};
+        [self.dataArray addObject:cancelMap];
         [self addSubview:self.bgView];
         [self.bgView addSubview:self.titleLabel];
         [self.bgView addSubview:self.tableView];
@@ -79,8 +79,8 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SWWarningCell *cell = [SWWarningCell cellForTableView:tableView];
     if (indexPath.row < self.dataArray.count) {
-        NSDictionary *dic = self.dataArray[indexPath.row];
-        cell.tipLabel.text = minstr(dic[@"name"]);
+        NSDictionary *itemMap = self.dataArray[indexPath.row];
+        cell.tipLabel.text = minstr(itemMap[@"name"]);
         if (indexPath.row == self.dataArray.count-1) {
             cell.tipLabel.textColor = RGB_COLOR(@"#5074FA", 1);
         }

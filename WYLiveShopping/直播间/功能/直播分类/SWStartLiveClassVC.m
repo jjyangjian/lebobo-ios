@@ -53,13 +53,13 @@
     if (!cell) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SWStartLiveClassCell" owner:nil options:nil] lastObject];
     }
-    NSDictionary *dic = self.classArray[indexPath.row];
-    if ([minstr([dic valueForKey:@"id"]) isEqual:_classID]) {
+    NSDictionary *classMap = self.classArray[indexPath.row];
+    if ([minstr([classMap valueForKey:@"id"]) isEqual:_classID]) {
         cell.selectImfView.hidden = NO;
     }else{
         cell.selectImfView.hidden = YES;
     }
-    cell.nameLabel.text = minstr([dic valueForKey:@"name"]);
+    cell.nameLabel.text = minstr([classMap valueForKey:@"name"]);
     return cell;
 }
 
@@ -83,9 +83,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    NSDictionary *dic = self.classArray[indexPath.row];
-    if (![minstr([dic valueForKey:@"id"]) isEqual:_classID]) {
-        self.block(dic);
+    NSDictionary *classMap = self.classArray[indexPath.row];
+    if (![minstr([classMap valueForKey:@"id"]) isEqual:_classID]) {
+        self.block(classMap);
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

@@ -568,9 +568,9 @@
         _GiftqueueTIME = nil;
         return;
     }
-    NSDictionary *Dic = [_GiftqueueArray firstObject];
+    NSDictionary *giftMap = [_GiftqueueArray firstObject];
     [_GiftqueueArray removeObjectAtIndex:0];
-    [self GiftPopView:Dic andLianSong:_haohualiwus];
+    [self GiftPopView:giftMap andLianSong:_haohualiwus];
 }
 //添加礼物数量
 -(void)GiftNumAdd:(int)tag

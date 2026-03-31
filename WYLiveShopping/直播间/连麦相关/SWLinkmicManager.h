@@ -22,13 +22,13 @@ typedef NS_ENUM(NSInteger,LinkEvent) {
     Link_Infos,
     Link_Anchor_Manager,
 };
-typedef void (^LinkmicHandle)(LinkEvent event,int eventCode,NSDictionary *eventDic);
+typedef void (^LinkmicHandle)(LinkEvent event,int eventCode,NSDictionary *eventMap);
 
 @interface SWLinkmicManager : NSObject
 
 +(instancetype)shareInstance;
 
-@property(nonatomic,strong)NSDictionary *roomDic;
+@property(nonatomic,strong)NSDictionary *roomMap;
 @property(nonatomic,assign)BOOL linkSwitch;// 主播连麦开关状态
 @property(nonatomic,assign)BOOL isLinking;// 主播连麦开关状态
 @property(nonatomic,assign)UserLinkStatus userStatus; // 用户连麦状态

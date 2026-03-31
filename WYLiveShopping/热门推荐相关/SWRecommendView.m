@@ -160,7 +160,7 @@
                 [self.dataArray removeAllObjects];
             }
             for (NSDictionary *dic in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDictionary:dic];
                 [self.dataArray addObject:model];
             }
             [self.recommendCollectionView reloadData];

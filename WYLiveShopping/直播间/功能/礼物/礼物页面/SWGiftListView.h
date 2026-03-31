@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 @protocol WYGiftListViewDelegate<NSObject>
--(void)sendGift:(NSMutableArray *_Nullable)myDic andPlayDic:(NSDictionary *)playDic andData:(NSArray *)datas andLianFa:(NSString *)lianfa;
+-(void)sendGift:(NSMutableArray *_Nullable)myMap andPlayDic:(NSDictionary *)playMap andData:(NSArray *)datas andLianFa:(NSString *)lianfa;
 -(void)pushCoinV;
 @end
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SWGiftListView : UIView
-- (instancetype)initWithFrame:(CGRect)frame andZhuboMsg:(NSDictionary *)dic;
+- (instancetype)initWithFrame:(CGRect)frame andZhuboMsg:(NSDictionary *)playMap;
 @property(nonatomic,weak)id<WYGiftListViewDelegate>delegate;
 //重置礼物列表下方的钻石数量
 -(void)chongzhiV:(NSString *)coins;

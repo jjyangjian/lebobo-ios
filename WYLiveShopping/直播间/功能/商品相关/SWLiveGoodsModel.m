@@ -9,19 +9,19 @@
 #import "SWLiveGoodsModel.h"
 
 @implementation SWLiveGoodsModel
--(instancetype)initWithDic:(NSDictionary *)dic{
+-(instancetype)initWithDictionary:(NSDictionary *)map{
     self = [super init];
     if (self) {
-        self.thumb = minstr([dic valueForKey:@"image"]);
-        self.name = minstr([dic valueForKey:@"store_name"]);
-        self.goodsID = minstr([dic valueForKey:@"id"]);
-        self.price = minstr([dic valueForKey:@"price"]);
-        self.is_sale = minstr([dic valueForKey:@"is_sale"]);
-        self.sales = minstr([dic valueForKey:@"sales"]);
-        self.salenums = minstr([dic valueForKey:@"salenums"]);
-        self.bring_price = minstr([dic valueForKey:@"bring_price"]);
-        if ([dic valueForKey:@"vip_price"]) {
-            self.vip_price = minstr([dic valueForKey:@"vip_price"]);
+        self.thumb = minstr([map valueForKey:@"image"]);
+        self.name = minstr([map valueForKey:@"store_name"]);
+        self.goodsID = minstr([map valueForKey:@"id"]);
+        self.price = minstr([map valueForKey:@"price"]);
+        self.is_sale = minstr([map valueForKey:@"is_sale"]);
+        self.sales = minstr([map valueForKey:@"sales"]);
+        self.salenums = minstr([map valueForKey:@"salenums"]);
+        self.bring_price = minstr([map valueForKey:@"bring_price"]);
+        if ([map valueForKey:@"vip_price"]) {
+            self.vip_price = minstr([map valueForKey:@"vip_price"]);
         }else{
             self.vip_price = @"";
         }

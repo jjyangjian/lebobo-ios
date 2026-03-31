@@ -35,10 +35,10 @@
 @property(nonatomic,copy)NSString *uid;
 @property(nonatomic,strong)NSString *fansNum;
 
--(instancetype)initWithDic:(NSDictionary *)dic;
+-(instancetype)initWithDictionary:(NSDictionary *)map;
 
 
-+(instancetype)modelWithDic:(NSDictionary *)dic;
++(instancetype)modelWithDictionary:(NSDictionary *)map;
 
 
 @end

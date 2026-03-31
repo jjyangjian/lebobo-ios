@@ -186,7 +186,7 @@
     NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
     [shareParams SSDKSetupWeChatMiniProgramShareParamsByTitle:minstr([shareDic valueForKey:@"store_name"]) description:[SWConfig getOwnNicename] webpageUrl:[NSURL URLWithString:@"https://malls.sdwanyue.com"] path:[NSString stringWithFormat:@"/pages/goods_details/index?id=%@&spid=%@&liveuid=%@",minstr([shareDic valueForKey:@"id"]),[SWConfig getOwnID],_liveUid] thumbImage:minstr([shareDic valueForKey:@"image"]) hdThumbImage:nil userName:WechatGH_Id withShareTicket:NO miniProgramType:0 forPlatformSubType:SSDKPlatformSubTypeWechatSession];
 //    [shareParams SSDKSetupShareParamsByText:@""
-//                                         images:[roomDic valueForKey:@"avatar"]
+//                                         images:[roomMap valueForKey:@"avatar"]
 //                                            url:ParamsURL
 //                                          title:@""
 //                                           type:SSDKContentType];

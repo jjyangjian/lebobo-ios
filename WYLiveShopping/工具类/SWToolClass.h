@@ -51,6 +51,8 @@ typedef void (^networkFailBlock)(void);
  */
 + (void)postNetworkWithUrl:(NSString *)url andParameter:(nullable id)parameter success:(networkSuccessBlock)successBlock fail:(networkFailBlock)failBlock;
 
++ (void)postJsonNetworkWithUrl:(NSString *)url andParameter:(id)parameter success:(networkSuccessBlock)successBlock fail:(networkFailBlock)failBlock;
+
 /**
  计算字符串宽度
 

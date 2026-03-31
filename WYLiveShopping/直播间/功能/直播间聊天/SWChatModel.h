@@ -16,7 +16,7 @@
 @property (nonatomic,assign) BOOL isattent;
 
 
--(instancetype)initWithDic:(NSDictionary *)dic;
-- (instancetype)initOnlineDic:(NSDictionary *)dic;
+-(instancetype)initWithDictionary:(NSDictionary *)map;
+- (instancetype)initWithOnlineDictionary:(NSDictionary *)map;
 
 @end

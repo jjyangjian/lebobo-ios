@@ -11,7 +11,7 @@
 @interface SWJubaoVC ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate>
 @property(nonatomic,strong) NSMutableArray *dataArr;
 @property(nonatomic,strong) UITableView *table;
-@property(nonatomic,strong) NSDictionary *selectedDictionary;
+@property(nonatomic,strong) NSDictionary *selectedMap;
 @property(nonatomic,assign) NSInteger selectedIndex;
 @property(nonatomic,assign) CGFloat textHeight;
 @property(nonatomic,strong) UITextView *reportTextView;
@@ -149,7 +149,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    self.selectedDictionary = [NSDictionary dictionaryWithDictionary:self.dataArr[indexPath.row]];
+    self.selectedMap = [NSDictionary dictionaryWithDictionary:self.dataArr[indexPath.row]];
     self.selectedIndex = indexPath.row;
     [self.table reloadData];
 }
@@ -159,13 +159,13 @@
         [MBProgressHUD showError:@"请选择举报理由"];
         return;
     }
-    NSString *content = [NSString stringWithFormat:@"%@%@", minstr([self.selectedDictionary valueForKey:@"name"]), self.reportTextView.text];
+    NSString *content = [NSString stringWithFormat:@"%@%@", minstr([self.selectedMap valueForKey:@"name"]), self.reportTextView.text];
 
-    NSMutableDictionary *parameterDic = @{
+    NSMutableDictionary *parameterMap = @{
         @"touid":_liveuid,
         @"content":content
     }.mutableCopy;
-    [SWToolClass postNetworkWithUrl:@"livereport" andParameter:parameterDic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"livereport" andParameter:parameterMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [MBProgressHUD showError:msg];
             [self doReturn];

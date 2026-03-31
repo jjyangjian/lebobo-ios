@@ -188,7 +188,7 @@
 		18403F9B24A9E504002700DA /* 小店.png in Resources */ = {isa = PBXBuildFile; fileRef = 18403F9924A9E503002700DA /* 小店.png */; };
 		184C0A0324C0065F0061B1F2 /* star_gray.png in Resources */ = {isa = PBXBuildFile; fileRef = 184C0A0224C0065F0061B1F2 /* star_gray.png */; };
 		18535E07248A1B91000B6770 /* SWLivebroadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E06248A1B91000B6770 /* SWLivebroadViewController.m */; };
-		18535E25248A1D30000B6770 /* SWSocketLive.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E09248A1D25000B6770 /* SWSocketLive.m */; };
+		18535E25248A1D30000B6770 /* SWLiveSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E09248A1D25000B6770 /* SWLiveSocket.m */; };
 		18535E26248A1D30000B6770 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E0C248A1D2F000B6770 /* NSObject+SBJson.m */; };
 		18535E27248A1D30000B6770 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E15248A1D2F000B6770 /* SBJsonStreamParser.m */; };
 		18535E28248A1D30000B6770 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18535E16248A1D30000B6770 /* SBJsonParser.m */; };
@@ -1572,8 +1572,8 @@
 		184C0A0224C0065F0061B1F2 /* star_gray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_gray.png; sourceTree = "<group>"; };
 		18535E05248A1B91000B6770 /* SWLivebroadViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SWLivebroadViewController.h; sourceTree = "<group>"; };
 		18535E06248A1B91000B6770 /* SWLivebroadViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SWLivebroadViewController.m; sourceTree = "<group>"; };
-		18535E09248A1D25000B6770 /* SWSocketLive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSocketLive.m; sourceTree = "<group>"; };
-		18535E0A248A1D2F000B6770 /* SWSocketLive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSocketLive.h; sourceTree = "<group>"; };
+		18535E09248A1D25000B6770 /* SWLiveSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLiveSocket.m; sourceTree = "<group>"; };
+		18535E0A248A1D2F000B6770 /* SWLiveSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLiveSocket.h; sourceTree = "<group>"; };
 		18535E0C248A1D2F000B6770 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
 		18535E0D248A1D2F000B6770 /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserState.h; sourceTree = "<group>"; };
 		18535E0E248A1D2F000B6770 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
@@ -3726,8 +3726,8 @@
 			isa = PBXGroup;
 			children = (
 				18535E0B248A1D2F000B6770 /* sbjson */,
-				18535E0A248A1D2F000B6770 /* SWSocketLive.h */,
-				18535E09248A1D25000B6770 /* SWSocketLive.m */,
+				18535E0A248A1D2F000B6770 /* SWLiveSocket.h */,
+				18535E09248A1D25000B6770 /* SWLiveSocket.m */,
 			);
 			path = socket;
 			sourceTree = "<group>";
@@ -8532,7 +8532,7 @@
 				180B666E24A04BB600C89494 /* SWProfitTypeVC.m in Sources */,
 				18A226F424887B5B00C556E9 /* SWBaseViewController.m in Sources */,
 				180B667124A04BB600C89494 /* SWAddTypeView.m in Sources */,
-				18535E25248A1D30000B6770 /* SWSocketLive.m in Sources */,
+				18535E25248A1D30000B6770 /* SWLiveSocket.m in Sources */,
 				18A7AE0A2490B5CB00A8EB89 /* SWCFGradientLabel.m in Sources */,
 				189006F926D894CA00F6E939 /* TUIGroupConversationListViewModel.m in Sources */,
 				18535E31248A1D30000B6770 /* SBJsonTokeniser.m in Sources */,
@@ -8987,7 +8987,7 @@
 				CODE_SIGN_ENTITLEMENTS = WYLiveShopping/WYLiveShopping.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = V9PW7DTKV2;
 				ENABLE_BITCODE = NO;
@@ -9031,7 +9031,7 @@
 				CODE_SIGN_ENTITLEMENTS = WYLiveShopping/WYLiveShopping.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = V9PW7DTKV2;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

@@ -25,8 +25,8 @@
         _haohuaCount = 0;
     }
 }
--(void)addArrayCount:(NSDictionary *)dic{
-    [_expensiveGiftCount addObject:dic];
+-(void)addArrayCount:(NSDictionary *)giftMap{
+    [_expensiveGiftCount addObject:giftMap];
 }
 -(void)stopHaoHUaLiwu{
     [expensiveGiftTime invalidate];
@@ -41,9 +41,9 @@
     }
     _isplatBool = isplat;
 
-    NSDictionary *Dic = [_expensiveGiftCount firstObject];
+    NSDictionary *giftMap = [_expensiveGiftCount firstObject];
     [_expensiveGiftCount removeObjectAtIndex:0];
-    [self expensiveGiftPopView:Dic];
+    [self expensiveGiftPopView:giftMap];
 }
 -(void)expensiveGiftPopView:(NSDictionary *)giftData{
     CGFloat seconds;

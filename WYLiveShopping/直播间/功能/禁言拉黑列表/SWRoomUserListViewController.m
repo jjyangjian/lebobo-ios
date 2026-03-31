@@ -63,31 +63,31 @@
         method = @"userkicklist";
     }
 
-    NSDictionary *subdic = @{@"p":@(page),
+    NSDictionary *subMap = @{@"p":@(page),
                              @"liveuid":self.liveuid
                             };
 
-    [SWToolClass postNetworkWithUrl:method andParameter:subdic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:method andParameter:subMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [listTable.mj_header endRefreshing];
         [listTable.mj_footer endRefreshing];
         if (code == 200) {
             if (_type == 0) {
-                NSDictionary *dicInfo = info;
-                NSArray *array = dicInfo[@"list"];
+                NSDictionary *infoMap = info;
+                NSArray *array = infoMap[@"list"];
                 if (page == 1) {
                     [listArray removeAllObjects];
                 }
-                for (NSDictionary *dic in array) {
-                    SWManagerModel *model = [[SWManagerModel alloc] initWithDic:dic];
+                for (NSDictionary *itemMap in array) {
+                    SWManagerModel *model = [[SWManagerModel alloc] initWithDictionary:itemMap];
                     [listArray addObject:model];
                 }
-                self.addAdmins = minstr([dicInfo valueForKey:@"count"]);//总的管理员
+                self.addAdmins = minstr([infoMap valueForKey:@"count"]);//总的管理员
             }else{
                 if (page == 1) {
                     [listArray removeAllObjects];
                 }
-                for (NSDictionary *dic in info) {
-                    SWManagerModel *model = [[SWManagerModel alloc] initWithDic:dic];
+                for (NSDictionary *itemMap in info) {
+                    SWManagerModel *model = [[SWManagerModel alloc] initWithDictionary:itemMap];
                     [listArray addObject:model];
                 }
                 if (listArray.count == 0) {
@@ -140,11 +140,11 @@
         method = @"liveunkick";
     }
 
-    NSDictionary *setadmin = @{
+    NSDictionary *setAdminMap = @{
                                @"liveuid":_liveuid,
                                @"touid":model.uid,
                                };
-    [SWToolClass postNetworkWithUrl:method andParameter:setadmin success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:method andParameter:setAdminMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [listArray removeObject:model];
             [listTable reloadData];
@@ -269,11 +269,11 @@
         method = @"Livemanage.cancelKick";
     }
 
-    NSDictionary *setadmin = @{
+    NSDictionary *setAdminMap = @{
                                @"liveuid":_liveuid,
                                @"touid":model.uid,
                                };
-    [SWToolClass postNetworkWithUrl:method andParameter:setadmin success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:method andParameter:setAdminMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 0) {
             [listArray removeObject:model];
             [listTable reloadData];

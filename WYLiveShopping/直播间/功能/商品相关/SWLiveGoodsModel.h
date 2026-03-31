@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL isAdmin;
 @property (nonatomic,assign) BOOL isDouble;
 
--(instancetype)initWithDic:(NSDictionary *)dic;
+-(instancetype)initWithDictionary:(NSDictionary *)map;
 
 @end
 

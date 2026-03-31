@@ -1,16 +1,16 @@
 #import "SWLiwuModel.h"
 #import "UIImageView+WebCache.h"
 @implementation SWLiwuModel
--(instancetype)initWithDic:(NSDictionary *)dic{
+-(instancetype)initWithDictionary:(NSDictionary *)map{
     self = [super init];
     if (self) {
-        self.imagePath = [dic valueForKey:@"icon"];
-        self.price = [dic valueForKey:@"coin"];
-        self.num = [NSString stringWithFormat:@"%@",[dic valueForKey:@"nums"]];
-        self.type = minstr([dic valueForKey:@"type"]);
-        self.giftname = minstr([dic valueForKey:@"name"]);
-        self.ID = minstr([dic valueForKey:@"id"]);
-        self.mark =minstr([dic valueForKey:@"mark"]) ;
+        self.imagePath = [map valueForKey:@"icon"];
+        self.price = [map valueForKey:@"coin"];
+        self.num = [NSString stringWithFormat:@"%@",[map valueForKey:@"nums"]];
+        self.type = minstr([map valueForKey:@"type"]);
+        self.giftname = minstr([map valueForKey:@"name"]);
+        self.ID = minstr([map valueForKey:@"id"]);
+        self.mark =minstr([map valueForKey:@"mark"]) ;
         self.duihaiOK = 0;
         
 //        [self setView];
@@ -31,7 +31,7 @@
     CGSize  size2 = [_num boundingRectWithSize:CGSizeMake(200, 20) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
     _numR = CGRectMake(_imageVR.size.width/2,_imageVR.size.height + size1.height+10, size2.width, size2.height);
 }
-+(instancetype)modelWithDic:(NSDictionary *)dic{
-    return  [[self alloc]initWithDic:dic];
++(instancetype)modelWithDictionary:(NSDictionary *)map{
+    return  [[self alloc]initWithDictionary:map];
 }
 @end

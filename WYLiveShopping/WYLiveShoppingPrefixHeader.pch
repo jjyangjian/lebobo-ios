@@ -58,6 +58,7 @@
 
 #define purl @"https://zb.shenwei.info/api/"
 #define h5url @"https://zb.shenwei.info/"
+#define h5share_url @"https://m.shenwei.info"
 
 //三方
 //QQ

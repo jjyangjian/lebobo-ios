@@ -11,7 +11,7 @@
 
 @implementation SWAnchorMessageView{
     NSString *anchorId;
-    NSDictionary *infoDic;
+    NSDictionary *infoMap;
     NSString *action;
     
 }
@@ -21,7 +21,7 @@
     anchorId = touid;
     [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"pop?touid=%@&liveuid=%@",touid,touid] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            infoDic = info;
+            infoMap = info;
             [_iconImgView sd_setImageWithURL:[NSURL URLWithString:minstr([info valueForKey:@"avatar"])]];
             _nameLabel.text = minstr([info valueForKey:@"nickname"]);
             _IDLabel.text = [NSString stringWithFormat:@"ID:%@",minstr([info valueForKey:@"uid"])];

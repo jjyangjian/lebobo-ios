@@ -9,7 +9,7 @@
 #import "SWBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void(^changeGoodsBlock)(NSDictionary *dic);
+typedef void(^changeGoodsBlock)(NSDictionary *goodsMap);
 @interface SWAddGoodsViewController : SWBaseViewController
 @property (nonatomic,copy) changeGoodsBlock block;
 @property (nonatomic,assign) BOOL isVideo;

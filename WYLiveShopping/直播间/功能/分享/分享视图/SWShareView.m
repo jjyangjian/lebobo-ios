@@ -10,7 +10,7 @@
 #import "SWShareImageView.h"
 
 @implementation SWShareView{
-    NSDictionary *roomDic;
+    NSDictionary *roomMap;
     UIView *whiteView;
     SWShareImageView *shareImgV;
     UIImage *shareImage;
@@ -18,7 +18,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andRoomMessage:(NSDictionary *)roomMessage{
     if (self = [super initWithFrame:frame]) {
-        roomDic = roomMessage;
+        roomMap = roomMessage;
         self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doHide)];
         [self addGestureRecognizer:tap];
@@ -97,9 +97,9 @@
     NSString *strFullUrl = @"";
     ParamsURL = [NSURL URLWithString:strFullUrl];
     NSMutableDictionary *shareParams = [NSMutableDictionary dictionary];
-    [shareParams SSDKSetupWeChatMiniProgramShareParamsByTitle:minstr([roomDic valueForKey:@"title"]) description:minstr([roomDic valueForKey:@"nickname"]) webpageUrl:[NSURL URLWithString:h5url] path:[NSString stringWithFormat:@"pages/newpages/live/index?l=%@&pid=%@",minstr([roomDic valueForKey:@"uid"]),[SWConfig getOwnID]] thumbImage:minstr([roomDic valueForKey:@"thumb"]) hdThumbImage:nil userName:WechatGH_Id withShareTicket:NO miniProgramType:0 forPlatformSubType:SSDKPlatformSubTypeWechatSession];
+    [shareParams SSDKSetupWeChatMiniProgramShareParamsByTitle:minstr([roomMap valueForKey:@"title"]) description:minstr([roomMap valueForKey:@"nickname"]) webpageUrl:[NSURL URLWithString:h5url] path:[NSString stringWithFormat:@"pages/newpages/live/index?l=%@&pid=%@",minstr([roomMap valueForKey:@"uid"]),[SWConfig getOwnID]] thumbImage:minstr([roomMap valueForKey:@"thumb"]) hdThumbImage:nil userName:WechatGH_Id withShareTicket:NO miniProgramType:0 forPlatformSubType:SSDKPlatformSubTypeWechatSession];
 //    [shareParams SSDKSetupShareParamsByText:@""
-//                                         images:[roomDic valueForKey:@"avatar"]
+//                                         images:[roomMap valueForKey:@"avatar"]
 //                                            url:ParamsURL
 //                                          title:@""
 //                                           type:SSDKContentType];
@@ -129,19 +129,19 @@
 }
 - (void)showShareImagView{
     if (!shareImgV) {
-        [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"/live/qr/%@",minstr([roomDic valueForKey:@"uid"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"/live/qr/%@",minstr([roomMap valueForKey:@"uid"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
             if (code == 200) {
                 shareImgV = [[[NSBundle mainBundle] loadNibNamed:@"SWShareImageView" owner:nil options:nil] lastObject];
                 shareImgV.frame = CGRectMake(0, 0, _window_width, _window_height);
                 [self addSubview:shareImgV];
                 [shareImgV layoutIfNeeded];
                 [shareImgV.codeImgView sd_setImageWithURL:[NSURL URLWithString:minstr([info valueForKey:@"code"])]];
-                [shareImgV.iconImgV sd_setImageWithURL:[NSURL URLWithString:minstr([roomDic valueForKey:@"avatar"])]];
-                [shareImgV.thumbImgV sd_setImageWithURL:[NSURL URLWithString:minstr([roomDic valueForKey:@"thumb"])]];
-                shareImgV.nameL.text = minstr([roomDic valueForKey:@"nickname"]);
-                shareImgV.titleL.text = minstr([roomDic valueForKey:@"title"]);
-                shareImgV.nameL.text = minstr([roomDic valueForKey:@"nickname"]);
-                shareImgV.userNameL.text = [NSString stringWithFormat:@"%@\n邀请您一起看直播\n\n长按识别二维码，进入直播间",minstr([roomDic valueForKey:@"nickname"])];
+                [shareImgV.iconImgV sd_setImageWithURL:[NSURL URLWithString:minstr([roomMap valueForKey:@"avatar"])]];
+                [shareImgV.thumbImgV sd_setImageWithURL:[NSURL URLWithString:minstr([roomMap valueForKey:@"thumb"])]];
+                shareImgV.nameL.text = minstr([roomMap valueForKey:@"nickname"]);
+                shareImgV.titleL.text = minstr([roomMap valueForKey:@"title"]);
+                shareImgV.nameL.text = minstr([roomMap valueForKey:@"nickname"]);
+                shareImgV.userNameL.text = [NSString stringWithFormat:@"%@\n邀请您一起看直播\n\n长按识别二维码，进入直播间",minstr([roomMap valueForKey:@"nickname"])];
                 UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doHideShareImage)];
                 [shareImgV addGestureRecognizer:tap];
                 UITapGestureRecognizer *nothingTap1 = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(doNothing)];

@@ -1276,7 +1276,7 @@
             }
             NSArray *good_list = [info valueForKey:@"good_list"];
             for (NSDictionary *dic in good_list) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDictionary:dic];
                 [self.recommendedGoodsArray addObject:model];
             }
             if (self.recommendedGoodsArray.count > 3) {
@@ -1623,7 +1623,7 @@
         [MBProgressHUD hideHUD];
         if (code == 200) {
             SWLivePlayerViewController *player = [[SWLivePlayerViewController alloc]init];
-            player.roomDic = [roomdic mutableCopy];
+            player.roomMap = [roomdic mutableCopy];
             [[SWMXBADelegate sharedAppDelegate] pushViewController:player animated:YES];
         }else{
             [MBProgressHUD showError:msg];

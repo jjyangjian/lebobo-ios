@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SWLivePlayerViewController : UIViewController
-@property (nonatomic,strong) NSMutableDictionary *roomDic;
+@property (nonatomic,strong) NSMutableDictionary *roomMap;
 
 @end
 

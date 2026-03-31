@@ -179,28 +179,68 @@
         [self doKick];
     }
 }
+
+//禁言
 - (void)doShutUP{
-    [SWToolClass getQCloudWithUrl:@"shutlist" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-       if (code == 200) {
+    
+    
+    NSDictionary *params = @{
+        @"liveuid":anchorID,
+        @"touid":userModel.userID,
+    };
+    [MBProgressHUD showMessage:@""];
+    [SWToolClass postJsonNetworkWithUrl:@"liveshut" andParameter:params success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        [MBProgressHUD hideHUD];
+
+        if (code == 200) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                SWChatWarningList *list = [[SWChatWarningList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) data:info];
-                list.delegate = self;
-                [self addSubview:list];
+                [MBProgressHUD showSuccess:@"禁言成功"];
+                self->shutUpBtn.selected = true;
+//                SWChatWarningList *list = [[SWChatWarningList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) data:info];
+//                list.delegate = self;
+//                [self addSubview:list];
             });
-           
+        }else{
+            [MBProgressHUD showError:@"禁言失败"];
+
         }
-    } Fail:^{
-        
+    } fail:^{
+        [MBProgressHUD hideHUD];
+        [MBProgressHUD showError:@"网络错误"];
+
     }];
+//    [MBProgressHUD showMessage:@""];
+//    [SWToolClass getQCloudWithUrl:@"/live/liveshut" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+//        [MBProgressHUD hideHUD];
+//
+//       if (code == 200) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                SWChatWarningList *list = [[SWChatWarningList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) data:info];
+//                list.delegate = self;
+//                [self addSubview:list];
+//            });
+//           
+//       }else{
+//           [MBProgressHUD showError:@"禁言失败"];
+//       }
+//    } Fail:^{
+//        [MBProgressHUD hideHUD];
+//        [MBProgressHUD showError:@"网络错误"];
+//
+//    }];
     
 }
+
+
+//解除禁言
 - (void)doCancleShutUP{
-    NSDictionary *dic = @{
+    NSDictionary *actionMap = @{
         @"touid":userModel.userID,
         @"liveuid":anchorID
     };
-    [SWToolClass postNetworkWithUrl:@"liveunshut" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"liveunshut" andParameter:actionMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
+            self->shutUpBtn.selected = false;
             if (self.delegate) {
                 [self.delegate doCancleShutupUser:userModel.userID andUserName:userModel.userName];
             }
@@ -212,11 +252,11 @@
     }];
 }
 - (void)doKick{
-    NSDictionary *dic = @{
+    NSDictionary *actionMap = @{
         @"touid":userModel.userID,
         @"liveuid":anchorID
     };
-    [SWToolClass postNetworkWithUrl:@"livekick" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"livekick" andParameter:actionMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             if (self.delegate) {
                 [self.delegate doKickUser:userModel.userID andUserName:userModel.userName];
@@ -230,13 +270,13 @@
 }
 #pragma mark -  设置管理
 - (void)doAdmin{
-    NSDictionary *dic = @{
+    NSDictionary *actionMap = @{
         @"touid":userModel.userID,
         @"liveuid":anchorID
     };
     NSString *action = minstr([userMsg valueForKey:@"action"]);
     if ([action isEqualToString:@"501"]) {
-        [SWToolClass postNetworkWithUrl:@"setmanager" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        [SWToolClass postNetworkWithUrl:@"setmanager" andParameter:actionMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
             if (code == 200) {
                 if (self.delegate) {
                     [self.delegate setAdminUser:userModel.userID andUserName:userModel.userName];
@@ -253,11 +293,11 @@
     
 }
 - (void)cancelAdmin{
-    NSDictionary *dic = @{
+    NSDictionary *actionMap = @{
         @"touid":userModel.userID,
         @"liveuid":anchorID
     };
-    [SWToolClass postNetworkWithUrl:@"delmanager" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"delmanager" andParameter:actionMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             if (self.delegate) {
                 [self.delegate cancelAdminUser:userModel.userID andUserName:userModel.userName];
@@ -275,13 +315,13 @@
 }
 #pragma mark - Jinyan delegate
 - (void)jinyanUser:(nonnull NSString *)time name:(nonnull NSString *)content jinyanID:(nonnull NSString *)ID {
-    NSDictionary *dic = @{
+    NSDictionary *actionMap = @{
         @"touid":userModel.userID,
         @"liveuid":anchorID,
         @"shutid":ID
     };
     NSString *jinyanContent = [NSString stringWithFormat:@"%@被%@",userModel.userName,content];
-    [SWToolClass postNetworkWithUrl:@"liveshut" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"liveshut" andParameter:actionMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             if (self.delegate) {
                 [self.delegate doShutupUser:userModel.userID andUserName:userModel.userName content:jinyanContent];

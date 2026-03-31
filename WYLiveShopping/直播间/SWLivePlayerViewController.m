@@ -7,7 +7,7 @@
 //
 
 #import "SWLivePlayerViewController.h"
-#import "SWSocketLive.h"
+#import "SWLiveSocket.h"
 #import <TXLiteAVSDK_Professional/TXLiteAVSDK.h>
 #import <TXLiteAVSDK_Professional/TXLivePlayer.h>
 #import "SWChatMsgCell.h"
@@ -31,7 +31,7 @@
 #import <TXLiteAVSDK_Professional/TRTCCloud.h>
 
 
-@interface SWLivePlayerViewController ()<TRTCCloudDelegate,UITextViewDelegate,socketLiveDelegate,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,haohuadelegate,TXLivePlayListener,anchorMessageViewDelegate,WYGiftListViewDelegate,LiveOnlineListDelegate,SWUserPopupViewDeleagte,tx_play_linkmic,V2TXLivePlayerObserver>{
+@interface SWLivePlayerViewController ()<TRTCCloudDelegate,UITextViewDelegate,SWLiveSocketDelegate,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,haohuadelegate,TXLivePlayListener,anchorMessageViewDelegate,WYGiftListViewDelegate,LiveOnlineListDelegate,SWUserPopupViewDeleagte,tx_play_linkmic,V2TXLivePlayerObserver>{
     //关注按钮
     UIButton *attionBtn;
     //直播间按钮
@@ -93,7 +93,7 @@
 @property (nonatomic,strong)    TXLivePlayConfig*    config;
 
 /// socket
-@property (nonatomic,strong) SWSocketLive *socketL;
+@property (nonatomic,strong) SWLiveSocket *socketL;
 ///直播界面视图父view
 @property (nonatomic,strong) UIView *frontView;
 ///聊天展示tableview
@@ -130,7 +130,7 @@
     }else {
         [_txLivePlayer pause];
     }
-    [[SWToolClass sharedInstance] showSusPlayer:_roomDic andVideoSize:videoSize];
+    [[SWToolClass sharedInstance] showSusPlayer:self.roomMap andVideoSize:videoSize];
     [self stopPushStream];
 }
 
@@ -164,7 +164,7 @@
     
 }
 - (void)getTRTCConfig{
-    NSString *url = [NSString stringWithFormat:@"livemic/url?stream=%@&liveuid=%@",minstr([_roomDic valueForKey:@"stream"]),minstr([_roomDic objectForKey:@"uid"])];
+    NSString *url = [NSString stringWithFormat:@"livemic/url?stream=%@&liveuid=%@",minstr([self.roomMap valueForKey:@"stream"]),minstr([self.roomMap objectForKey:@"uid"])];
     [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if(code == 200){
             [self startPushStream:info];
@@ -177,7 +177,7 @@
 - (void)startPushStream:(NSDictionary *)info {
     TRTCParams *params = [[TRTCParams alloc] init];
     params.sdkAppId = [minstr( [info objectForKey:@"sdkappid"]) intValue];
-    params.roomId = [[_roomDic objectForKey:@"showid"] intValue];
+    params.roomId = [[self.roomMap objectForKey:@"showid"] intValue];
     params.userId = [SWConfig getOwnID];
     params.role = TRTCRoleAnchor;
     params.userSig = minstr([info objectForKey:@"usersig"]);
@@ -202,7 +202,7 @@
     // 对采集内容进行本地预览
     [self.trtcCloud startLocalPreview:YES view:_linkUserView];
    
-    [self.trtcCloud startRemoteView:minstr([_roomDic valueForKey:@"uid"]) streamType:TRTCVideoStreamTypeBig view:_playBackView];
+    [self.trtcCloud startRemoteView:minstr([self.roomMap valueForKey:@"uid"]) streamType:TRTCVideoStreamTypeBig view:_playBackView];
 }
 - (void)onFirstVideoFrame:(NSString *)userId streamType:(TRTCVideoStreamType)streamType width:(int)width height:(int)height{
     NSLog(@"%@userID=,streamType=%ld",userId,streamType);
@@ -212,7 +212,7 @@
         [self.trtcCloud stopLocalAudio];
         [self.trtcCloud stopLocalPreview];
         [self.trtcCloud switchRole:TRTCRoleAudience];
-        [self.trtcCloud stopRemoteView:minstr([_roomDic valueForKey:@"uid"]) streamType:TRTCVideoStreamTypeBig];
+        [self.trtcCloud stopRemoteView:minstr([self.roomMap valueForKey:@"uid"]) streamType:TRTCVideoStreamTypeBig];
         [self.trtcCloud exitRoom];
     }
 }
@@ -273,10 +273,10 @@
     _playBackView.frame = CGRectMake(0,0, _window_width, _window_height);
     
     _thumbImgView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
-    [_thumbImgView sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"thumb"])]];
+    [_thumbImgView sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomMap valueForKey:@"thumb"])]];
     _thumbImgView.contentMode = UIViewContentModeScaleAspectFill;
     [_playBackView addSubview:_thumbImgView];
-    _hostURL = minstr([_roomDic valueForKey:@"pull"]);
+    _hostURL = minstr([self.roomMap valueForKey:@"pull"]);
     _config = [[TXLivePlayConfig alloc] init];
     //_config.enableAEC = YES;
     //自动模式
@@ -578,7 +578,7 @@
     }
     [textField resignFirstResponder];
     if (textField.text.length > 0) {
-        [_socketL sendMessage:textField.text andisAtt:minstr([_roomDic valueForKey:@"isattent"]) userType:usertype];
+        [_socketL sendMessage:textField.text andisAtt:minstr([self.roomMap valueForKey:@"isattent"]) userType:usertype];
         textField.text = @"";
     }
     return YES;
@@ -626,7 +626,7 @@
 #pragma mark - 在线列表
 - (void)showOnlineList{
     if (!onlineList) {
-        onlineList = [[SWLiveOnlineList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) stream:_roomDic[@"stream"] liveUID:_roomDic[@"uid"]];
+        onlineList = [[SWLiveOnlineList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) stream:self.roomMap[@"stream"] liveUID:self.roomMap[@"uid"]];
         onlineList.delegate = self;
     }
     [onlineList requestData];
@@ -642,7 +642,7 @@
         [userPview removeFromSuperview];
         userPview = nil;
     }
-    userPview = [[SWUserPopupView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andModel:model liveUid:_roomDic[@"uid"]];
+    userPview = [[SWUserPopupView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andModel:model liveUid:self.roomMap[@"uid"]];
     userPview.delegate = self;
     userPview.isOnlineUser = isOnline;
     [self.view addSubview:userPview];
@@ -687,9 +687,9 @@
         anchorMsgV.frame = CGRectMake(0, 0, _window_width, _window_height);
         [anchorMsgV.followBtn setBackgroundImage:[SWToolClass getImgWithColor:normalColors] forState:0];
         [anchorMsgV.followBtn setBackgroundImage:[SWToolClass getImgWithColor:RGB_COLOR(@"#f2edeb", 1)] forState:UIControlStateSelected];
-        [anchorMsgV.iconImgView sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"avatar"])]];
-        anchorMsgV.nameLabel.text = minstr([_roomDic valueForKey:@"nickname"]);
-        anchorMsgV.IDLabel.text = [NSString stringWithFormat:@"ID:%@",minstr([_roomDic valueForKey:@"uid"])];
+        [anchorMsgV.iconImgView sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomMap valueForKey:@"avatar"])]];
+        anchorMsgV.nameLabel.text = minstr([self.roomMap valueForKey:@"nickname"]);
+        anchorMsgV.IDLabel.text = [NSString stringWithFormat:@"ID:%@",minstr([self.roomMap valueForKey:@"uid"])];
         anchorMsgV.delegate = self;
         [self.view addSubview:anchorMsgV];
         WeakSelf;
@@ -697,13 +697,13 @@
             [weakSelf reloadAttionButton:isFollow];
         };
     }
-    anchorMsgV.followBtn.selected = [minstr([_roomDic valueForKey:@"isattent"]) intValue];
-    [anchorMsgV requestMessage:minstr([_roomDic valueForKey:@"uid"])];
+    anchorMsgV.followBtn.selected = [minstr([self.roomMap valueForKey:@"isattent"]) intValue];
+    [anchorMsgV requestMessage:minstr([self.roomMap valueForKey:@"uid"])];
     anchorMsgV.hidden = NO;
 }
 #pragma mark- 关闭直播
 - (void)closeLive{
-    [SWToolClass postNetworkWithUrl:@"supershut" andParameter:@{@"liveuid":_roomDic[@"uid"],@"stream":minstr([_roomDic valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"supershut" andParameter:@{@"liveuid":self.roomMap[@"uid"],@"stream":minstr([self.roomMap valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [_socketL superAdminCloseLive];
         }
@@ -727,7 +727,7 @@
     iconButton.layer.cornerRadius = 15;
     iconButton.layer.masksToBounds = YES;
     iconButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [iconButton sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"avatar"])] forState:0];
+    [iconButton sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomMap valueForKey:@"avatar"])] forState:0];
     [iconButton addTarget:self action:@selector(doShowAnchorView) forControlEvents:UIControlEventTouchUpInside];
     [leftView addSubview:iconButton];
     [iconButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -738,7 +738,7 @@
     UILabel *nameL = [[UILabel alloc]init];
     nameL.font = SYS_Font(14);
     nameL.textColor = [UIColor whiteColor];
-    nameL.text = minstr([_roomDic valueForKey:@"nickname"]);
+    nameL.text = minstr([self.roomMap valueForKey:@"nickname"]);
     [leftView addSubview:nameL];
     [nameL mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(iconButton).offset(3);
@@ -827,9 +827,9 @@
     }];
 }
 - (void)reloadAttionButton:(BOOL)isAtt{
-    [_roomDic setValue:[NSString stringWithFormat:@"%d",isAtt] forKey:@"isattent"];
+    [self.roomMap setValue:[NSString stringWithFormat:@"%d",isAtt] forKey:@"isattent"];
     //
-    [SWLinkmicManager shareInstance].roomDic = [NSDictionary dictionaryWithDictionary:_roomDic];
+    [SWLinkmicManager shareInstance].roomMap = [NSDictionary dictionaryWithDictionary:self.roomMap];
 
     [UIView animateWithDuration:0.1 animations:^{
         [attionBtn mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -855,10 +855,10 @@
 #pragma mark -- 分享
 - (void)doShare{
     //杨剑修改，分享
-//    self.stream = minstr([self.roomDic valueForKey:@"stream"]);
+//    self.stream = minstr([self.roomMap valueForKey:@"stream"]);
 //    self.uid = minstr([dic valueForKey:@"uid"]);
-    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
-    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+    NSString *uid = minstr([self.roomMap valueForKey:@"uid"]);
+    NSString *stream = minstr([self.roomMap valueForKey:@"stream"]);
     JJShareLiveLinkView *SWShareView = JJShareLiveLinkView.new;
     SWShareView.linkText = [NSString stringWithFormat:@"https://m.shenwei.info/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
     SWShareView.doneBlock = ^{
@@ -869,7 +869,7 @@
     [SWShareView show];
 
 //    if (!shareV) {
-//        shareV = [[SWShareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
+//        shareV = [[SWShareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:self.roomMap];
 //        [self.view addSubview:shareV];
 //    }else{
 //        [shareV show];
@@ -878,7 +878,7 @@
 #pragma mark -- 底部商品按钮点击
 - (void)showgoodsShowView{
     if (!goodsView) {
-        goodsView = [[SWLiveGoodsView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:minstr([_roomDic valueForKey:@"uid"])];
+        goodsView = [[SWLiveGoodsView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:minstr([self.roomMap valueForKey:@"uid"])];
         [self.view addSubview:goodsView];
     }
     [goodsView show];
@@ -925,7 +925,7 @@
 }
 - (void)doJubao{
     SWJubaoVC *vc = [[SWJubaoVC alloc]init];
-    vc.liveuid = minstr([_roomDic valueForKey:@"uid"]);
+    vc.liveuid = minstr([self.roomMap valueForKey:@"uid"]);
     [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
 #pragma mark -- 键盘通知
@@ -978,7 +978,7 @@
     if (!giftview) {
         //礼物弹窗
         CGFloat height = _window_width/2+65+40+ShowDiff;
-        giftview = [[SWGiftListView alloc]initWithFrame:CGRectMake(0, _window_height-height, _window_width, height) andZhuboMsg:self.roomDic];
+        giftview = [[SWGiftListView alloc]initWithFrame:CGRectMake(0, _window_height-height, _window_width, height) andZhuboMsg:self.roomMap];
         giftview.delegate = self;
         
     }else{
@@ -990,7 +990,7 @@
 }
 #pragma gift delegate
 //发送礼物
--(void)sendGift:(NSDictionary *)myDic andPlayDic:(NSDictionary *)playDic andData:(NSArray *)datas andLianFa:(NSString *)lianfa{
+-(void)sendGift:(NSDictionary *)myMap andPlayDic:(NSDictionary *)playMap andData:(NSArray *)datas andLianFa:(NSString *)lianfa{
    // haohualiwu = lianfa;
     NSString *info = [datas  valueForKey:@"gifttoken"];
     //level = [[datas firstObject] valueForKey:@"level"];
@@ -1007,11 +1007,11 @@
 #pragma mark -- 送礼物效果
 -(void)sendGift:(NSDictionary *)msg andLiansong:(NSString *)liansong andTotalCoin:(NSString *)votestotal andGiftInfo:(NSDictionary *)giftInfo andCt:(NSDictionary *)ct{
     NSString *type = minstr([ct valueForKey:@"type"]);
-    NSMutableDictionary *muDic = [NSMutableDictionary dictionaryWithDictionary:ct];
-    [muDic setObject:msg[@"uhead"] forKey:@"avatar"];
-    [muDic setObject:giftInfo[@"nicename"] forKey:@"nicename"];
+    NSMutableDictionary *giftMap = [NSMutableDictionary dictionaryWithDictionary:ct];
+    [giftMap setObject:msg[@"uhead"] forKey:@"avatar"];
+    [giftMap setObject:giftInfo[@"nicename"] forKey:@"nicename"];
     if ([type isEqual:@"1"]) {
-        [self expensiveGift:muDic.copy isPlatGift:NO];
+        [self expensiveGift:giftMap.copy isPlatGift:NO];
     }else{
         if (!continueGifts) {
             continueGifts = [[SWContinueGift alloc]init];
@@ -1019,7 +1019,7 @@
             //初始化礼物空位
             [continueGifts initGift];
         }
-        [continueGifts GiftPopView:muDic.copy andLianSong:liansong];
+        [continueGifts GiftPopView:giftMap.copy andLianSong:liansong];
     }
 }
 
@@ -1064,14 +1064,14 @@
 #pragma mark -- 进入直播间enterroom
 
 - (void)enterRoom{
-    [SWToolClass postNetworkWithUrl:@"live/enter" andParameter:@{@"stream":minstr([_roomDic valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"live/enter" andParameter:@{@"stream":minstr([self.roomMap valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            [_roomDic addEntriesFromDictionary:info];
-            [_roomDic setObject:minstr([info valueForKey:@"liveuid"]) forKey:@"uid"];
+            [self.roomMap addEntriesFromDictionary:info];
+            [self.roomMap setObject:minstr([info valueForKey:@"liveuid"]) forKey:@"uid"];
             //
-            [SWLinkmicManager shareInstance].roomDic = [NSDictionary dictionaryWithDictionary:_roomDic];
+            [SWLinkmicManager shareInstance].roomMap = [NSDictionary dictionaryWithDictionary:self.roomMap];
             // 1是 APP主播   2是小程序主播
-            room_type = [minstr([_roomDic valueForKey:@"room_type"]) intValue];
+            room_type = [minstr([self.roomMap valueForKey:@"room_type"]) intValue];
            
             
 //            if (room_type == 2) {
@@ -1081,13 +1081,13 @@
 //            }
 
             [self linkSocketL];
-            isShutUp = [minstr([_roomDic valueForKey:@"ishut"]) intValue];
-            usertype = minstr(_roomDic[@"usertype"]);
+            isShutUp = [minstr([self.roomMap valueForKey:@"ishut"]) intValue];
+            usertype = minstr(self.roomMap[@"usertype"]);
             dispatch_async(dispatch_get_main_queue(), ^{
                 userNumLabel.text = [NSString stringWithFormat:@"  %@人  ",minstr([info valueForKey:@"nums"])];
                 likesNumLabel.text = minstr([info valueForKey:@"likes"]);
                 sellerGoodsNumsLabel.text = minstr([info valueForKey:@"goods"]);
-                [self reloadAttionButton:[minstr([_roomDic valueForKey:@"isattent"]) intValue]];
+                [self reloadAttionButton:[minstr([self.roomMap valueForKey:@"isattent"]) intValue]];
                 [self changeShutState];
             });
         }
@@ -1100,16 +1100,16 @@
 -(void)linkSocketL
 {
 
-    _socketL = [[SWSocketLive alloc]init];
+    _socketL = [[SWLiveSocket alloc]init];
     _socketL.delegate = self;
-    [_socketL addNodeListen:minstr([_roomDic valueForKey:@"chatserver"]) andRoomMessage:_roomDic];
+    [_socketL addNodeListen:minstr([self.roomMap valueForKey:@"chatserver"]) andRoomMessage:self.roomMap];
 }
 //聊天消息
-- (void)reciveMessage:(NSDictionary *)dic {
-    NSDictionary *chatDic;
-    if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SystemNot"]) {
-        chatDic = @{
-            @"contentChat":minstr([dic valueForKey:@"ct"]),
+- (void)receiveMessage:(NSDictionary *)messageMap {
+    NSDictionary *chatMap;
+    if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SystemNot"]) {
+        chatMap = @{
+            @"contentChat":minstr([messageMap valueForKey:@"ct"]),
             @"userName":@"",
             @"userID":@"",
             @"type":@"1",
@@ -1118,31 +1118,31 @@
             
         };
     }
-    else if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SendMsg"]) {
-        chatDic = @{
-            @"contentChat":minstr([dic valueForKey:@"content"]),
-            @"userName":minstr([dic valueForKey:@"usernickname"]),
-            @"userID":minstr([dic valueForKey:@"uid"]),
+    else if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SendMsg"]) {
+        chatMap = @{
+            @"contentChat":minstr([messageMap valueForKey:@"content"]),
+            @"userName":minstr([messageMap valueForKey:@"usernickname"]),
+            @"userID":minstr([messageMap valueForKey:@"uid"]),
             @"type":@"2",
-            @"icon":minstr([dic valueForKey:@"avatar"]),
-            @"isattent":minstr([dic valueForKey:@"isattent"]),
-            @"usertype":minstr(dic[@"usertype"])
+            @"icon":minstr([messageMap valueForKey:@"avatar"]),
+            @"isattent":minstr([messageMap valueForKey:@"isattent"]),
+            @"usertype":minstr(messageMap[@"usertype"])
         };
 
     }
-    else if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SendLight"]) {
-        chatDic = @{
+    else if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SendLight"]) {
+        chatMap = @{
             @"contentChat":@"点亮了",
-            @"userName":minstr([dic valueForKey:@"usernickname"]),
-            @"userID":minstr([dic valueForKey:@"uid"]),
+            @"userName":minstr([messageMap valueForKey:@"usernickname"]),
+            @"userID":minstr([messageMap valueForKey:@"uid"]),
             @"type":@"4",
-            @"icon":minstr([dic valueForKey:@"avatar"]),
-            @"isattent":minstr([dic valueForKey:@"isattent"]),
+            @"icon":minstr([messageMap valueForKey:@"avatar"]),
+            @"isattent":minstr([messageMap valueForKey:@"isattent"]),
         };
 
     }
-    if (chatDic) {
-        SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
+    if (chatMap) {
+        SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
         [_chatArray addObject:model];
         if (_chatArray.count > 100) {
             [_chatArray removeObjectAtIndex:1];
@@ -1152,10 +1152,10 @@
     }
 }
 //用户进入
-- (void)userEnterRoom:(NSDictionary *)dic {
-    NSDictionary *ct = [dic valueForKey:@"ct"];
+- (void)userEnterRoom:(NSDictionary *)userMap {
+    NSDictionary *ct = [userMap valueForKey:@"ct"];
     if (![minstr([ct valueForKey:@"uid"]) isEqual:[SWConfig getOwnID]]) {
-        NSDictionary *chatDic = @{
+        NSDictionary *chatMap = @{
             @"contentChat":@"进入了直播间",
             @"userName":minstr([ct valueForKey:@"name"]),
             @"userID":minstr([ct valueForKey:@"uid"]),
@@ -1163,7 +1163,7 @@
             @"icon":minstr([ct valueForKey:@"avatar"]),
             @"isattent":minstr([ct valueForKey:@"isattent"]),
         };
-        SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
+        SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
         [_chatArray addObject:model];
         if (_chatArray.count > 100) {
             [_chatArray removeObjectAtIndex:1];
@@ -1188,7 +1188,7 @@
             [MBProgressHUD showError:@"你已解除禁言"];
         }
     }
-   NSDictionary *chatDic = @{
+   NSDictionary *chatMap = @{
         @"contentChat":content,
         @"userName":@"",
         @"userID":@"",
@@ -1197,7 +1197,7 @@
         @"isattent":@"0",
         
     };
-    SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
+    SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
     [_chatArray addObject:model];
     if (_chatArray.count > 100) {
         [_chatArray removeObjectAtIndex:1];
@@ -1229,7 +1229,7 @@
         }
     }
     /*
-    NSDictionary *chatDic = @{
+    NSDictionary *chatMap = @{
         @"contentChat":minstr(msg[@"ct"]),
         @"userName":@"",
         @"userID":@"",
@@ -1238,7 +1238,7 @@
         @"isattent":@"0",
         
     };
-    SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
+    SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
     [_chatArray addObject:model];
     if (_chatArray.count > 100) {
         [_chatArray removeObjectAtIndex:1];
@@ -1249,7 +1249,7 @@
 }
 ///直播关闭
 - (void)LiveEnd{
-    NSString *url = [NSString stringWithFormat:@"live/stopinfo?stream=%@",minstr([_roomDic valueForKey:@"stream"])];
+    NSString *url = [NSString stringWithFormat:@"live/stopinfo?stream=%@",minstr([self.roomMap valueForKey:@"stream"])];
     [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [self lastview:info];
@@ -1262,7 +1262,7 @@
     
 
 }
--(void)lastview:(NSDictionary *)dic{
+-(void)lastview:(NSDictionary *)summaryMap{
 
     if (linkItem.userStatus == UserLinkStatus_Onmic) {
         [self userSelfCloseLink];
@@ -1275,12 +1275,12 @@
     }
 
     //无数据都显示0
-    if (!dic) {
-        dic = @{@"length":@"0",@"nums":@"0"};
+    if (!summaryMap) {
+        summaryMap = @{@"length":@"0",@"nums":@"0"};
     }
     UIImageView *lastView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
     lastView.userInteractionEnabled = YES;
-    [lastView sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"thumb"])]];
+    [lastView sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomMap valueForKey:@"thumb"])]];
     UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     UIVisualEffectView *effectview = [[UIVisualEffectView alloc] initWithEffect:blur];
     effectview.frame = CGRectMake(0, 0,_window_width,_window_height);
@@ -1301,7 +1301,7 @@
     [lastView addSubview:backView];
     
     UIImageView *headerImgView = [[UIImageView alloc]initWithFrame:CGRectMake(_window_width/2-50, labell.bottom, 100, 100)];
-    [headerImgView sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"avatar"])] placeholderImage:[UIImage imageNamed:@"bg1"]];
+    [headerImgView sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomMap valueForKey:@"avatar"])] placeholderImage:[UIImage imageNamed:@"bg1"]];
     headerImgView.layer.masksToBounds = YES;
     headerImgView.layer.cornerRadius = 50;
     [lastView addSubview:headerImgView];
@@ -1309,7 +1309,7 @@
     
     UILabel *nameL= [[UILabel alloc]initWithFrame:CGRectMake(0,50, backView.width, backView.height*0.55-50)];
     nameL.textColor = [UIColor whiteColor];
-    nameL.text = minstr([_roomDic valueForKey:@"nickname"]);
+    nameL.text = minstr([self.roomMap valueForKey:@"nickname"]);
     nameL.textAlignment = NSTextAlignmentCenter;
     nameL.font = [UIFont fontWithName:@"Helvetica-Bold" size:18];
     [backView addSubview:nameL];
@@ -1323,13 +1323,13 @@
         topLabel.textColor = [UIColor whiteColor];
         topLabel.textAlignment = NSTextAlignmentCenter;
         if (i == 0) {
-            topLabel.text = minstr([dic valueForKey:@"length"]);
+            topLabel.text = minstr([summaryMap valueForKey:@"length"]);
         }
 //        if (i == 1) {
 //            topLabel.text = minstr([dic valueForKey:@"votes"]);
 //        }
         if (i == 1) {
-            topLabel.text = minstr([dic valueForKey:@"nums"]);
+            topLabel.text = minstr([summaryMap valueForKey:@"nums"]);
         }
         [backView addSubview:topLabel];
         UILabel *footLabel = [[UILabel alloc]initWithFrame:CGRectMake(topLabel.left, topLabel.bottom, topLabel.width, 14)];
@@ -1367,7 +1367,7 @@
 #pragma mark -- 注销计时器
 - (void)invalidateTimer{
     //[_socketL userLeaveRoom];//发送关闭直播的socket
-    [_socketL colseSocket];//注销socket
+    [_socketL closeSocket];//注销socket
     _socketL = nil;//注销socket
     [_txLivePlayer stopPlay];
     _txLivePlayer = nil;
@@ -1386,7 +1386,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         attionBtn.userInteractionEnabled = YES;
     });
-    [SWToolClass postNetworkWithUrl:@"attent/add" andParameter:@{@"touid":minstr([_roomDic valueForKey:@"liveuid"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"attent/add" andParameter:@{@"touid":minstr([self.roomMap valueForKey:@"liveuid"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [MBProgressHUD showError:@"关注成功"];
             WeakSelf;
@@ -1399,7 +1399,7 @@
 
 #pragma mark -- 获取直播间人数
 - (void)getRoomUserNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livenums?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livenums?stream=%@",minstr([self.roomMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             userNumLabel.text = [NSString stringWithFormat:@"  %@人  ",minstr([info valueForKey:@"nums"])];
 
@@ -1410,7 +1410,7 @@
 }
 #pragma mark -- 获取直播间点赞数
 - (void)getRoomLikeNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livelikes?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livelikes?stream=%@",minstr([self.roomMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             likesNumLabel.text = minstr([info valueForKey:@"nums"]);
         }
@@ -1421,7 +1421,7 @@
 }
 #pragma mark -- 获取直播间销售商品数
 - (void)getRoomSellerGoodsNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livegoodsnums?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livegoodsnums?stream=%@",minstr([self.roomMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             sellerGoodsNumsLabel.text = minstr([info valueForKey:@"nums"]);
         }
@@ -1440,7 +1440,7 @@
 - (void)doLight{
     
     likeBtn.userInteractionEnabled = NO;
-    [SWToolClass postNetworkWithUrl:@"livesetlike" andParameter:@{@"stream":minstr([_roomDic valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"livesetlike" andParameter:@{@"stream":minstr([self.roomMap valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         likeBtn.userInteractionEnabled = YES;
         if (code == 200) {
             if (!isLight) {
@@ -1521,7 +1521,7 @@
 -(void)dealloc{
     if (_socketL) {
         [_socketL closeRoom];//发送关闭直播的socket
-        [_socketL colseSocket];//注销socket
+        [_socketL closeSocket];//注销socket
         _socketL = nil;//注销socket
     }
     if (_txLivePlayer) {
@@ -1554,7 +1554,7 @@
 
     if (linkItem.userStatus == UserLinkStatus_Applied) {
         // 取消申请
-        [[SWLinkmicManager shareInstance] userCancel:^(LinkEvent event, int eventCode, NSDictionary *eventDic) {
+        [[SWLinkmicManager shareInstance] userCancel:^(LinkEvent event, int eventCode, NSDictionary *eventMap) {
             if (eventCode == 0) {
                 linkItem.userStatus = UserLinkStatus_Normal;
                 // socket
@@ -1568,7 +1568,7 @@
         [self destroyLinkUserView];
     }else {
         // 申请上麦
-        [[SWLinkmicManager shareInstance] userApplay:^(LinkEvent event, int eventCode, NSDictionary *eventDic) {
+        [[SWLinkmicManager shareInstance] userApplay:^(LinkEvent event, int eventCode, NSDictionary *eventMap) {
             if (eventCode == 0) {
                 linkItem.userStatus = UserLinkStatus_Applied;
                 //socekt
@@ -1604,20 +1604,20 @@
 }
 
 // 连麦窗口
--(void)createLinkUserView:(NSDictionary *)infoDic {
+-(void)createLinkUserView:(NSDictionary *)infoMap {
     [self destroyLinkUserView];
     /**
      live_pull   主播的播流地址
      user_push    用户的推流地址
      user_pull     用户的播流地址
      */
-    NSDictionary *subdic = @{
+    NSDictionary *subMap = @{
         @"userid":[SWConfig getOwnID],
-        @"playurl":minstr([infoDic valueForKey:@"live_pull"]),
-        @"pushurl":minstr([infoDic valueForKey:@"user_push"]),
-        @"stream":minstr([_roomDic valueForKey:@"stream"])
+        @"playurl":minstr([infoMap valueForKey:@"live_pull"]),
+        @"pushurl":minstr([infoMap valueForKey:@"user_push"]),
+        @"stream":minstr([self.roomMap valueForKey:@"stream"])
     };
-    _linkUserView = [[SWLinkUserView alloc]initWithRTMPURL:subdic andFrame:CGRectMake(_window_width - 100, _window_height - 110 - ShowDiff - 150 , 100, 150) andisHOST:NO andAnToAn:NO];
+    _linkUserView = [[SWLinkUserView alloc]initWithRTMPURL:subMap andFrame:CGRectMake(_window_width - 100, _window_height - 110 - ShowDiff - 150 , 100, 150) andisHOST:NO andAnToAn:NO];
     _linkUserView.delegate = self;
     _linkUserView.tag = 1500 + [[SWConfig getOwnID] intValue];
     [_linkUserView ctrCloseBtn:YES];
@@ -1627,14 +1627,14 @@
     if (useV2) {
         if (_v2txLivePlayer) {
             [_v2txLivePlayer stopPlay];
-            NSString *onlyHostUrl = minstr([infoDic valueForKey:@"live_pull"]);
+            NSString *onlyHostUrl = minstr([infoMap valueForKey:@"live_pull"]);
             V2TXLiveCode result = [_v2txLivePlayer startLivePlay:onlyHostUrl];
             NSLog(@"wangminxin%ld",(long)result);
         }
     }else{
         if (_txLivePlayer) {
             [_txLivePlayer stopPlay];
-            NSString *onlyHostUrl = minstr([infoDic valueForKey:@"live_pull"]);
+            NSString *onlyHostUrl = minstr([infoMap valueForKey:@"live_pull"]);
             int result = [_txLivePlayer startLivePlay:onlyHostUrl type:1];
             // V2TXLiveCode result = [_txLivePlayer startLivePlay:onlyHostUrl];
             NSLog(@"wangminxin%ld",(long)result);
@@ -1657,19 +1657,19 @@
     }
 }
 #pragma mark - 连麦
-- (void)linkmicEventSoc:(NSDictionary *)linkDic {
-    int action = [minstr([linkDic valueForKey:@"action"]) intValue];
-    NSString *toUid = minstr([linkDic valueForKey:@"to_uid"]);
+- (void)linkmicEventSoc:(NSDictionary *)linkMap {
+    int action = [minstr([linkMap valueForKey:@"action"]) intValue];
+    NSString *toUid = minstr([linkMap valueForKey:@"to_uid"]);
     WeakSelf;
     if ([toUid isEqual:[SWConfig getOwnID]]) {
         if (action == 3) {
             // 主播同意
             linkItem.userStatus = UserLinkStatus_Onmic;
-            [[SWLinkmicManager shareInstance] userGetLinkinfo:^(LinkEvent event, int eventCode, NSDictionary *eventDic) {
-                [weakSelf createLinkUserView:eventDic];
+            [[SWLinkmicManager shareInstance] userGetLinkinfo:^(LinkEvent event, int eventCode, NSDictionary *eventMap) {
+                [weakSelf createLinkUserView:eventMap];
                 // socekt
                 [_socketL linkMicSocket:5 andParam:@{
-                    @"user_pull":minstr([eventDic valueForKey:@"user_pull"]),
+                    @"user_pull":minstr([eventMap valueForKey:@"user_pull"]),
                 }];
             }];
             if (room_type == 2) {

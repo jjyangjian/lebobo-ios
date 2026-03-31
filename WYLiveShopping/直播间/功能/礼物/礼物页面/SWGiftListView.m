@@ -51,18 +51,18 @@
 @property(nonatomic,strong)UIButton *push;
 @property(nonatomic,strong)UILabel *chongzhi;
 @property(nonatomic,strong)NSArray *allArray;
-@property(nonatomic,strong)NSDictionary *pldic;
+@property(nonatomic,strong)NSDictionary *playMap;
 @property(nonatomic,strong)NSMutableArray *myArr;
 @property (nonatomic,strong) UIView *giftCountView;
 
 @end
 @implementation SWGiftListView
 
-- (instancetype)initWithFrame:(CGRect)frame andZhuboMsg:(NSDictionary *)dic{
+- (instancetype)initWithFrame:(CGRect)frame andZhuboMsg:(NSDictionary *)playMap{
     self = [super initWithFrame:frame];
     if (self) {
         self.models = [NSMutableArray array];
-        self.pldic = dic;
+        self.playMap = playMap;
         countArray = @[@"1314",@"520",@"100",@"88",@"66",@"10",@"1"];
         self.backgroundColor = RGB_COLOR(@"#000000", 0.96);
         [self addSubview:self.tipLabel];
@@ -81,7 +81,7 @@
             self.allArray = [info valueForKey:@"list"];
             NSMutableArray *muatb = [NSMutableArray array];
             for (int i=0;i<self.allArray.count;i++) {
-                SWLiwuModel *model = [SWLiwuModel modelWithDic:self.allArray[i]];
+                SWLiwuModel *model = [SWLiwuModel modelWithDictionary:self.allArray[i]];
                 [muatb addObject:model];
             }
             _models = muatb;
@@ -139,9 +139,9 @@
 //    }
 
     /*******发送礼物开始 **********/
-    NSDictionary *giftDic = [NSDictionary dictionaryWithObjectsAndKeys:[self.pldic valueForKey:@"uid"],@"liveuid",[self.pldic valueForKey:@"stream"],@"stream",_selectModel.ID,@"giftid",giftCount,@"count", nil];
-    NSLog(@"%@",giftDic);
-    [SWToolClass postNetworkWithUrl:@"sendgift" andParameter:giftDic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    NSDictionary *giftMap = [NSDictionary dictionaryWithObjectsAndKeys:[self.playMap valueForKey:@"uid"],@"liveuid",[self.playMap valueForKey:@"stream"],@"stream",_selectModel.ID,@"giftid",giftCount,@"count", nil];
+    NSLog(@"%@",giftMap);
+    [SWToolClass postNetworkWithUrl:@"sendgift" andParameter:giftMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             
             NSString *coin = minstr([info valueForKey:@"coin"]);
@@ -149,7 +149,7 @@
 //            liveUser.coin  =  [NSString stringWithFormat:@"%@",coin];
             [SWConfig saveIcon:coin];
             [self chongzhiV:coin];
-            [self.delegate sendGift:self.myArr andPlayDic:self.pldic andData:info andLianFa:lianfa];
+            [self.delegate sendGift:self.myArr andPlayDic:self.playMap andData:info andLianFa:lianfa];
             
             [_collectionView reloadData];
             

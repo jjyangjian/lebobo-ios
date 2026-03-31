@@ -93,7 +93,7 @@
                 }
             }
             for (NSDictionary *dic in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDictionary:dic];
                 [self.dataArray addObject:model];
             }
             if ([info count] < 20) {
@@ -249,7 +249,7 @@
                 }
             }
             for (NSDictionary *dic in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDictionary:dic];
                 [self.dataArray addObject:model];
             }
             if ([info count] < 20) {

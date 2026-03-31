@@ -27,7 +27,7 @@
 @property(nonatomic,assign)int haohuaCount;
 @property(nonatomic, assign)BOOL isplatBool;
 -(void)sethaohuacount;
--(void)addArrayCount:(NSDictionary *)dic;
+-(void)addArrayCount:(NSDictionary *)giftMap;
 -(void)enGiftEspensive:(BOOL)isplat;
 -(void)stopHaoHUaLiwu;
 

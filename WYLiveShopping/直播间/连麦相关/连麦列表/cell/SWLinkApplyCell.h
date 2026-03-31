@@ -10,7 +10,7 @@
 
 @protocol LinkApplyDelegate <NSObject>
 
--(void)linkToUser:(NSDictionary*)dic;
+-(void)linkToUser:(NSDictionary*)userMap;
 
 @end
 
@@ -21,7 +21,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *linkBtn;
 
 @property(nonatomic,weak)id<LinkApplyDelegate> delegate;
-@property(nonatomic,strong)NSDictionary *dataDic;
+@property(nonatomic,strong)NSDictionary *dataMap;
 
 
 @end

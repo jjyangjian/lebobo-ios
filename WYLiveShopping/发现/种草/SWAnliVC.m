@@ -250,7 +250,7 @@
         [MBProgressHUD hideHUD];
         if (code == 200) {
             SWLivePlayerViewController *player = [[SWLivePlayerViewController alloc]init];
-            player.roomDic = [model.originDic mutableCopy];
+            player.roomMap = [model.originDic mutableCopy];
             [[SWMXBADelegate sharedAppDelegate] pushViewController:player animated:YES];
         }else{
             [MBProgressHUD showError:msg];

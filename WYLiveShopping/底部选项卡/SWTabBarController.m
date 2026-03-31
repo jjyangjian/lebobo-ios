@@ -9,7 +9,7 @@
 #import "JJMerchantHomeVC.h"
 #import "JJMineVC.h"
 #import "JJStartLiveVC.h"
-#import "JJHomeLiveListVC.h"
+//#import "JJHomeLiveListVC.h"
 //#import "SWZYTabBar.h"
 #import <MHBeautySDK/MHSDK.h>
 //#import "SWHomeViewController.h"
@@ -102,12 +102,12 @@
 #pragma mark  在这里更换 左右tabbar的image
 - (void)setUpAllChildVc {
     JJMerchantHomeVC *home = [JJMerchantHomeVC new];
-    JJHomeLiveListVC *liveList = [JJHomeLiveListVC new];
+//    JJHomeLiveListVC *liveList = [JJHomeLiveListVC new];
     JJStartLiveVC *startLive = [JJStartLiveVC new];
     JJMineVC *mine = [JJMineVC new];
 
     [self setUpOneChildVcWithVc:home Image:@"tab_home" selectedImage:@"tab_home_sel" title:@"首页" andTag:0];
-    [self setUpOneChildVcWithVc:liveList Image:@"tab_class" selectedImage:@"tab_class_sel" title:@"直播" andTag:1];
+//    [self setUpOneChildVcWithVc:liveList Image:@"tab_class" selectedImage:@"tab_class_sel" title:@"直播" andTag:1];
     [self setUpOneChildVcWithVc:startLive Image:@"tab_class" selectedImage:@"tab_class_sel" title:@"开始直播" andTag:2];
     [self setUpOneChildVcWithVc:mine Image:@"tab_mine" selectedImage:@"tab_mine_sel" title:@"我的" andTag:3];
 }

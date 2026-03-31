@@ -179,6 +179,85 @@ static AFHTTPSessionManager *httpManager = nil;
 //
 //     }];
 }
++ (void)postJsonNetworkWithUrl:(NSString *)url andParameter:(id)parameter success:(networkSuccessBlock)successBlock fail:(networkFailBlock)failBlock{
+    NSString *phoneVersion = [[UIDevice currentDevice] systemVersion];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@%@",purl,url];
+    NSString *build = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *package = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    requestUrl = [requestUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+
+    NSMutableDictionary *pDic;
+    NSString *ownToken = minstr([SWConfig getOwnToken]);
+    if ([SWConfig getOwnID].integerValue > 0 && ownToken.length > 0) {
+        pDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:minstr([SWConfig getOwnID]),@"uid",[self getCurrentDeviceModel],@"model",build,@"version",phoneVersion,@"system",package,@"package",ownToken,@"token", nil];
+    } else {
+        pDic = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"0",@"uid",[self getCurrentDeviceModel],@"model",build,@"version",phoneVersion,@"system",package,@"package",@"0",@"token", nil];
+    }
+    if ([parameter isKindOfClass:[NSDictionary class]]) {
+        [pDic addEntriesFromDictionary:parameter];
+    }
+
+    NSLog(@"请求URL:%@",requestUrl);
+    NSLog(@"请求参数：%@",pDic);
+
+    NSURL *urlObj = [NSURL URLWithString:requestUrl];
+    if (!urlObj) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            failBlock();
+        });
+        return;
+    }
+
+    NSError *jsonError = nil;
+    NSData *bodyData = [NSJSONSerialization dataWithJSONObject:pDic options:0 error:&jsonError];
+    if (jsonError || !bodyData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            failBlock();
+        });
+        return;
+    }
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlObj];
+    request.HTTPMethod = @"POST";
+    request.timeoutInterval = 30;
+    request.HTTPBody = bodyData;
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    if (ownToken.length > 0) {
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", ownToken] forHTTPHeaderField:@"Authori-zation"];
+    }
+
+    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:config];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (error || !data) {
+                failBlock();
+                return;
+            }
+
+            NSError *parseError = nil;
+            id responseObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&parseError];
+            if (parseError || ![responseObject isKindOfClass:[NSDictionary class]]) {
+                failBlock();
+                return;
+            }
+
+            NSDictionary *responseDic = (NSDictionary *)responseObject;
+            NSNumber *number = @([minstr(responseDic[@"status"]) intValue]);
+            id dataObj = responseDic[@"data"];
+            NSString *msg = minstr(responseDic[@"msg"]);
+            NSLog(@"返回数据：%@",responseDic);
+
+            successBlock([number intValue], dataObj, msg);
+
+            if ([number intValue] == 200) {
+            } else if ([number intValue] == 410000 || [number intValue] == 410001 || [number intValue] == 410002) {
+                [[SWToolClass sharedInstance] quitLogin];
+            }
+        });
+    }];
+    [task resume];
+}
 
 /**
  计算字符串宽度

@@ -16,27 +16,27 @@
     NSMutableArray *originalArray;//用这个数组记录最开始数据
     NSString *searchKeywords;
 }
-@property (nonatomic,strong) UITableView *godsTableView;
+@property (nonatomic,strong) UITableView *goodsTableView;
 
 @end
 
 @implementation SWAddGoodsViewController
--(UITableView *)godsTableView{
-    if (!_godsTableView) {
-        _godsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64+46+statusbarHeight, _window_width, _window_height-ShowDiff-(64+46+statusbarHeight)) style:0];
-        _godsTableView.delegate = self;
-        _godsTableView.dataSource = self;
-        _godsTableView.separatorStyle = 0;
-        _godsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+-(UITableView *)goodsTableView{
+    if (!_goodsTableView) {
+        _goodsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 64+46+statusbarHeight, _window_width, _window_height-ShowDiff-(64+46+statusbarHeight)) style:0];
+        _goodsTableView.delegate = self;
+        _goodsTableView.dataSource = self;
+        _goodsTableView.separatorStyle = 0;
+        _goodsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             page = 1;
             [self requestData:searchKeywords];
         }];
-        _godsTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        _goodsTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
             page ++;
             [self requestData:searchKeywords];
         }];
     }
-    return _godsTableView;
+    return _goodsTableView;
 }
 - (void)addSearchView{
     UIView *searchView = [[UIView alloc]initWithFrame:CGRectMake(0, 64+statusbarHeight, _window_width, 46)];
@@ -71,7 +71,7 @@
     originalArray = [NSMutableArray array];
     searchKeywords = @"";
     [self addSearchView];
-    [self.view addSubview:self.godsTableView];
+    [self.view addSubview:self.goodsTableView];
     [self requestData:searchKeywords];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keywordsChanged) name:UITextFieldTextDidChangeNotification object:nil];
 }
@@ -115,12 +115,12 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (_isVideo) {
         SWLiveGoodsModel *model = dataArray[indexPath.row];
-        NSDictionary *dic = @{
+        NSDictionary *goodsMap = @{
             @"id":model.goodsID,
             @"name":model.name
         };
         if (self.block) {
-            self.block(dic);
+            self.block(goodsMap);
         }
         [self doReturn];
     }
@@ -129,27 +129,27 @@
     NSString *url = [NSString stringWithFormat:@"shoplist?liveuid=%@&page=%d&keyword=%@",[SWConfig getOwnID],page,keyword];
 
     [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_goodsTableView.mj_header endRefreshing];
+        [_goodsTableView.mj_footer endRefreshing];
 
         if (code == 200) {
             if (page == 1) {
                 [dataArray removeAllObjects];
                 [originalArray removeAllObjects];
             }
-            for (NSDictionary *dci in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDic:dci];
+            for (NSDictionary *itemMap in info) {
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDictionary:itemMap];
                 [dataArray addObject:model];
                 [originalArray addObject:model];
             }
-            [_godsTableView reloadData];
+            [_goodsTableView reloadData];
             if ([info count] < 20) {
-                [_godsTableView.mj_footer endRefreshingWithNoMoreData];
+                [_goodsTableView.mj_footer endRefreshingWithNoMoreData];
             }
         }
     } Fail:^{
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_goodsTableView.mj_header endRefreshing];
+        [_goodsTableView.mj_footer endRefreshing];
     }];
 }
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

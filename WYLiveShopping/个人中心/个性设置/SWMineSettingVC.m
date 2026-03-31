@@ -203,7 +203,12 @@ static NSString * const JJSettingCellId = @"JJSettingCell";
             [MBProgressHUD showError:@"输入内容不正确"];
             return;
         }
-        [MBProgressHUD showError:@"注销功能暂未接入"];
+        [MBProgressHUD showMessage:@""];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideHUD];
+            [self logOutBtnClick];
+            [MBProgressHUD showError:@"账号开始注销，7日内不要登录"];
+        });
     }];
     [confirmAction setValue:[UIColor redColor] forKey:@"titleTextColor"];
     [alertController addAction:cancelAction];

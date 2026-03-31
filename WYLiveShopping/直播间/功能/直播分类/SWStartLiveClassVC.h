@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void (^liveClassClick)(NSDictionary *dic);
+typedef void (^liveClassClick)(NSDictionary *classMap);
 
 @interface SWStartLiveClassVC : SWBaseViewController
 @property (nonatomic,strong)NSString *classID;

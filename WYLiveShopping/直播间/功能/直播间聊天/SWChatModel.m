@@ -1,26 +1,26 @@
 #import "SWChatModel.h"
 @implementation SWChatModel
--(instancetype)initWithDic:(NSDictionary *)dic{
+-(instancetype)initWithDictionary:(NSDictionary *)map{
     self = [super init];
     if (self) {
-        self.userName = minstr([dic valueForKey:@"userName"]);
-        self.contentChat = minstr([dic valueForKey:@"contentChat"]);
-        self.userID = minstr([dic valueForKey:@"userID"]);
-        self.type = minstr([dic valueForKey:@"type"]);
-        self.icon = minstr([dic valueForKey:@"icon"]);
-        self.isattent = [minstr([dic valueForKey:@"isattent"]) intValue];
-        self.userType = minstr(dic[@"usertype"]);
+        self.userName = minstr([map valueForKey:@"userName"]);
+        self.contentChat = minstr([map valueForKey:@"contentChat"]);
+        self.userID = minstr([map valueForKey:@"userID"]);
+        self.type = minstr([map valueForKey:@"type"]);
+        self.icon = minstr([map valueForKey:@"icon"]);
+        self.isattent = [minstr([map valueForKey:@"isattent"]) intValue];
+        self.userType = minstr(map[@"usertype"]);
     }
     return self;
 }
 
-- (instancetype)initOnlineDic:(NSDictionary *)dic{
+- (instancetype)initWithOnlineDictionary:(NSDictionary *)map{
     self = [super init];
     if (self) {
-        self.userName = minstr([dic valueForKey:@"nickname"]);
-        self.userID = minstr([dic valueForKey:@"uid"]);
-        self.icon = minstr([dic valueForKey:@"avatar"]);
-        self.money = minstr(dic[@"total"]);
+        self.userName = minstr([map valueForKey:@"nickname"]);
+        self.userID = minstr([map valueForKey:@"uid"]);
+        self.icon = minstr([map valueForKey:@"avatar"]);
+        self.money = minstr(map[@"total"]);
     }
     return self;
 }

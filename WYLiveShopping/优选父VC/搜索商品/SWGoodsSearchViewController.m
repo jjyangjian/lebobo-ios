@@ -149,7 +149,7 @@
                 [self.infoArray removeAllObjects];
             }
             for (NSDictionary *dic in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDictionary:dic];
                 [self.infoArray addObject:model];
             }
             [self.searchTableView reloadData];

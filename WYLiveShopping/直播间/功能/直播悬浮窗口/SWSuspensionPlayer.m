@@ -17,7 +17,7 @@
 @property (nonatomic,strong) NSString *hostURL;
 @property (nonatomic,strong)    TXLivePlayer *       txLivePlayer;
 @property (nonatomic,strong)    TXLivePlayConfig*    config;
-@property (nonatomic,strong) NSMutableDictionary *roomDic;
+@property (nonatomic,strong) NSMutableDictionary *roomMap;
 
 @end
 
@@ -29,8 +29,8 @@
         UIImageView *imgV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.width, self.height)];
         [imgV sd_setImageWithURL:[NSURL URLWithString:minstr([msg valueForKey:@"thumb"])]];
         [self addSubview:imgV];
-        _roomDic = [msg mutableCopy];
-        _hostURL = minstr([_roomDic valueForKey:@"pull"]);
+        _roomMap = [msg mutableCopy];
+        _hostURL = minstr([_roomMap valueForKey:@"pull"]);
         _config = [[TXLivePlayConfig alloc] init];
         //自动模式
         _config.bAutoAdjustCacheTime   = YES;
@@ -200,11 +200,11 @@
 
 }
 - (void)checkLive{
-    [SWToolClass postNetworkWithUrl:@"live/check" andParameter:@{@"stream":minstr([_roomDic valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"live/check" andParameter:@{@"stream":minstr([_roomMap valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [MBProgressHUD hideHUD];
             SWLivePlayerViewController *player = [[SWLivePlayerViewController alloc]init];
-            player.roomDic = _roomDic;
+            player.roomMap = _roomMap;
             [[SWMXBADelegate sharedAppDelegate] pushViewController:player animated:YES];
         }
     } fail:^{

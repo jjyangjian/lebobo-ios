@@ -25,17 +25,17 @@
 }
 
 
-- (void)setDataDic:(NSDictionary *)dataDic {
-    _dataDic = dataDic;
+- (void)setDataMap:(NSDictionary *)dataMap {
+    _dataMap = dataMap;
 
-    [_avatarIV sd_setImageWithURL:[NSURL URLWithString:minstr([_dataDic valueForKey:@"avatar"])]];
-    _nameL.text = minstr([_dataDic valueForKey:@"nickname"]);
+    [_avatarIV sd_setImageWithURL:[NSURL URLWithString:minstr([_dataMap valueForKey:@"avatar"])]];
+    _nameL.text = minstr([_dataMap valueForKey:@"nickname"]);
 
 }
 
 - (IBAction)clickLinkBtn:(UIButton *)sender {
     if (_delegate && [_delegate respondsToSelector:@selector(linkToUser:)]) {
-        [_delegate linkToUser:_dataDic];
+        [_delegate linkToUser:_dataMap];
     }
 }
 

@@ -12,10 +12,10 @@
 @interface SWLinkApplyView()<UITableViewDelegate,UITableViewDataSource,LinkApplyDelegate>{
     int page;
     UIView *showView;
-    UILabel *titleLable;
+    UILabel *titleLabel;
     NSString *liveUid;
 }
-@property (nonatomic,strong) UITableView *godsTableView;
+@property (nonatomic,strong) UITableView *applyTableView;
 @property (nonatomic,strong) NSMutableArray *dataArray;
 
 @end
@@ -58,11 +58,11 @@
     showView.backgroundColor = [UIColor whiteColor];
     [self addSubview:showView];
     showView.layer.mask = [[SWToolClass sharedInstance] setViewLeftTop:20 andRightTop:20 andView:showView];
-    titleLable = [[UILabel alloc]init];
-    titleLable.font = [UIFont boldSystemFontOfSize:14];
-    titleLable.text = @"申请连麦";
-    [showView addSubview:titleLable];
-    [titleLable mas_makeConstraints:^(MASConstraintMaker *make) {
+    titleLabel = [[UILabel alloc]init];
+    titleLabel.font = [UIFont boldSystemFontOfSize:14];
+    titleLabel.text = @"申请连麦";
+    [showView addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(showView);
         make.centerY.equalTo(showView.mas_top).offset(20);
     }];
@@ -74,31 +74,31 @@
         [addBtn addTarget:self action:@selector(closeLink) forControlEvents:UIControlEventTouchUpInside];
         [showView addSubview:addBtn];
         [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(titleLable);
+            make.centerY.equalTo(titleLabel);
             make.right.equalTo(showView).offset(-20);
         }];
     }
     [[SWToolClass sharedInstance] lineViewWithFrame:CGRectMake(10, 39, _window_width-20, 1) andColor:colorf0 andView:showView];
 
-    [showView addSubview:self.godsTableView];
+    [showView addSubview:self.applyTableView];
 }
 
--(UITableView *)godsTableView{
-    if (!_godsTableView) {
-        _godsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 40, _window_width, showView.height-40-ShowDiff) style:0];
-        _godsTableView.delegate = self;
-        _godsTableView.dataSource = self;
-        _godsTableView.separatorStyle = 0;
-        _godsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+-(UITableView *)applyTableView{
+    if (!_applyTableView) {
+        _applyTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 40, _window_width, showView.height-40-ShowDiff) style:0];
+        _applyTableView.delegate = self;
+        _applyTableView.dataSource = self;
+        _applyTableView.separatorStyle = 0;
+        _applyTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             page = 1;
             [self requestData];
         }];
-        _godsTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        _applyTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
             page ++;
             [self requestData];
         }];
     }
-    return _godsTableView;
+    return _applyTableView;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return _dataArray.count;
@@ -109,7 +109,7 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SWLinkApplyCell" owner:nil options:nil] lastObject];
         cell.delegate = self;
     }
-    cell.dataDic = _dataArray[indexPath.row];
+    cell.dataMap = _dataArray[indexPath.row];
     return cell;
 
 }
@@ -121,26 +121,26 @@
 }
 - (void)requestData{
 //    NSDictionary *changelive = @{
-//        @"stream":minstr([[SWLinkmicManager shareInstance].roomDic valueForKey:@"stream"]),
+//        @"stream":minstr([[SWLinkmicManager shareInstance].roomMap valueForKey:@"stream"]),
 //    };
     //
-    NSString *getUrl = [NSString stringWithFormat:@"livemic/list&stream=%@&p=%@",minstr([[SWLinkmicManager shareInstance].roomDic valueForKey:@"stream"]),@(page)];
+    NSString *getUrl = [NSString stringWithFormat:@"livemic/list&stream=%@&p=%@",minstr([[SWLinkmicManager shareInstance].roomMap valueForKey:@"stream"]),@(page)];
     [SWToolClass getQCloudWithUrl:getUrl Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_applyTableView.mj_header endRefreshing];
+        [_applyTableView.mj_footer endRefreshing];
         if (code == 200) {
             if (page == 1) {
                 [_dataArray removeAllObjects];
             }
             [_dataArray addObjectsFromArray:info];
-            [_godsTableView reloadData];
+            [_applyTableView reloadData];
             if ([info count] < 20) {
-                [_godsTableView.mj_footer endRefreshingWithNoMoreData];
+                [_applyTableView.mj_footer endRefreshingWithNoMoreData];
             }
         }
     } Fail:^{
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_applyTableView.mj_header endRefreshing];
+        [_applyTableView.mj_footer endRefreshing];
     }];
 }
 
@@ -154,10 +154,10 @@
 
 #pragma mark - LinkApplyDelegate
 
-- (void)linkToUser:(NSDictionary *)dic {
+- (void)linkToUser:(NSDictionary *)userMap {
 
     if (self.delegate && [self.delegate respondsToSelector:@selector(agreeUserLink:)]) {
-        [self.delegate agreeUserLink:dic];
+        [self.delegate agreeUserLink:userMap];
     }
     // 刷新
     page = 1;

@@ -45,7 +45,7 @@
                 [_dataArray removeAllObjects];
             }
             for (int i = 0; i<infoA.count; i++) {
-                SWChatModel *model = [[SWChatModel alloc] initOnlineDic:infoA[i]];
+                SWChatModel *model = [[SWChatModel alloc] initWithOnlineDictionary:infoA[i]];
                 [_dataArray addObject:model];
             }
         

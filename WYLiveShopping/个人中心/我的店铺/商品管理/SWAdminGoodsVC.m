@@ -73,7 +73,7 @@
                 [self.dataArray removeAllObjects];
             }
             for (NSDictionary *dic in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDic:dic];
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc] initWithDictionary:dic];
                 model.isAdmin = YES;
                 model.is_sale = @"0";
                 [self.dataArray addObject:model];

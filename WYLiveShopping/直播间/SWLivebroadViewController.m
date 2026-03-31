@@ -6,14 +6,19 @@
 //  Copyright © 2020 IOS1. All rights reserved.
 //
 
+/// 控制器声明
 #import "SWLivebroadViewController.h"
-#import "SWSocketLive.h"
+/// 直播间 socket 通道
+#import "SWLiveSocket.h"
+
+/// 腾讯直播/连麦核心 SDK
 #import <TXLiteAVSDK_Professional/TXLiteAVSDK.h>
 #import <TXLiteAVSDK_Professional/V2TXLivePusher.h>
 #import <TXLiteAVSDK_Professional/TXLiveBase.h>
 #import <TXLiteAVSDK_Professional/TRTCCloud.h>
-#import "V8HorizontalPickerView.h"
 
+/// 三方 UI 组件
+#import "V8HorizontalPickerView.h"
 #import "JJShareLiveLinkView.h"
 
 
@@ -32,6 +37,7 @@
 #import <CoreTelephony/CTCall.h>
 #import <CWStatusBarNotification/CWStatusBarNotification.h>
 
+/// 页面组件与业务模块
 #import "SWStartLiveClassVC.h"
 #import "SWUtils.h"
 #import "SWChatMsgCell.h"
@@ -47,6 +53,7 @@
 #import "SWLinkApplyView.h"
 #import "SWLinkUserView.h"
 
+/// 腾讯滤镜类型枚举（旧逻辑保留）
 typedef NS_ENUM(NSInteger,TCLVFilterType) {
     FilterType_None         = 0,
     FilterType_white        ,   //美白滤镜
@@ -61,97 +68,15 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 };
 @import CoreLocation;
 
-@interface SWLivebroadViewController ()<TXVideoCustomProcessDelegate,V2TXLivePusherObserver,V8HorizontalPickerViewDelegate,V8HorizontalPickerViewDataSource,MHMeiyanMenusViewDelegate,UITextViewDelegate,CLLocationManagerDelegate,socketLiveDelegate,UITableViewDelegate,UITableViewDataSource,SWUserPopupViewDeleagte,UITextFieldDelegate,haohuadelegate,TZImagePickerControllerDelegate,LiveOnlineListDelegate,LinkAncorDelegate,tx_play_linkmic>{
-    /***********************  腾讯SDK start **********************/
-    float  _tx_beauty_level;
-    float  _tx_whitening_level;
-    float  _tx_eye_level;
-    float  _tx_face_level;
-    UIButton              *_beautyBtn;
-    UIButton              *_filterBtn;
-    UILabel               *_beautyLabel;
-    UILabel               *_whiteLabel;
-    UISlider              *_sdBeauty;
-    UISlider              *_sdWhitening;
-    V8HorizontalPickerView  *_filterPickerView;
-    NSInteger    _filterType;
-    
-    NSTimer *backGroundTimer;//检测后台时间（超过60秒执行断流操作）
-    int backTime;//返回后台时间60s
-
-    //预览视图相关
-    UIButton *preThumbBtn;
-    UILabel *thumbLabel;
-    UITextView *liveTitleTextView;
-    UILabel *textPlaceholdLabel;
-    UIImage *thumbImage;
-    //开播位置相关
-    UILabel *locationLabel;
-    //开始直播按钮
-    UIButton *startLiveBtn;
-    //直播分类
-    UILabel *classTipL;
-    NSString *liveClassID;
-    //开始动画
-    UIView *animationBackView;
-    UILabel *aniLabel1;
-    UILabel *aniLabel2;
-    UILabel *aniLabel3;
-    //是否被禁言
-    BOOL isShutUp;
-    //直播间按钮
-    UIButton *closeRoomBtn;//关闭直播间按钮
-    UIButton *chatBtn;//聊天按钮
-    UIButton *goodsBtn;//商品按钮
-    UIButton *linkBtn;
-    UIButton *linkEndBtn;
-    UILabel *linkRed;
-    UIButton *moreBtn;//更多功能按钮
-    UILabel *likesNumLabel;//点赞数
-    UILabel *userNumLabel;//直播间人数
-    //用户弹窗
-    SWUserPopupView *userPview;
-    //直播间商品列表
-    SWLiveGoodsView *goodsView;
-    //飘心计时器
-    NSTimer *heartTimer;
-    int heartShowCount;
-    //主播更多按钮view
-    SWAnchorMoreMenuView *moreMenuView;
-    BOOL isTorch;//是否开启闪光灯
-    //分享视图
-    SWShareView *shareV;
-    //连送礼物效果展示view
-    UIView *liansongliwubottomview;//连送礼物底部view
-    SWContinueGift *continueGifts;//连送礼物
-    SWExpensiveGiftV *haohualiwuV;//豪华礼物
-    //定时请求直播间人数点赞数
-    NSTimer *reloadTimer;
-    //已卖出商品数量
-    UILabel *sellerGoodsNumsLabel;
-    BOOL _needScale;
-    SWLiveOnlineList *onlineList;//在线用户列表
-
-    SWLinkApplyView *applyView;
-    BOOL _isFrontCamera;
-    BOOL isLoadWebSprout;
-
-    SWLinkUserView *_linkUserView;
-    
-    BOOL showEndLinkBtn;
-    TRTCCloud *_trtcCloud;
-    NSString *_linkingRemoteUserId;
-    NSString *_expectedRemoteUserIdFromSignal;
-    BOOL _trtcEntered;
-    BOOL _trtcEntering;
-    void (^_trtcEnterCompletion)(BOOL ok);
-}
+@interface SWLivebroadViewController ()<TXVideoCustomProcessDelegate,V2TXLivePusherObserver,V8HorizontalPickerViewDelegate,V8HorizontalPickerViewDataSource,MHMeiyanMenusViewDelegate,UITextViewDelegate,CLLocationManagerDelegate,SWLiveSocketDelegate,UITableViewDelegate,UITableViewDataSource,SWUserPopupViewDeleagte,UITextFieldDelegate,haohuadelegate,TZImagePickerControllerDelegate,LiveOnlineListDelegate,LinkAncorDelegate,tx_play_linkmic>
 
 /********************  MHSDK添加 开始 ********************/
+/// 美狐美颜菜单/管理器
 @property (nonatomic, strong) MHMeiyanMenusView *menusView;
 @property (nonatomic, strong) MHBeautyManager *beautyManager;
 /******************** MHSDK添加 结束 ********************/
-@property (nonatomic,strong)UIView *preFrontView;
+/// 开播前预览层容器
+@property (nonatomic,strong)UIView *previewFrontView;
 //@property(nonatomic, strong) GPUImageView *gpuPreviewView;
 //@property (nonatomic, strong) GPUImageStillCamera *videoCamera;
 //@property (nonatomic, strong) CIImage *outputImage;
@@ -159,42 +84,120 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 //@property (nonatomic, assign) size_t outputheight;
 
 /***********************  腾讯SDK start **********************/
+/// V2 推流核心对象与编码参数
 //@property TXLivePushConfig* txLivePushonfig;
 //@property TXLivePush*       txLivePublisher;
-@property(nonatomic,strong)V2TXLiveVideoEncoderParam *txLiveVieoParam;
+@property(nonatomic,strong)V2TXLiveVideoEncoderParam *txLiveVideoParam;
 @property(nonatomic,strong)V2TXLivePusher *txLivePusher;
-@property(nonatomic,strong)TXAudioEffectManager *audioEffect;
-@property (nonatomic,strong) NSDictionary *pushSettings;
+@property(nonatomic,strong)TXAudioEffectManager *audioEffectManager;
+@property (nonatomic,strong) NSDictionary *pushConfigMap;
 
-@property(nonatomic,strong)NSMutableArray *filterArray;//美颜数组
-@property (nonatomic,strong)UIView     *vBeauty;
-@property (nonatomic,strong)CTCallCenter     *callCenter;
+/// 美颜与滤镜面板
+@property(nonatomic,strong)NSMutableArray *filterOptionList;//美颜数组
+@property (nonatomic,strong)UIView     *beautyContainerView;
+
+/// 系统事件与定时器
+@property (nonatomic,strong)CTCallCenter     *telephonyCallCenter;
+@property (nonatomic,strong) NSTimer *backgroundTimer;
+@property (nonatomic,assign) int backgroundElapsedTime;
+@property (nonatomic,strong) NSTimer *heartAnimationTimer;
+@property (nonatomic,assign) int heartBurstCount;
+@property (nonatomic,strong) NSTimer *statsRefreshTimer;
+
+/// 开播前信息输入（封面/标题/分类）
+@property (nonatomic,strong) UIButton *previewThumbButton;
+@property (nonatomic,strong) UILabel *previewThumbLabel;
+@property (nonatomic,strong) UITextView *liveTitleTextView;
+@property (nonatomic,strong) UILabel *textPlaceholderLabel;
+@property (nonatomic,strong) UIImage *previewThumbnailImage;
+@property (nonatomic,strong) UILabel *locationLabel;
+@property (nonatomic,strong) UIButton *startLiveButton;
+@property (nonatomic,strong) UILabel *classTipLabel;
+@property (nonatomic,copy) NSString *selectedLiveClassId;
+
+/// 开播倒计时动效
+@property (nonatomic,strong) UIView *animationBackView;
+@property (nonatomic,strong) UILabel *countdownLabel3;
+@property (nonatomic,strong) UILabel *countdownLabel2;
+@property (nonatomic,strong) UILabel *countdownLabel1;
+
+/// 主播端直播间底部操作区
+@property (nonatomic,assign) BOOL isMuted;
+@property (nonatomic,assign) BOOL isTorch;
+@property (nonatomic,assign) BOOL hasLoadedWebSprout;
+@property (nonatomic,assign) BOOL shouldShowEndLinkButton;
+@property (nonatomic,strong) UIButton *closeRoomButton;
+@property (nonatomic,strong) UIButton *chatButton;
+@property (nonatomic,strong) UIButton *goodsButton;
+@property (nonatomic,strong) UIButton *linkButton;
+@property (nonatomic,strong) UIButton *linkEndButton;
+@property (nonatomic,strong) UILabel *linkRequestRedDotView;
+@property (nonatomic,strong) UIButton *moreButton;
+@property (nonatomic,strong) UILabel *likesCountLabel;
+@property (nonatomic,strong) UILabel *userCountLabel;
+@property (nonatomic,strong) SWUserPopupView *userPopupView;
+@property (nonatomic,strong) UILabel *soldGoodsCountLabel;
+@property (nonatomic,strong) SWLiveOnlineList *onlineUserListView;
+@property (nonatomic,strong) SWLiveGoodsView *liveGoodsPanelView;
+@property (nonatomic,strong) SWAnchorMoreMenuView *anchorMoreMenuView;
+@property (nonatomic,strong) SWShareView *liveShareView;
+@property (nonatomic,strong) UIView *continueGiftContainerView;
+@property (nonatomic,strong) SWContinueGift *continueGiftView;
+@property (nonatomic,strong) SWExpensiveGiftV *expensiveGiftView;
+@property (nonatomic,strong) SWLinkApplyView *linkRequestView;
+
+/// 美颜参数（腾讯 SDK）
+@property (nonatomic,assign) float beautyLevel;
+@property (nonatomic,assign) float whiteningLevel;
+@property (nonatomic,assign) float eyeEnlargeLevel;
+@property (nonatomic,assign) float faceSlimLevel;
+@property (nonatomic,strong) UIButton *beautyButton;
+@property (nonatomic,strong) UIButton *filterButton;
+@property (nonatomic,strong) UILabel *beautyLabel;
+@property (nonatomic,strong) UILabel *whiteningLabel;
+@property (nonatomic,strong) UISlider *beautySlider;
+@property (nonatomic,strong) UISlider *whiteningSlider;
+@property (nonatomic,strong) V8HorizontalPickerView *filterPickerView;
+@property (nonatomic,assign) NSInteger filterType;
+
+/// 摄像头状态
+@property (nonatomic,assign) BOOL needsScale;
+@property (nonatomic,assign) BOOL isFrontCamera;
+
+/// 连麦窗口与 TRTC 订阅状态
+@property (nonatomic,strong) SWLinkUserView *linkMicUserView;
+@property (nonatomic,strong) TRTCCloud *trtcCloud;
+@property (nonatomic,copy) NSString *linkingRemoteUserId;
+@property (nonatomic,copy) NSString *expectedRemoteUserIdFromSignal;
+@property (nonatomic,assign) BOOL trtcEntered;
+@property (nonatomic,assign) BOOL trtcEntering;
+@property (nonatomic,copy) void (^trtcEnterCompletion)(BOOL ok);
 
 /***********************  腾讯SDK end **********************/
 
-/// 顶部提示
-@property (nonatomic,strong) CWStatusBarNotification *notification;
+/// 顶部状态提示条
+@property (nonatomic,strong) CWStatusBarNotification *statusBarNotification;
 
-/// 预览视图
-@property (nonatomic,strong) UIView *pushBackView;
+/// 腾讯预览渲染视图
+@property (nonatomic,strong) UIView *livePreviewRenderView;
 
 /// 推流地址
-@property (nonatomic,strong) NSString *hostURL;
-/// socket
-@property (nonatomic,strong) SWSocketLive *socketL;
+@property (nonatomic,strong) NSString *pushStreamUrl;
+/// 房间 socket
+@property (nonatomic,strong) SWLiveSocket *liveSocket;
 ///定位
-@property (nonatomic,strong) CLLocationManager   *lbsManager;
+@property (nonatomic,strong) CLLocationManager   *locationServiceManager;
 ///直播界面视图父view
-@property (nonatomic,strong) UIView *frontView;
+@property (nonatomic,strong) UIView *liveRoomContainerView;
 ///直播间信息字典
-@property (nonatomic,strong) NSMutableDictionary *roomDic;
+@property (nonatomic,strong) NSMutableDictionary *roomInfoMap;
 ///聊天展示tableview
 @property (nonatomic,strong) UITableView *chatTableView;
 ///聊天信息数组
-@property (nonatomic,strong) NSMutableArray *chatArray;
+@property (nonatomic,strong) NSMutableArray *chatMessageList;
 ///直播间打字聊天输入框
-@property (nonatomic,strong) UIView *toolView;
-@property (nonatomic,strong) UITextField *inputTextView;
+@property (nonatomic,strong) UIView *chatInputContainerView;
+@property (nonatomic,strong) UITextField *chatInputTextField;
 
 @end
 
@@ -209,21 +212,25 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 
 - (void)trtcEnterRoomIfNeededThen:(void (^)(BOOL ok))completion {
+    // 1) 保证 TRTCCloud 已初始化
     [self trtcInitIfNeeded];
+    // 2) 已经进房则直接回调
     if (_trtcEntered) {
         if (completion) completion(YES);
         return;
     }
+    // 3) 进房中则只更新 completion，避免并发重复进房
     if (_trtcEntering) {
         _trtcEnterCompletion = completion;
         return;
     }
+    // 4) 拉取 usersig/sdkappid 后执行进房
     _trtcEntering = YES;
     _trtcEnterCompletion = completion;
     // 复用现有接口获取 usersig/sdkappid
     NSString *url = [NSString stringWithFormat:@"livemic/url?stream=%@&liveuid=%@",
-                     minstr([_roomDic valueForKey:@"stream"]),
-                     minstr([_roomDic valueForKey:@"uid"])];
+                     minstr([self.roomInfoMap valueForKey:@"stream"]),
+                     minstr([self.roomInfoMap valueForKey:@"uid"])];
     [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code != 200) {
             self->_trtcEntering = NO;
@@ -231,9 +238,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             self->_trtcEnterCompletion = nil;
             return;
         }
+        // 5) 组装 TRTC 进房参数（主播端仅订阅连麦用户画面）
         TRTCParams *params = [[TRTCParams alloc] init];
         params.sdkAppId = [minstr([info objectForKey:@"sdkappid"]) intValue];
-        params.roomId = [minstr([_roomDic objectForKey:@"showid"]) intValue];
+        params.roomId = [minstr([self.roomInfoMap objectForKey:@"showid"]) intValue];
         params.userId = [SWConfig getOwnID];
         params.role = TRTCRoleAudience; // 仅订阅远端画面，不重复采集本地
         params.userSig = minstr([info objectForKey:@"usersig"]);
@@ -251,7 +259,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 - (void)onEnterRoom:(NSInteger)result {
     // result < 0 代表进房失败；>=0 代表耗时（ms）
     NSLog(@"[TRTC] onEnterRoom result=%ld roomId=%@ userId=%@",
-          (long)result, minstr([_roomDic objectForKey:@"showid"]), [SWConfig getOwnID]);
+          (long)result, minstr([self.roomInfoMap objectForKey:@"showid"]), [SWConfig getOwnID]);
     _trtcEntering = NO;
     _trtcEntered = result >= 0;
     if (_trtcEnterCompletion) {
@@ -259,10 +267,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         _trtcEnterCompletion = nil;
     }
     // 进房成功后，如果已经收到上麦用户，尝试拉取一次
-    if (_trtcEntered && _linkingRemoteUserId.length > 0 && _linkUserView) {
+    if (_trtcEntered && _linkingRemoteUserId.length > 0 && _linkMicUserView) {
         [_trtcCloud startRemoteView:_linkingRemoteUserId
                          streamType:TRTCVideoStreamTypeBig
-                               view:_linkUserView.videoContainerView];
+                               view:_linkMicUserView.videoContainerView];
     }
 }
 
@@ -278,7 +286,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         }
         return;
     }
-    if (!_linkUserView) return;
+    if (!_linkMicUserView) return;
 
     // 优先使用信令里的 uid（预期远端 userId）
     if (_expectedRemoteUserIdFromSignal.length > 0) {
@@ -298,7 +306,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         NSLog(@"[TRTC] startRemoteView userId=%@ -> linkWindow", userId);
         [_trtcCloud startRemoteView:userId
                          streamType:TRTCVideoStreamTypeBig
-                               view:_linkUserView.videoContainerView];
+                               view:_linkMicUserView.videoContainerView];
     }
 }
 #pragma mark -- 退出登录
@@ -308,22 +316,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 #pragma mark -- 定位相关
 /*
 - (void)stopLbs {
-    [_lbsManager stopUpdatingHeading];
-    _lbsManager.delegate = nil;
-    _lbsManager = nil;
+    [_locationServiceManager stopUpdatingHeading];
+    _locationServiceManager.delegate = nil;
+    _locationServiceManager = nil;
 }
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+- (void)locationServiceManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (status == kCLAuthorizationStatusRestricted || status == kCLAuthorizationStatusDenied) {
         [self stopLbs];
     } else {
-        [_lbsManager startUpdatingLocation];
+        [_locationServiceManager startUpdatingLocation];
     }
 }
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+- (void)locationServiceManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     [self stopLbs];
 }
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+- (void)locationServiceManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
     CLLocation *newLocatioin = locations[0];
     SWLiveCity *cityU = [SWCityDefault myProfile];
@@ -340,23 +348,23 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             cityU.city = city;
             [SWCityDefault saveProfile:cityU];
             dispatch_async(dispatch_get_main_queue(), ^{
-                locationLabel.text = city;
+                self.locationLabel.text = city;
             });
         }
     }];
      [self stopLbs];
 }
 -(void)location{
-    if (!_lbsManager) {
-        _lbsManager = [[CLLocationManager alloc] init];
-        [_lbsManager setDesiredAccuracy:kCLLocationAccuracyBest];
-        _lbsManager.delegate = self;
+    if (!_locationServiceManager) {
+        _locationServiceManager = [[CLLocationManager alloc] init];
+        [_locationServiceManager setDesiredAccuracy:kCLLocationAccuracyBest];
+        _locationServiceManager.delegate = self;
         // 兼容iOS8定位
         SEL requestSelector = NSSelectorFromString(@"requestWhenInUseAuthorization");
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined && [_lbsManager respondsToSelector:requestSelector]) {
-            [_lbsManager requestWhenInUseAuthorization];  //调用了这句,就会弹出允许框了.
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined && [_locationServiceManager respondsToSelector:requestSelector]) {
+            [_locationServiceManager requestWhenInUseAuthorization];  //调用了这句,就会弹出允许框了.
         } else {
-            [_lbsManager startUpdatingLocation];
+            [_locationServiceManager startUpdatingLocation];
         }
     }
 }
@@ -365,62 +373,63 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 #pragma mark -- 腾讯直播相关
 -(void)txBaseBeauty {
-    _filterArray = [NSMutableArray new];
-    [_filterArray addObject:({
+    // 初始化滤镜数据源（横向选择器）
+    _filterOptionList = [NSMutableArray new];
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"原图";
         v.face = [UIImage imageNamed:@"orginal"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"美白";
         v.face = [UIImage imageNamed:@"fwhite"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"浪漫";
         v.face = [UIImage imageNamed:@"langman"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"清新";
         v.face = [UIImage imageNamed:@"qingxin"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"唯美";
         v.face = [UIImage imageNamed:@"weimei"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"粉嫩";
         v.face = [UIImage imageNamed:@"fennen"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"怀旧";
         v.face = [UIImage imageNamed:@"huaijiu"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"蓝调";
         v.face = [UIImage imageNamed:@"landiao"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"清凉";
         v.face = [UIImage imageNamed:@"qingliang"];
         v;
     })];
-    [_filterArray addObject:({
+    [_filterOptionList addObject:({
         V8LabelNode *v = [V8LabelNode new];
         v.title = @"日系";
         v.face = [UIImage imageNamed:@"rixi"];
@@ -429,6 +438,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     
     
     
+    // 组装美颜/滤镜面板 UI（按钮、滑杆、选择器）
     //美颜拉杆浮层
     float   beauty_btn_width  = 65;
     float   beauty_btn_height = 30;//19;
@@ -438,68 +448,68 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     float   beauty_center_interval = (self.view.width - 30 - beauty_btn_width)/(beauty_btn_count - 1);
     float   first_beauty_center_x  = 15 + beauty_btn_width/2;
     int ib = 0;
-    _vBeauty = [[UIView  alloc] init];
-    _vBeauty.frame = CGRectMake(0, self.view.height-185-statusbarHeight, self.view.width, 185+statusbarHeight);
-    [_vBeauty setBackgroundColor:[UIColor whiteColor]];
-    float   beauty_center_y = _vBeauty.height - 30;//35;
-    _beautyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    _beautyBtn.center = CGPointMake(first_beauty_center_x, beauty_center_y);
-    _beautyBtn.bounds = CGRectMake(0, 0, beauty_btn_width, beauty_btn_height);
-    [_beautyBtn setImage:[UIImage imageNamed:@"white_beauty"] forState:UIControlStateNormal];
-    [_beautyBtn setImage:[UIImage imageNamed:@"white_beauty_press"] forState:UIControlStateSelected];
-    [_beautyBtn setTitle:@"美颜" forState:UIControlStateNormal];
-    [_beautyBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_beautyBtn setTitleColor:normalColors forState:UIControlStateSelected];
-    _beautyBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 0);
-    _beautyBtn.titleLabel.font = [UIFont systemFontOfSize:16];
-    _beautyBtn.tag = 0;
-    _beautyBtn.selected = YES;
-    [_beautyBtn addTarget:self action:@selector(selectBeauty:) forControlEvents:UIControlEventTouchUpInside];
+    _beautyContainerView = [[UIView  alloc] init];
+    _beautyContainerView.frame = CGRectMake(0, self.view.height-185-statusbarHeight, self.view.width, 185+statusbarHeight);
+    [_beautyContainerView setBackgroundColor:[UIColor whiteColor]];
+    float   beauty_center_y = _beautyContainerView.height - 30;//35;
+    _beautyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _beautyButton.center = CGPointMake(first_beauty_center_x, beauty_center_y);
+    _beautyButton.bounds = CGRectMake(0, 0, beauty_btn_width, beauty_btn_height);
+    [_beautyButton setImage:[UIImage imageNamed:@"white_beauty"] forState:UIControlStateNormal];
+    [_beautyButton setImage:[UIImage imageNamed:@"white_beauty_press"] forState:UIControlStateSelected];
+    [_beautyButton setTitle:@"美颜" forState:UIControlStateNormal];
+    [_beautyButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_beautyButton setTitleColor:normalColors forState:UIControlStateSelected];
+    _beautyButton.titleEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 0);
+    _beautyButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    _beautyButton.tag = 0;
+    _beautyButton.selected = YES;
+    [_beautyButton addTarget:self action:@selector(selectBeauty:) forControlEvents:UIControlEventTouchUpInside];
     ib++;
-    _filterBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    _filterBtn.center = CGPointMake(first_beauty_center_x + ib*beauty_center_interval, beauty_center_y);
-    _filterBtn.bounds = CGRectMake(0, 0, beauty_btn_width, beauty_btn_height);
-    [_filterBtn setImage:[UIImage imageNamed:@"beautiful"] forState:UIControlStateNormal];
-    [_filterBtn setImage:[UIImage imageNamed:@"beautiful_press"] forState:UIControlStateSelected];
-    [_filterBtn setTitle:@"滤镜" forState:UIControlStateNormal];
-    [_filterBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_filterBtn setTitleColor:normalColors forState:UIControlStateSelected];
-    _filterBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 0);
-    _filterBtn.titleLabel.font = [UIFont systemFontOfSize:16];
-    _filterBtn.tag = 1;
-    [_filterBtn addTarget:self action:@selector(selectBeauty:) forControlEvents:UIControlEventTouchUpInside];
+    _filterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _filterButton.center = CGPointMake(first_beauty_center_x + ib*beauty_center_interval, beauty_center_y);
+    _filterButton.bounds = CGRectMake(0, 0, beauty_btn_width, beauty_btn_height);
+    [_filterButton setImage:[UIImage imageNamed:@"beautiful"] forState:UIControlStateNormal];
+    [_filterButton setImage:[UIImage imageNamed:@"beautiful_press"] forState:UIControlStateSelected];
+    [_filterButton setTitle:@"滤镜" forState:UIControlStateNormal];
+    [_filterButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_filterButton setTitleColor:normalColors forState:UIControlStateSelected];
+    _filterButton.titleEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 0);
+    _filterButton.titleLabel.font = [UIFont systemFontOfSize:16];
+    _filterButton.tag = 1;
+    [_filterButton addTarget:self action:@selector(selectBeauty:) forControlEvents:UIControlEventTouchUpInside];
     ib++;
-    _beautyLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,  _beautyBtn.top - 95, 40, 20)];
+    _beautyLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,  _beautyButton.top - 95, 40, 20)];
     _beautyLabel.text = @"美白";
     _beautyLabel.font = [UIFont systemFontOfSize:12];
-    _sdBeauty = [[UISlider alloc] init];
-    _sdBeauty.frame = CGRectMake(_beautyLabel.right, _beautyBtn.top - 95, self.view.width - _beautyLabel.right - 10, 20);
-    _sdBeauty.minimumValue = 0;
-    _sdBeauty.maximumValue = 9;
-    _sdBeauty.value = 6.3;
-    [_sdBeauty setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
-    [_sdBeauty setMinimumTrackImage:[SWToolClass getImgWithColor:normalColors] forState:UIControlStateNormal];
-    [_sdBeauty setMaximumTrackImage:[UIImage imageNamed:@"gray"] forState:UIControlStateNormal];
-    [_sdBeauty addTarget:self action:@selector(txsliderValueChange:) forControlEvents:UIControlEventValueChanged];
-    _sdBeauty.tag = 0;
+    _beautySlider = [[UISlider alloc] init];
+    _beautySlider.frame = CGRectMake(_beautyLabel.right, _beautyButton.top - 95, self.view.width - _beautyLabel.right - 10, 20);
+    _beautySlider.minimumValue = 0;
+    _beautySlider.maximumValue = 9;
+    _beautySlider.value = 6.3;
+    [_beautySlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
+    [_beautySlider setMinimumTrackImage:[SWToolClass getImgWithColor:normalColors] forState:UIControlStateNormal];
+    [_beautySlider setMaximumTrackImage:[UIImage imageNamed:@"gray"] forState:UIControlStateNormal];
+    [_beautySlider addTarget:self action:@selector(txsliderValueChange:) forControlEvents:UIControlEventValueChanged];
+    _beautySlider.tag = 0;
     
     
-    _whiteLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, _beautyBtn.top - 55, 40, 20)];
+    _whiteningLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, _beautyButton.top - 55, 40, 20)];
     
-    _whiteLabel.text = @"美颜";
-    _whiteLabel.font = [UIFont systemFontOfSize:12];
-    _sdWhitening = [[UISlider alloc] init];
+    _whiteningLabel.text = @"美颜";
+    _whiteningLabel.font = [UIFont systemFontOfSize:12];
+    _whiteningSlider = [[UISlider alloc] init];
     
-    _sdWhitening.frame =  CGRectMake(_whiteLabel.right, _beautyBtn.top - 55, self.view.width - _whiteLabel.right - 10, 20);
+    _whiteningSlider.frame =  CGRectMake(_whiteningLabel.right, _beautyButton.top - 55, self.view.width - _whiteningLabel.right - 10, 20);
     
-    _sdWhitening.minimumValue = 0;
-    _sdWhitening.maximumValue = 9;
-    _sdWhitening.value = 2.7;
-    [_sdWhitening setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
-    [_sdWhitening setMinimumTrackImage:[SWToolClass getImgWithColor:normalColors] forState:UIControlStateNormal];//[UIImage imageNamed:@"green"]
-    [_sdWhitening setMaximumTrackImage:[UIImage imageNamed:@"gray"] forState:UIControlStateNormal];
-    [_sdWhitening addTarget:self action:@selector(txsliderValueChange:) forControlEvents:UIControlEventValueChanged];
-    _sdWhitening.tag = 1;
+    _whiteningSlider.minimumValue = 0;
+    _whiteningSlider.maximumValue = 9;
+    _whiteningSlider.value = 2.7;
+    [_whiteningSlider setThumbImage:[UIImage imageNamed:@"slider"] forState:UIControlStateNormal];
+    [_whiteningSlider setMinimumTrackImage:[SWToolClass getImgWithColor:normalColors] forState:UIControlStateNormal];//[UIImage imageNamed:@"green"]
+    [_whiteningSlider setMaximumTrackImage:[UIImage imageNamed:@"gray"] forState:UIControlStateNormal];
+    [_whiteningSlider addTarget:self action:@selector(txsliderValueChange:) forControlEvents:UIControlEventValueChanged];
+    _whiteningSlider.tag = 1;
     
     _filterPickerView = [[V8HorizontalPickerView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, 115)];
     _filterPickerView.textColor = [UIColor grayColor];
@@ -513,29 +523,30 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _filterPickerView.selectedMaskView = sel;
     _filterType = 0;
     
-    [_vBeauty addSubview:_beautyLabel];
-    [_vBeauty addSubview:_whiteLabel];
-    [_vBeauty addSubview:_sdWhitening];
-    [_vBeauty addSubview:_sdBeauty];
-    [_vBeauty addSubview:_beautyBtn];
-    [_vBeauty addSubview:_filterPickerView];
-    [_vBeauty addSubview:_filterBtn];
-    _vBeauty.hidden = YES;
-    [self.view addSubview: _vBeauty];
+    [_beautyContainerView addSubview:_beautyLabel];
+    [_beautyContainerView addSubview:_whiteningLabel];
+    [_beautyContainerView addSubview:_whiteningSlider];
+    [_beautyContainerView addSubview:_beautySlider];
+    [_beautyContainerView addSubview:_beautyButton];
+    [_beautyContainerView addSubview:_filterPickerView];
+    [_beautyContainerView addSubview:_filterButton];
+    _beautyContainerView.hidden = YES;
+    [self.view addSubview: _beautyContainerView];
 }
 -(void)userTXBase {
-    if (!_vBeauty) {
+    if (!_beautyContainerView) {
         [self txBaseBeauty];
     }
-    _preFrontView.hidden = YES;
-    _vBeauty.hidden = NO;
-    [self.view bringSubviewToFront:_vBeauty];
+    _previewFrontView.hidden = YES;
+    _beautyContainerView.hidden = NO;
+    [self.view bringSubviewToFront:_beautyContainerView];
 }
 -(void)txRtmpPush{
-    _pushBackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
-    _pushBackView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_pushBackView];
-    [self.view sendSubviewToBack:_pushBackView];
+    // 1) 创建预览渲染层并置于底层
+    _livePreviewRenderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
+    _livePreviewRenderView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_livePreviewRenderView];
+    [self.view sendSubviewToBack:_livePreviewRenderView];
     /*
      {
      "codingmode": "2",
@@ -558,7 +569,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     _txLivePushonfig = [[TXLivePushConfig alloc] init];
     _txLivePushonfig.frontCamera = YES;
     _txLivePushonfig.enableAutoBitrate = YES;
-    int videoResolution = [minstr([_pushSettings valueForKey:@"resolution"]) intValue];
+    int videoResolution = [minstr([_pushConfigMap valueForKey:@"resolution"]) intValue];
     if (videoResolution == 0) {
         _txLivePushonfig.videoResolution = VIDEO_RESOLUTION_TYPE_360_640 ;
     }
@@ -568,12 +579,12 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     else{
         _txLivePushonfig.videoResolution = VIDEO_RESOLUTION_TYPE_720_1280 ;
     }
-    _txLivePushonfig.videoEncodeGop = [minstr([_pushSettings valueForKey:@"gop"]) intValue];
-    _txLivePushonfig.videoFPS = [minstr([_pushSettings valueForKey:@"fps"]) intValue];
-    _txLivePushonfig.videoBitratePIN = [minstr([_pushSettings valueForKey:@"bitrate"]) intValue];
-    _txLivePushonfig.videoBitrateMax = [minstr([_pushSettings valueForKey:@"bitrate_max"]) intValue];
-    _txLivePushonfig.videoBitrateMin = [minstr([_pushSettings valueForKey:@"bitrate_min"]) intValue];
-    _txLivePushonfig.audioSampleRate = [minstr([_pushSettings valueForKey:@"audiorate"]) intValue];
+    _txLivePushonfig.videoEncodeGop = [minstr([_pushConfigMap valueForKey:@"gop"]) intValue];
+    _txLivePushonfig.videoFPS = [minstr([_pushConfigMap valueForKey:@"fps"]) intValue];
+    _txLivePushonfig.videoBitratePIN = [minstr([_pushConfigMap valueForKey:@"bitrate"]) intValue];
+    _txLivePushonfig.videoBitrateMax = [minstr([_pushConfigMap valueForKey:@"bitrate_max"]) intValue];
+    _txLivePushonfig.videoBitrateMin = [minstr([_pushConfigMap valueForKey:@"bitrate_min"]) intValue];
+    _txLivePushonfig.audioSampleRate = [minstr([_pushConfigMap valueForKey:@"audiorate"]) intValue];
     _txLivePushonfig.pauseTime = 60;
     //background push
     _txLivePushonfig.pauseFps = 5;
@@ -587,53 +598,61 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         [_txLivePublisher setBeautyStyle:0 beautyLevel:0 whitenessLevel:0 ruddinessLevel:0];
         [_txLivePublisher setMirror:YES];
     }else{
-        _tx_beauty_level = 9;
-        _tx_whitening_level = 3;
-        [_txLivePublisher setBeautyStyle:0 beautyLevel:_tx_beauty_level whitenessLevel:_tx_whitening_level ruddinessLevel:0];
+        _beautyLevel = 9;
+        _whiteningLevel = 3;
+        [_txLivePublisher setBeautyStyle:0 beautyLevel:_beautyLevel whitenessLevel:_whiteningLevel ruddinessLevel:0];
     }
     
-    [_txLivePublisher startPreview:_pushBackView];
+    [_txLivePublisher startPreview:_livePreviewRenderView];
     //[self txStartRtmp];
-    _notification = [CWStatusBarNotification new];
-    _notification.notificationLabelBackgroundColor = [UIColor redColor];
-    _notification.notificationLabelTextColor = [UIColor whiteColor];
+    _statusBarNotification = [CWStatusBarNotification new];
+    _statusBarNotification.notificationLabelBackgroundColor = [UIColor redColor];
+    _statusBarNotification.notificationLabelTextColor = [UIColor whiteColor];
     */
 
-    _txLiveVieoParam = [[V2TXLiveVideoEncoderParam alloc]init];
-    int videoResolution = [minstr([_pushSettings valueForKey:@"resolution"]) intValue];
+    // 2) 根据服务端下发参数设置编码配置
+    _txLiveVideoParam = [[V2TXLiveVideoEncoderParam alloc]init];
+    int videoResolution = [minstr([_pushConfigMap valueForKey:@"resolution"]) intValue];
     if (videoResolution == 0) {
-        _txLiveVieoParam.videoResolution =V2TXLiveVideoResolution640x360;
+        _txLiveVideoParam.videoResolution =V2TXLiveVideoResolution640x360;
     }
     else if (videoResolution == 1){
-        _txLiveVieoParam.videoResolution =V2TXLiveVideoResolution960x540;
+        _txLiveVideoParam.videoResolution =V2TXLiveVideoResolution960x540;
     }
-    else {
-        _txLiveVieoParam.videoResolution =V2TXLiveVideoResolution1280x720;
-    }
-    _txLiveVieoParam.videoFps = [minstr([_pushSettings valueForKey:@"fps"]) intValue];
-    _txLiveVieoParam.videoBitrate = [minstr([_pushSettings valueForKey:@"bitrate"]) intValue];
-    _txLiveVieoParam.minVideoBitrate = [minstr([_pushSettings valueForKey:@"bitrate_min"]) intValue];
+    else if (videoResolution == 2){
+        _txLiveVideoParam.videoResolution =V2TXLiveVideoResolution1280x720;
+    }else  if (videoResolution == 3){
+        _txLiveVideoParam.videoResolution =V2TXLiveVideoResolution1920x1080;
+    }else {
+        _txLiveVideoParam.videoResolution =V2TXLiveVideoResolution960x540;
 
+    }
+    _txLiveVideoParam.videoFps = [minstr([_pushConfigMap valueForKey:@"fps"]) intValue];
+    _txLiveVideoParam.videoBitrate = [minstr([_pushConfigMap valueForKey:@"bitrate"]) intValue];
+    _txLiveVideoParam.minVideoBitrate = [minstr([_pushConfigMap valueForKey:@"bitrate_min"]) intValue];
+
+    // 3) 初始化推流器并绑定渲染/采集/观察者
     _txLivePusher = [[V2TXLivePusher alloc]initWithLiveMode:V2TXLiveMode_RTC];
-    V2TXLiveCode videoCode = [_txLivePusher setVideoQuality:_txLiveVieoParam];
+    V2TXLiveCode videoCode = [_txLivePusher setVideoQuality:_txLiveVideoParam];
     V2TXLiveCode cusVideoCode =[_txLivePusher enableCustomVideoProcess:true pixelFormat:V2TXLivePixelFormatTexture2D bufferType:V2TXLiveBufferTypeTexture];
     V2TXLiveCode mirrorCode = [_txLivePusher setEncoderMirror:YES];
 
     //
-    V2TXLiveCode code =  [_txLivePusher setRenderView:_pushBackView];
+    V2TXLiveCode code =  [_txLivePusher setRenderView:_livePreviewRenderView];
 
     V2TXLiveCode cameraCode = [_txLivePusher startCamera:YES];
     [_txLivePusher setRenderMirror:V2TXLiveMirrorTypeEnable];
     [_txLivePusher startMicrophone];
 
     //
-    _audioEffect =[_txLivePusher getAudioEffectManager];
+    // 4) 保存音效管理器并监听推流状态
+    _audioEffectManager =[_txLivePusher getAudioEffectManager];
     [_txLivePusher setObserver:self];
     NSLog(@"=========>videoCode:%ld===cusCode:%ld===mirrorCode:%ld===cameraCode:%ld===render:%ld",(long)videoCode,(long)cusVideoCode,(long)mirrorCode,(long)cameraCode,(long)code);
     //
-    _notification = [CWStatusBarNotification new];
-    _notification.notificationLabelBackgroundColor = [UIColor redColor];
-    _notification.notificationLabelTextColor = [UIColor whiteColor];
+    _statusBarNotification = [CWStatusBarNotification new];
+    _statusBarNotification.notificationLabelBackgroundColor = [UIColor redColor];
+    _statusBarNotification.notificationLabelTextColor = [UIColor whiteColor];
 
 }
 
@@ -645,22 +664,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         _txLivePublisher.delegate = self;
         [self.txLivePublisher setVideoQuality:VIDEO_QUALITY_HIGH_DEFINITION adjustBitrate:YES adjustResolution:YES];
         //连麦混流
-//        _hostURL = [NSString stringWithFormat:@"%@&mix=session_id:%@",_hostURL,[SWConfig getOwnID]];
-        [_txLivePublisher startPush:_hostURL];
-        if ([_txLivePublisher startPush:_hostURL] != 0) {
-            [_notification displayNotificationWithMessage:@"推流器启动失败" forDuration:5];
+//        self.pushStreamUrl = [NSString stringWithFormat:@"%@&mix=session_id:%@",self.pushStreamUrl,[SWConfig getOwnID]];
+        [_txLivePublisher startPush:self.pushStreamUrl];
+        if ([_txLivePublisher startPush:self.pushStreamUrl] != 0) {
+            [_statusBarNotification displayNotificationWithMessage:@"推流器启动失败" forDuration:5];
             NSLog(@"推流器启动失败");
         }
 //        if ([[SWCommon getIsTXfiter]isEqual:@"1"]) {
-//            [_txLivePublisher setEyeScaleLevel:_tx_eye_level];
-//            [_txLivePublisher setFaceScaleLevel:_tx_face_level];
+//            [_txLivePublisher setEyeScaleLevel:_eyeEnlargeLevel];
+//            [_txLivePublisher setFaceScaleLevel:_faceSlimLevel];
 //        }
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     }
     */
     if (_txLivePusher != nil) {
-        // _hostURL = [NSString stringWithFormat:@"%@&mix=session_id:%@",_hostURL,[SWConfig getOwnID]];
-        V2TXLiveCode pushStatus = [_txLivePusher startPush:_hostURL];
+        // self.pushStreamUrl = [NSString stringWithFormat:@"%@&mix=session_id:%@",self.pushStreamUrl,[SWConfig getOwnID]];
+        V2TXLiveCode pushStatus = [_txLivePusher startPush:self.pushStreamUrl];
         [self pushLiveStateCode:pushStatus];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     }
@@ -676,7 +695,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
         } else {
             // 进入房间失败处理
-            [_notification displayNotificationWithMessage:@"进入直播间失败" forDuration:5];
+            [_statusBarNotification displayNotificationWithMessage:@"进入直播间失败" forDuration:5];
         }
     }];
 }
@@ -684,16 +703,16 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     if (pushStatus == V2TXLIVE_OK) {
         NSLog(@"LIVEBROADCAST --:推流成功、停止推流");
     }else if (pushStatus == V2TXLIVE_ERROR_INVALID_PARAMETER){
-        [_notification displayNotificationWithMessage:@"操作失败，url 不合法" forDuration:5];
+        [_statusBarNotification displayNotificationWithMessage:@"操作失败，url 不合法" forDuration:5];
         NSLog(@"推流器启动失败");
     }else if (pushStatus == V2TXLIVE_ERROR_INVALID_LICENSE){
-        [_notification displayNotificationWithMessage:@"操作失败，license 不合法，鉴权失败" forDuration:5];
+        [_statusBarNotification displayNotificationWithMessage:@"操作失败，license 不合法，鉴权失败" forDuration:5];
         NSLog(@"推流器启动失败");
     }else if (pushStatus == V2TXLIVE_ERROR_REFUSED){
-        [_notification displayNotificationWithMessage:@"操作失败，RTC 不支持同一设备上同时推拉同一个 StreamId" forDuration:5];
+        [_statusBarNotification displayNotificationWithMessage:@"操作失败，RTC 不支持同一设备上同时推拉同一个 StreamId" forDuration:5];
         NSLog(@"推流器启动失败");
     }else if (pushStatus == V2TXLIVE_WARNING_NETWORK_BUSY){
-        [_notification displayNotificationWithMessage:
+        [_statusBarNotification displayNotificationWithMessage:
          @"您当前的网络环境不佳，请尽快更换网络保证正常直播" forDuration:5];
     }
 }
@@ -709,7 +728,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         _txLivePublisher = nil;
     }*/
     if(_txLivePusher != nil) {
-        [_audioEffect stopPlayMusic:666];
+        [_audioEffectManager stopPlayMusic:666];
         [_txLivePusher stopCamera];
         [_txLivePusher stopMicrophone];
         [_txLivePusher stopPush];
@@ -730,7 +749,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
  */
 - (void)onError:(V2TXLiveCode)code message:(NSString *)msg extraInfo:(NSDictionary *)extraInfo;
 {
-    NSLog(@"rtcManager Error ==:%ld =msg=:%@  =dic=%@",code,msg,extraInfo);
+    NSLog(@"rtcManager Error ==:%ld =msg=:%@  =map=%@",code,msg,extraInfo);
 }
 /**
  * 麦克风采集音量值回调
@@ -754,7 +773,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         if (status == V2TXLivePushStatusDisconnected) {
             /// 与服务器断开连接
             NSLog(@"PUSH_EVT_PUSH_BEGIN网络断连,且经多次重连抢救无效,可以放弃治疗,更多重试请自行重启推流");
-            [_notification displayNotificationWithMessage:@"网络断连" forDuration:5];
+            [_statusBarNotification displayNotificationWithMessage:@"网络断连" forDuration:5];
             [self getCloseShow];
 
         }else if(status == V2TXLivePushStatusConnecting){
@@ -767,7 +786,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
         }else if(status == V2TXLivePushStatusConnectSuccess){
             ///  重连服务器中
-            [_notification displayNotificationWithMessage:@"网络断连, 已启动自动重连" forDuration:5];
+            [_statusBarNotification displayNotificationWithMessage:@"网络断连, 已启动自动重连" forDuration:5];
         }
     });
 }
@@ -812,34 +831,19 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
                 // 网络断连, 已启动自动重连 (自动重连连续失败超过三次会放弃)
                 NSLog(@"网络断连, 已启动自动重连 (自动重连连续失败超过三次会放弃)");
             }else if (EvtID == PUSH_WARNING_NET_BUSY) {
-                [_notification displayNotificationWithMessage:@"您当前的网络环境不佳，请尽快更换网络保证正常直播" forDuration:5];
+                [_statusBarNotification displayNotificationWithMessage:@"您当前的网络环境不佳，请尽快更换网络保证正常直播" forDuration:5];
             }else if (EvtID == WARNING_RTMP_SERVER_RECONNECT) {
-                [_notification displayNotificationWithMessage:@"网络断连, 已启动自动重连" forDuration:5];
+                [_statusBarNotification displayNotificationWithMessage:@"网络断连, 已启动自动重连" forDuration:5];
             }
         }else {
             if (EvtID == PUSH_ERR_NET_DISCONNECT) {
                 NSLog(@"PUSH_EVT_PUSH_BEGIN网络断连,且经多次重连抢救无效,可以放弃治疗,更多重试请自行重启推流");
-                [_notification displayNotificationWithMessage:@"网络断连" forDuration:5];
+                [_statusBarNotification displayNotificationWithMessage:@"网络断连" forDuration:5];
                 [self getCloseShow];
             }
         }
     });
     */
-}
-// 备份原方法
-- (void)__changePlayState:(int)status{
-    
-    NSDictionary *changelive = @{
-                                 @"islive":@"1"
-                                 };
-    [SWToolClass postNetworkWithUrl:@"live/upLive" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-
-        if (code == 200) {
-            //
-            [[SWLinkmicManager shareInstance] livemicCdn];
-        }
-    } fail:^{        
-    }];
 }
 
 //调整创建直播间-修改后
@@ -865,33 +869,33 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     TXBeautyManager *beautyManager = [_txLivePusher getBeautyManager];
 
     if (obj.tag == 1) { //美颜
-        _tx_beauty_level = obj.value;
-        // [_txLivePublisher setBeautyStyle:0 beautyLevel:_tx_beauty_level whitenessLevel:_tx_whitening_level ruddinessLevel:0];
+        _beautyLevel = obj.value;
+        // [_txLivePublisher setBeautyStyle:0 beautyLevel:_beautyLevel whitenessLevel:_whiteningLevel ruddinessLevel:0];
         [beautyManager setBeautyStyle:0];
-        [beautyManager setBeautyLevel:_tx_beauty_level];
-        [beautyManager setWhitenessLevel:_tx_whitening_level];
+        [beautyManager setBeautyLevel:_beautyLevel];
+        [beautyManager setWhitenessLevel:_whiteningLevel];
         [beautyManager setRuddyLevel:0];
 
     } else if (obj.tag == 0) { //美白
-        _tx_whitening_level = obj.value;
-        //[_txLivePublisher setBeautyStyle:0 beautyLevel:_tx_beauty_level whitenessLevel:_tx_whitening_level ruddinessLevel:0];
+        _whiteningLevel = obj.value;
+        //[_txLivePublisher setBeautyStyle:0 beautyLevel:_beautyLevel whitenessLevel:_whiteningLevel ruddinessLevel:0];
         // [_txLivePublisher setBeautyFilterDepth:_beauty_level setWhiteningFilterDepth:_whitening_level];
         [beautyManager setBeautyStyle:0];
-        [beautyManager setBeautyLevel:_tx_beauty_level];
-        [beautyManager setWhitenessLevel:_tx_whitening_level];
+        [beautyManager setBeautyLevel:_beautyLevel];
+        [beautyManager setWhitenessLevel:_whiteningLevel];
         [beautyManager setRuddyLevel:0];
 
     } else if (obj.tag == 2) { //大眼
-        _tx_eye_level = obj.value;
-        // [_txLivePublisher setEyeScaleLevel:_tx_eye_level];
-        [beautyManager setEyeScaleLevel:_tx_eye_level];
+        _eyeEnlargeLevel = obj.value;
+        // [_txLivePublisher setEyeScaleLevel:_eyeEnlargeLevel];
+        [beautyManager setEyeScaleLevel:_eyeEnlargeLevel];
     } else if (obj.tag == 3) { //瘦脸
-        _tx_face_level = obj.value;
-        // [_txLivePublisher setFaceScaleLevel:_tx_face_level];
-        [beautyManager setFaceVLevel:_tx_face_level];
+        _faceSlimLevel = obj.value;
+        // [_txLivePublisher setFaceScaleLevel:_faceSlimLevel];
+        [beautyManager setFaceVLevel:_faceSlimLevel];
     } else if (obj.tag == 4) {// 背景音乐音量
         // [_txLivePublisher setBGMVolume:(obj.value/obj.maximumValue)];
-        [_audioEffect setVoiceVolume:(obj.value/obj.maximumValue)];
+        [_audioEffectManager setVoiceVolume:(obj.value/obj.maximumValue)];
     } else if (obj.tag == 5) { // 麦克风音量
         // [_txLivePublisher setMicVolume:(obj.value/obj.maximumValue)];
     }
@@ -900,38 +904,38 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 -(void)selectBeauty:(UIButton *)button{
     switch (button.tag) {
         case 0: {
-            _sdWhitening.hidden = NO;
-            _sdBeauty.hidden    = NO;
+            _whiteningSlider.hidden = NO;
+            _beautySlider.hidden    = NO;
             _beautyLabel.hidden = NO;
-            _whiteLabel.hidden  = NO;
-            _beautyBtn.selected  = YES;
-            _filterBtn.selected = NO;
+            _whiteningLabel.hidden  = NO;
+            _beautyButton.selected  = YES;
+            _filterButton.selected = NO;
             _filterPickerView.hidden = YES;
-            _vBeauty.frame = CGRectMake(0, self.view.height-185-statusbarHeight, self.view.width, 185+statusbarHeight);
+            _beautyContainerView.frame = CGRectMake(0, self.view.height-185-statusbarHeight, self.view.width, 185+statusbarHeight);
         }break;
         case 1: {
-            _sdWhitening.hidden = YES;
-            _sdBeauty.hidden    = YES;
+            _whiteningSlider.hidden = YES;
+            _beautySlider.hidden    = YES;
             _beautyLabel.hidden = YES;
-            _whiteLabel.hidden  = YES;
-            _beautyBtn.selected  = NO;
-            _filterBtn.selected = YES;
+            _whiteningLabel.hidden  = YES;
+            _beautyButton.selected  = NO;
+            _filterButton.selected = YES;
             _filterPickerView.hidden = NO;
             [_filterPickerView scrollToElement:_filterType animated:NO];
         }
-            _beautyBtn.center = CGPointMake(_beautyBtn.center.x, _vBeauty.frame.size.height - 35-statusbarHeight);
-            _filterBtn.center = CGPointMake(_filterBtn.center.x, _vBeauty.frame.size.height - 35-statusbarHeight);
+            _beautyButton.center = CGPointMake(_beautyButton.center.x, _beautyContainerView.frame.size.height - 35-statusbarHeight);
+            _filterButton.center = CGPointMake(_filterButton.center.x, _beautyContainerView.frame.size.height - 35-statusbarHeight);
     }
 }
 //设置美颜滤镜
 #pragma mark - HorizontalPickerView DataSource Methods/Users/annidy/Work/RTMPDemo_PituMerge/RTMPSDK/webrtc
 - (NSInteger)numberOfElementsInHorizontalPickerView:(V8HorizontalPickerView *)picker {
-    return [_filterArray count];
+    return [_filterOptionList count];
 }
 #pragma mark - HorizontalPickerView Delegate Methods
 - (UIView *)horizontalPickerView:(V8HorizontalPickerView *)picker viewForElementAtIndex:(NSInteger)index {
     
-    V8LabelNode *v = [_filterArray objectAtIndex:index];
+    V8LabelNode *v = [_filterOptionList objectAtIndex:index];
     return [[UIImageView alloc] initWithImage:v.face];
     
 }
@@ -991,18 +995,18 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 - (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
-    if (moreMenuView) {
-        moreMenuView.hidden = YES;
-        moreBtn.selected = NO;
+    if (self.anchorMoreMenuView) {
+        self.anchorMoreMenuView.hidden = YES;
+        self.moreButton.selected = NO;
     }
     //腾讯基础美颜
-    if (_vBeauty && _vBeauty.hidden == NO) {
-        _vBeauty.hidden = YES;
-         _preFrontView.hidden = NO;
+    if (_beautyContainerView && _beautyContainerView.hidden == NO) {
+        _beautyContainerView.hidden = YES;
+         _previewFrontView.hidden = NO;
     }
     if (isMHSDK) {
         [self.menusView showMenuView:NO];
-        _preFrontView.hidden = self.menusView.isShow;
+        _previewFrontView.hidden = self.menusView.isShow;
     }
 
 }
@@ -1015,7 +1019,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 //        return newTexture;
 //        [self.beautyManager processWithTexture:texture width:width height:height];
         GLuint newTexture = texture;
-        if (_needScale){
+        if (_needsScale){
             newTexture = [self.beautyManager processWithTexture:texture width:width height:height scale:0.75];
         }else{
             [self.beautyManager processWithTexture:texture width:width height:height];
@@ -1045,22 +1049,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         NSInteger number = [[[symbols[0] componentsSeparatedByCharactersInSet:characterSet] componentsJoinedByString:@""] integerValue];
         //iPhone9,1 -> iPhone 7
         if (number >= 9){
-            _needScale = NO;
+            _needsScale = NO;
         }else{
-            _needScale = YES;
+            _needsScale = YES;
         }
     }
 }
 #pragma mark - MHMenuViewDelegate
 - (void)beautyEffectWithLevel:(NSInteger)beauty whitenessLevel:(NSInteger)white ruddinessLevel:(NSInteger)ruddiness {
     //暂时用腾讯的美颜
-    _tx_beauty_level = 9;
-    _tx_whitening_level = 3;
+    _beautyLevel = 9;
+    _whiteningLevel = 3;
     // [_txLivePublisher setBeautyStyle:0 beautyLevel:beauty whitenessLevel:white ruddinessLevel:ruddiness];
     TXBeautyManager *beautyManager = [_txLivePusher getBeautyManager];
     [beautyManager setBeautyStyle:0];
-    [beautyManager setBeautyLevel:_tx_beauty_level];
-    [beautyManager setWhitenessLevel:_tx_whitening_level];
+    [beautyManager setBeautyLevel:_beautyLevel];
+    [beautyManager setWhitenessLevel:_whiteningLevel];
     [beautyManager setRuddyLevel:0];
 }
 
@@ -1095,7 +1099,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     //初始化一些基本信息
     [self chushihua];
     //注册通知
-    [self nsnotifition];
+    [self configNotificationAndObserver];
 
     //创建预览视图
     [self creatPreFrontView];
@@ -1126,9 +1130,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
    
 
 #pragma mark 回到后台+来电话
-    self.callCenter = [CTCallCenter new];
+    self.telephonyCallCenter = [CTCallCenter new];
     
-    self.callCenter.callEventHandler = ^(CTCall *call) {
+    self.telephonyCallCenter.callEventHandler = ^(CTCall *call) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([call.callState isEqualToString:CTCallStateDialing]) {
                 NSLog(@"电话主动拨打电话");
@@ -1157,7 +1161,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [SWToolClass getQCloudWithUrl:@"/live/config" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             //腾讯
-            _pushSettings = [info valueForKey:@"ios"];
+            _pushConfigMap = [info valueForKey:@"ios"];
             [self txRtmpPush];
 
         }
@@ -1166,13 +1170,13 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }];
 }
 - (void)chushihua{
-    showEndLinkBtn = false;
-    liveClassID = @"未选择";
-    _chatArray = [NSMutableArray array];
+    self.shouldShowEndLinkButton = false;
+    self.selectedLiveClassId = @"未选择";
+    _chatMessageList = [NSMutableArray array];
     _isFrontCamera = YES;
     [self checkDevice];
 }
--(void)nsnotifition{
+-(void)configNotificationAndObserver{
     //注册进入后台的处理
     NSNotificationCenter* notification = [NSNotificationCenter defaultCenter];
     [notification addObserver:self
@@ -1200,56 +1204,58 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark ================ 直播开始之前的预览 ===============
 - (void)creatPreFrontView{
-    _preFrontView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
-    _preFrontView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:_preFrontView];
+    // 1) 预开播页面根容器
+    _previewFrontView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
+    _previewFrontView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_previewFrontView];
 //    UIView *zhezhaoView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
 //    zhezhaoView.backgroundColor = RGB_COLOR(@"#000000", 0.4);
-//    [_preFrontView addSubview:zhezhaoView];
+//    [_previewFrontView addSubview:zhezhaoView];
     /*
     UIImageView *loactionImgView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 42+statusbarHeight, 16, 16)];
     loactionImgView.image = [UIImage imageNamed:@"pre_location"];
-    [_preFrontView addSubview:loactionImgView];
+    [_previewFrontView addSubview:loactionImgView];
     UIView *locationLabelView = [[UIView alloc]init];
     locationLabelView.backgroundColor = RGB_COLOR(@"#000000", 0.3);
     locationLabelView.layer.cornerRadius = 8;
     locationLabelView.layer.masksToBounds = YES;
-    [_preFrontView addSubview:locationLabelView];
+    [_previewFrontView addSubview:locationLabelView];
     [locationLabelView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(loactionImgView);
         make.left.equalTo(loactionImgView.mas_right).offset(-8);
         make.height.mas_equalTo(16);
     }];
 
-    locationLabel = [[UILabel alloc]init];
-    locationLabel.text = @"  ";
-    locationLabel.font = [UIFont systemFontOfSize:11];
-    locationLabel.textColor = [UIColor whiteColor];
-    locationLabel.text = [SWCityDefault getMyCity];
-    [locationLabelView addSubview:locationLabel];
-    [locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.locationLabel = [[UILabel alloc]init];
+    self.locationLabel.text = @"  ";
+    self.locationLabel.font = [UIFont systemFontOfSize:11];
+    self.locationLabel.textColor = [UIColor whiteColor];
+    self.locationLabel.text = [SWCityDefault getMyCity];
+    [locationLabelView addSubview:self.locationLabel];
+    [self.locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(locationLabelView);
         make.height.mas_equalTo(16);
         make.left.equalTo(locationLabelView).offset(10);
         make.right.equalTo(locationLabelView).offset(-10);
     }];
-    [_preFrontView insertSubview:locationLabelView belowSubview:loactionImgView];
+    [_previewFrontView insertSubview:locationLabelView belowSubview:loactionImgView];
     UIButton *locationSwitchBtn = [UIButton buttonWithType:0];
     [locationSwitchBtn addTarget:self action:@selector(locationSwitchBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [_preFrontView addSubview:locationSwitchBtn];
+    [_previewFrontView addSubview:locationSwitchBtn];
     [locationSwitchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.height.equalTo(loactionImgView);
         make.right.equalTo(locationLabelView);
     }];
      */
+    // 2) 顶部快捷操作（切摄像头、退出登录）
     UIButton *switchBtn = [UIButton buttonWithType:0];
 //    switchBtn.frame = CGRectMake(locationLabel.right+20, loactionImgView.top, loactionImgView.height, loactionImgView.height);
     [switchBtn setImage:[UIImage imageNamed:@"pre_camer"] forState:0];
     [switchBtn addTarget:self action:@selector(rotateCamera) forControlEvents:UIControlEventTouchUpInside];
-    [_preFrontView addSubview:switchBtn];
+    [_previewFrontView addSubview:switchBtn];
     [switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_preFrontView).offset(15);
-        make.top.equalTo(_preFrontView).offset(40+statusbarHeight);
+        make.left.equalTo(_previewFrontView).offset(15);
+        make.top.equalTo(_previewFrontView).offset(40+statusbarHeight);
         make.height.width.mas_equalTo(20);
     }];
     
@@ -1257,62 +1263,64 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [signOutbtn setImage:[UIImage imageNamed:@"pre_退出登录"] forState:0];
     [signOutbtn addTarget:self action:@selector(doSignOut) forControlEvents:UIControlEventTouchUpInside];
     signOutbtn.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-    [_preFrontView addSubview:signOutbtn];
+    [_previewFrontView addSubview:signOutbtn];
     [signOutbtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(_preFrontView).offset(-10);
+        make.right.equalTo(_previewFrontView).offset(-10);
         make.centerY.equalTo(switchBtn);
         make.height.width.mas_equalTo(40);
     }];
     
     
+    // 3) 中部信息区（封面 + 标题输入）
     UIView *preMiddleView = [[UIView alloc]initWithFrame:CGRectMake(10, 110+statusbarHeight, _window_width-20, (_window_width-20)*0.4)];
     preMiddleView.backgroundColor = RGB_COLOR(@"#000000", 0.15);
     preMiddleView.layer.cornerRadius = 5;
-    [_preFrontView addSubview:preMiddleView];
+    [_previewFrontView addSubview:preMiddleView];
     
-    preThumbBtn = [UIButton buttonWithType:0];
-    preThumbBtn.frame = CGRectMake(10, 15, (preMiddleView.height-30)*0.91, preMiddleView.height-30);
-    [preThumbBtn setImage:[UIImage imageNamed:@"pre_uploadThumb"] forState:0];
-//    preThumbBtn.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [preThumbBtn addTarget:self action:@selector(doUploadPicture) forControlEvents:UIControlEventTouchUpInside];
-    preThumbBtn.layer.cornerRadius = 5.0;
-    preThumbBtn.layer.masksToBounds = YES;
-    [preMiddleView addSubview:preThumbBtn];
-    thumbLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, preThumbBtn.height*0.75, preThumbBtn.width, preThumbBtn.height/4)];
-    thumbLabel.textColor = RGB_COLOR(@"#ffffff", 1);
-    thumbLabel.textAlignment = NSTextAlignmentCenter;
-    thumbLabel.text = @"添加封面";
-    thumbLabel.font = [UIFont systemFontOfSize:12];
-    [preThumbBtn addSubview:thumbLabel];
+    self.previewThumbButton = [UIButton buttonWithType:0];
+    self.previewThumbButton.frame = CGRectMake(10, 15, (preMiddleView.height-30)*0.91, preMiddleView.height-30);
+    [self.previewThumbButton setImage:[UIImage imageNamed:@"pre_uploadThumb"] forState:0];
+//    self.previewThumbButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.previewThumbButton addTarget:self action:@selector(doUploadPicture) forControlEvents:UIControlEventTouchUpInside];
+    self.previewThumbButton.layer.cornerRadius = 5.0;
+    self.previewThumbButton.layer.masksToBounds = YES;
+    [preMiddleView addSubview:self.previewThumbButton];
+    self.previewThumbLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, self.previewThumbButton.height*0.75, self.previewThumbButton.width, self.previewThumbButton.height/4)];
+    self.previewThumbLabel.textColor = RGB_COLOR(@"#ffffff", 1);
+    self.previewThumbLabel.textAlignment = NSTextAlignmentCenter;
+    self.previewThumbLabel.text = @"添加封面";
+    self.previewThumbLabel.font = [UIFont systemFontOfSize:12];
+    [self.previewThumbButton addSubview:self.previewThumbLabel];
     
 
-//    UILabel *preTitlelabel = [[UILabel alloc]initWithFrame:CGRectMake(preThumbBtn.right+5, preThumbBtn.top, 100, preThumbBtn.height/4)];
+//    UILabel *preTitlelabel = [[UILabel alloc]initWithFrame:CGRectMake(previewThumbButton.right+5, previewThumbButton.top, 100, previewThumbButton.height/4)];
 //    preTitlelabel.font = [UIFont systemFontOfSize:13];
 //    preTitlelabel.textColor = RGB_COLOR(@"#c8c8c8", 1);
 //    preTitlelabel.text = @"直播标题";
 //    [preMiddleView addSubview:preTitlelabel];
-    liveTitleTextView = [[UITextView alloc]initWithFrame:CGRectMake(preThumbBtn.right+5, preThumbBtn.top + 5, preMiddleView.width-10-preThumbBtn.right, preThumbBtn.height-10)];
-    liveTitleTextView.delegate = self;
-    liveTitleTextView.font = [UIFont systemFontOfSize:17];
-    liveTitleTextView.textColor = [UIColor whiteColor];
-    liveTitleTextView.backgroundColor = [UIColor clearColor];
-    [preMiddleView addSubview:liveTitleTextView];
-    textPlaceholdLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, liveTitleTextView.width, 22)];
-    textPlaceholdLabel.font = [UIFont systemFontOfSize:17];
-    textPlaceholdLabel.textColor = [UIColor whiteColor];
-    textPlaceholdLabel.text = @"给直播写个标题吧";
-    [liveTitleTextView addSubview:textPlaceholdLabel];
+    self.liveTitleTextView = [[UITextView alloc]initWithFrame:CGRectMake(self.previewThumbButton.right+5, self.previewThumbButton.top + 5, preMiddleView.width-10-self.previewThumbButton.right, self.previewThumbButton.height-10)];
+    self.liveTitleTextView.delegate = self;
+    self.liveTitleTextView.font = [UIFont systemFontOfSize:17];
+    self.liveTitleTextView.textColor = [UIColor whiteColor];
+    self.liveTitleTextView.backgroundColor = [UIColor clearColor];
+    [preMiddleView addSubview:self.liveTitleTextView];
+    self.textPlaceholderLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, self.liveTitleTextView.width, 22)];
+    self.textPlaceholderLabel.font = [UIFont systemFontOfSize:17];
+    self.textPlaceholderLabel.textColor = [UIColor whiteColor];
+    self.textPlaceholderLabel.text = @"给直播写个标题吧";
+    [self.liveTitleTextView addSubview:self.textPlaceholderLabel];
 
+    // 4) 直播分类选择区
     UIView *liveClassView = [[UIView alloc]initWithFrame:CGRectMake(preMiddleView.left, preMiddleView.bottom + 10, preMiddleView.width, 50)];
     liveClassView.backgroundColor = RGB_COLOR(@"#000000", 0.15);
     liveClassView.layer.cornerRadius = 5;
-    [_preFrontView addSubview:liveClassView];
-    classTipL = [[UILabel alloc]init];
-    classTipL.text = @"请选择直播分类";
-    classTipL.textColor = RGB_COLOR(@"#ffffff", 1);
-    classTipL.font = SYS_Font(14);
-    [liveClassView addSubview:classTipL];
-    [classTipL mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_previewFrontView addSubview:liveClassView];
+    self.classTipLabel = [[UILabel alloc]init];
+    self.classTipLabel.text = @"请选择直播分类";
+    self.classTipLabel.textColor = RGB_COLOR(@"#ffffff", 1);
+    self.classTipLabel.font = SYS_Font(14);
+    [liveClassView addSubview:self.classTipLabel];
+    [self.classTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(liveClassView).offset(15);
         make.centerY.equalTo(liveClassView);
         make.right.equalTo(liveClassView).offset(-35);
@@ -1331,34 +1339,36 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [liveClassBtn addTarget:self action:@selector(showAllClassView) forControlEvents:UIControlEventTouchUpInside];
     [liveClassView addSubview:liveClassBtn];
 
+    // 5) 开播主按钮
     //开播按钮
-    startLiveBtn = [UIButton buttonWithType:0];
-    startLiveBtn.layer.cornerRadius = 20.0;
-    startLiveBtn.layer.masksToBounds = YES;
-    [startLiveBtn setBackgroundColor:normalColors];
-//    [startLiveBtn setBackgroundImage:[UIImage imageNamed:@"startLive_back"]];
-    [startLiveBtn addTarget:self action:@selector(doHidden:) forControlEvents:UIControlEventTouchUpInside];
-    [startLiveBtn setTitle:@"开始直播" forState:0];
-    startLiveBtn.userInteractionEnabled = NO;
-    startLiveBtn.alpha = 0.5;
-    startLiveBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    [_preFrontView addSubview:startLiveBtn];
-    [startLiveBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(_preFrontView).offset(-80-ShowDiff);
-        make.width.equalTo(_preFrontView).multipliedBy(0.8);
+    self.startLiveButton = [UIButton buttonWithType:0];
+    self.startLiveButton.layer.cornerRadius = 20.0;
+    self.startLiveButton.layer.masksToBounds = YES;
+    [self.startLiveButton setBackgroundColor:normalColors];
+//    [self.startLiveButton setBackgroundImage:[UIImage imageNamed:@"startLive_back"]];
+    [self.startLiveButton addTarget:self action:@selector(doHidden:) forControlEvents:UIControlEventTouchUpInside];
+    [self.startLiveButton setTitle:@"开始直播" forState:0];
+    self.startLiveButton.userInteractionEnabled = NO;
+    self.startLiveButton.alpha = 0.5;
+    self.startLiveButton.titleLabel.font = [UIFont systemFontOfSize:15];
+    [_previewFrontView addSubview:self.startLiveButton];
+    [self.startLiveButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(_previewFrontView).offset(-80-ShowDiff);
+        make.width.equalTo(_previewFrontView).multipliedBy(0.8);
         make.height.mas_equalTo(40);
-        make.centerX.equalTo(_preFrontView);
+        make.centerX.equalTo(_previewFrontView);
     }];
+    // 6) 美颜入口
     //美颜
     UIButton *preFitterBtn = [UIButton buttonWithType:0];
     [preFitterBtn setTitle:@"美颜" forState:0];
     [preFitterBtn setImage:[UIImage imageNamed:@"pre_fitter"] forState:0];
     preFitterBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [preFitterBtn addTarget:self action:@selector(showFitterView) forControlEvents:UIControlEventTouchUpInside];
-    [_preFrontView addSubview:preFitterBtn];
+    [_previewFrontView addSubview:preFitterBtn];
     [preFitterBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(startLiveBtn.mas_top).offset(-15);
-        make.centerX.equalTo(startLiveBtn);
+        make.bottom.equalTo(self.startLiveButton.mas_top).offset(-15);
+        make.centerX.equalTo(self.startLiveButton);
         make.height.mas_equalTo(30);
     }];
 }
@@ -1418,10 +1428,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 - (void)imagePickerController:(TZImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray *)assets isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto{
     if (photos.count > 0) {
-        thumbImage = [photos firstObject];
-        [preThumbBtn setImage:thumbImage forState:UIControlStateNormal];
-        thumbLabel.text = @"更换封面";
-        thumbLabel.backgroundColor = RGB_COLOR(@"#0000000", 0.3);
+        self.previewThumbnailImage = [photos firstObject];
+        [self.previewThumbButton setImage:self.previewThumbnailImage forState:UIControlStateNormal];
+        self.previewThumbLabel.text = @"更换封面";
+        self.previewThumbLabel.backgroundColor = RGB_COLOR(@"#0000000", 0.3);
     }
     [self changeStartLiveButtonState];
 
@@ -1433,9 +1443,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 {
     if (textView.text.length == 0) {
-        textPlaceholdLabel.text = @"给直播写个标题吧";
+        self.textPlaceholderLabel.text = @"给直播写个标题吧";
     }else{
-        textPlaceholdLabel.text = @"";
+        self.textPlaceholderLabel.text = @"";
     }
     [self changeStartLiveButtonState];
 
@@ -1444,11 +1454,11 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 - (void)showAllClassView{
     SWStartLiveClassVC *vc = [[SWStartLiveClassVC alloc]init];
-    vc.classID = liveClassID;
-    vc.block = ^(NSDictionary * _Nonnull dic) {
+    vc.classID = self.selectedLiveClassId;
+    vc.block = ^(NSDictionary * _Nonnull classMap) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            liveClassID = minstr([dic valueForKey:@"id"]);
-            classTipL.text = minstr([dic valueForKey:@"name"]);
+            self.selectedLiveClassId = minstr([classMap valueForKey:@"id"]);
+            self.classTipLabel.text = minstr([classMap valueForKey:@"name"]);
             [self changeStartLiveButtonState];
         });
     };
@@ -1459,7 +1469,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 #pragma mark -- 展示美颜
 
 - (void)showFitterView{
-    _preFrontView.hidden = YES;
+    _previewFrontView.hidden = YES;
     if (isMHSDK) {
         [self.menusView showMenuView:YES];
     }else{
@@ -1475,6 +1485,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 开播按钮点击
 -(void)doHidden:(UIButton *)sender{
+    // 开播前权限校验（相机 + 麦克风）
     NSString *mediaType = AVMediaTypeVideo;
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
     if(authStatus == AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied){
@@ -1506,15 +1517,15 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 //创建房间
 -(void)creatRoom{
-   
+    // Step 1: 上传封面图
     [MBProgressHUD showMessage:@""];
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *url = [NSString stringWithFormat:@"%@upload/image",purl];
     [session POST:url parameters:nil headers:@{@"Authori-zation":[NSString stringWithFormat:@"Bearer %@",[SWConfig getOwnToken]]} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        if (thumbImage) {
+        if (self.previewThumbnailImage) {
             
-//            UIImage *img = UIImagePNGRepresentation(thumbImage);
-            [formData appendPartWithFileData:UIImageJPEGRepresentation(thumbImage,0.5) name:@"file" fileName:[SWToolClass getNameBaseCurrentTime:@"livethumb.png"] mimeType:@"image/jpeg"];
+//            UIImage *img = UIImagePNGRepresentation(previewThumbnailImage);
+            [formData appendPartWithFileData:UIImageJPEGRepresentation(self.previewThumbnailImage,0.5) name:@"file" fileName:[SWToolClass getNameBaseCurrentTime:@"livethumb.png"] mimeType:@"image/jpeg"];
         }
     } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         [MBProgressHUD hideHUD];
@@ -1534,29 +1545,30 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 }
 - (void)creatRommStepSecond:(NSString *)thumbUrl{
+    // Step 2: 创建直播间并缓存房间信息
     NSString *deviceinfo = [NSString stringWithFormat:@"%@_%@_%@",[SWToolClass getCurrentDeviceModel],[[UIDevice currentDevice] systemVersion],[SWToolClass getNetworkType]];
-    NSDictionary *dic = @{
-        @"title":minstr(liveTitleTextView.text),
+    NSDictionary *requestMap = @{
+        @"title":minstr(self.liveTitleTextView.text),
         @"thumb":thumbUrl,
-        @"classid":liveClassID,
+        @"classid":self.selectedLiveClassId,
         @"province":@"",
         @"city":@"",//minstr([SWCityDefault getMyCity])
         @"deviceinfo":deviceinfo,
         @"source":@"2",
         @"key":_keyString?_keyString:@""
     };
-    [SWToolClass postNetworkWithUrl:@"live/start" andParameter:dic success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"live/start" andParameter:requestMap success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD hideHUD];
-        [_preFrontView removeFromSuperview];
-        _preFrontView = nil;
-        _roomDic = [info mutableCopy];
-        [_roomDic setObject:[SWConfig getOwnID] forKey:@"uid"];
-        [_roomDic setObject:[SWConfig getavatar] forKey:@"avatar"];
-        [_roomDic setObject:[SWConfig getOwnNicename] forKey:@"nickname"];
-        [_roomDic setObject:thumbUrl forKey:@"thumb"];
-        [_roomDic setObject:minstr([dic valueForKey:@"title"]) forKey:@"title"];
+        [_previewFrontView removeFromSuperview];
+        _previewFrontView = nil;
+        self.roomInfoMap = [info mutableCopy];
+        [self.roomInfoMap setObject:[SWConfig getOwnID] forKey:@"uid"];
+        [self.roomInfoMap setObject:[SWConfig getavatar] forKey:@"avatar"];
+        [self.roomInfoMap setObject:[SWConfig getOwnNicename] forKey:@"nickname"];
+        [self.roomInfoMap setObject:thumbUrl forKey:@"thumb"];
+        [self.roomInfoMap setObject:minstr([requestMap valueForKey:@"title"]) forKey:@"title"];
         //
-        [SWLinkmicManager shareInstance].roomDic = [NSDictionary dictionaryWithDictionary:_roomDic];
+        [SWLinkmicManager shareInstance].roomMap = [NSDictionary dictionaryWithDictionary:self.roomInfoMap];
         [SWLinkmicManager shareInstance].linkSwitch = NO;
         [SWLinkmicManager shareInstance].isLinking = NO;
         [self startUI];
@@ -1565,68 +1577,71 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }];
 }
 -(void)startUI{
-    _frontView = [[UIView alloc]initWithFrame:CGRectMake(0,0, _window_width, _window_height)];
-    _frontView.clipsToBounds = YES;
-    [self.view addSubview:_frontView];
-    [self.view insertSubview:_frontView atIndex:3];
+    // 1) 创建直播间主容器
+    self.liveRoomContainerView = [[UIView alloc]initWithFrame:CGRectMake(0,0, _window_width, _window_height)];
+    self.liveRoomContainerView.clipsToBounds = YES;
+    [self.view addSubview:self.liveRoomContainerView];
+    [self.view insertSubview:self.liveRoomContainerView atIndex:3];
 
+    // 2) 加载主直播间 UI（按钮、聊天区、顶部信息区）
     dispatch_async(dispatch_get_main_queue(), ^{
         [self setView];//加载信息页面
         [self hideBTN];
     });
+    // 3) 开播前 3-2-1 倒计时动画层
     //倒计时动画
-    animationBackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
-    animationBackView.opaque = YES;
-    aniLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
-    aniLabel1.textColor = [UIColor whiteColor];
-    aniLabel1.font = [UIFont systemFontOfSize:90];
-    aniLabel1.text = @"3";
-    aniLabel1.textAlignment = NSTextAlignmentCenter;
-    aniLabel1.center = animationBackView.center;
-    aniLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
-    aniLabel2.textColor = [UIColor whiteColor];
-    aniLabel2.font = [UIFont systemFontOfSize:90];
-    aniLabel2.text = @"2";
-    aniLabel2.textAlignment = NSTextAlignmentCenter;
-    aniLabel2.center = animationBackView.center;
-    aniLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
-    aniLabel3.textColor = [UIColor whiteColor];
-    aniLabel3.font = [UIFont systemFontOfSize:90];
-    aniLabel3.text = @"1";
-    aniLabel3.textAlignment = NSTextAlignmentCenter;
-    aniLabel3.center = animationBackView.center;
-    aniLabel1.hidden = YES;
-    aniLabel2.hidden = YES;
-    aniLabel3.hidden = YES;
-    [animationBackView addSubview:aniLabel3];
-    [animationBackView addSubview:aniLabel1];
-    [animationBackView addSubview:aniLabel2];
-    [_frontView addSubview:animationBackView];
+    self.animationBackView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
+    self.animationBackView.opaque = YES;
+    self.countdownLabel3 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
+    self.countdownLabel3.textColor = [UIColor whiteColor];
+    self.countdownLabel3.font = [UIFont systemFontOfSize:90];
+    self.countdownLabel3.text = @"3";
+    self.countdownLabel3.textAlignment = NSTextAlignmentCenter;
+    self.countdownLabel3.center = self.animationBackView.center;
+    self.countdownLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
+    self.countdownLabel2.textColor = [UIColor whiteColor];
+    self.countdownLabel2.font = [UIFont systemFontOfSize:90];
+    self.countdownLabel2.text = @"2";
+    self.countdownLabel2.textAlignment = NSTextAlignmentCenter;
+    self.countdownLabel2.center = self.animationBackView.center;
+    self.countdownLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(_window_width/2 -100, _window_height/2-200, 100, 100)];
+    self.countdownLabel1.textColor = [UIColor whiteColor];
+    self.countdownLabel1.font = [UIFont systemFontOfSize:90];
+    self.countdownLabel1.text = @"1";
+    self.countdownLabel1.textAlignment = NSTextAlignmentCenter;
+    self.countdownLabel1.center = self.animationBackView.center;
+    self.countdownLabel3.hidden = YES;
+    self.countdownLabel2.hidden = YES;
+    self.countdownLabel1.hidden = YES;
+    [self.animationBackView addSubview:self.countdownLabel1];
+    [self.animationBackView addSubview:self.countdownLabel3];
+    [self.animationBackView addSubview:self.countdownLabel2];
+    [self.liveRoomContainerView addSubview:self.animationBackView];
     [self kaishidonghua];
     self.view.backgroundColor = [UIColor clearColor];
 }
 //开始321
 -(void)kaishidonghua{
-    
+    // 分段触发 3-2-1 文本动画，结束后正式进房与推流
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        aniLabel1.hidden = NO;
-        [self donghua:aniLabel1];
+        self.countdownLabel3.hidden = NO;
+        [self donghua:self.countdownLabel3];
     });
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        aniLabel1.hidden = YES;
-        aniLabel2.hidden = NO;
-        [self donghua:aniLabel2];
+        self.countdownLabel3.hidden = YES;
+        self.countdownLabel2.hidden = NO;
+        [self donghua:self.countdownLabel2];
     });
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        aniLabel2.hidden = YES;
-        aniLabel3.hidden = NO;
-        [self donghua:aniLabel3];
+        self.countdownLabel2.hidden = YES;
+        self.countdownLabel1.hidden = NO;
+        [self donghua:self.countdownLabel1];
     });
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        aniLabel3.hidden = YES;
-        animationBackView.hidden = YES;
-        [animationBackView removeFromSuperview];
-        animationBackView = nil;
+        self.countdownLabel1.hidden = YES;
+        self.animationBackView.hidden = YES;
+        [self.animationBackView removeFromSuperview];
+        self.animationBackView = nil;
         [self showBTN];
         [self getStartShow];//请求直播
     });
@@ -1634,12 +1649,15 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 //请求直播
 -(void)getStartShow
 {
-    _hostURL = minstr([_roomDic valueForKey:@"push"]);
+    // 1) 缓存推流地址
+    self.pushStreamUrl = minstr([self.roomInfoMap valueForKey:@"push"]);
 
-    _socketL = [[SWSocketLive alloc]init];
-    _socketL.delegate = self;
-    [_socketL addNodeListen:minstr([_roomDic valueForKey:@"chatserver"]) andRoomMessage:_roomDic];
+    // 2) 初始化并接入房间 socket
+    self.liveSocket = [[SWLiveSocket alloc]init];
+    self.liveSocket.delegate = self;
+    [self.liveSocket addNodeListen:minstr([self.roomInfoMap valueForKey:@"chatserver"]) andRoomMessage:self.roomInfoMap];
 
+    // 3) 启动推流
     [self txStartRtmp];
     // for test
     // [self changePlayState:1];
@@ -1661,127 +1679,132 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 //创建直播间视图按钮
 - (void)setView{
+    // 1) 顶部主播信息区
     [self addLeftView];
-    closeRoomBtn = [UIButton buttonWithType:0];
-    [closeRoomBtn setImage:[UIImage imageNamed:@"live_关闭"] forState:0];
-    [closeRoomBtn addTarget:self action:@selector(showCloseAlert) forControlEvents:UIControlEventTouchUpInside];
-    [_frontView addSubview:closeRoomBtn];
-    [closeRoomBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(_frontView).offset(27+statusbarHeight);
-        make.right.equalTo(_frontView).offset(-10);
+    // 2) 顶部右侧控制（关闭 + 在线人数）
+    self.closeRoomButton = [UIButton buttonWithType:0];
+    [self.closeRoomButton setImage:[UIImage imageNamed:@"live_关闭"] forState:0];
+    [self.closeRoomButton addTarget:self action:@selector(showCloseAlert) forControlEvents:UIControlEventTouchUpInside];
+    [self.liveRoomContainerView addSubview:self.closeRoomButton];
+    [self.closeRoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.liveRoomContainerView).offset(27+statusbarHeight);
+        make.right.equalTo(self.liveRoomContainerView).offset(-10);
         make.width.height.mas_equalTo(30);
     }];
-    userNumLabel = [[UILabel alloc]init];
-    userNumLabel.font = SYS_Font(10);
-    userNumLabel.textColor = [UIColor whiteColor];
-    userNumLabel.textAlignment = NSTextAlignmentCenter;
-    userNumLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-    userNumLabel.text = @"  0人  ";
-    userNumLabel.userInteractionEnabled = YES;
+    self.userCountLabel = [[UILabel alloc]init];
+    self.userCountLabel.font = SYS_Font(10);
+    self.userCountLabel.textColor = [UIColor whiteColor];
+    self.userCountLabel.textAlignment = NSTextAlignmentCenter;
+    self.userCountLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+    self.userCountLabel.text = @"  0人  ";
+    self.userCountLabel.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(checkUseList)];
-    [userNumLabel addGestureRecognizer:tap];
-    userNumLabel.layer.cornerRadius = 15;
-    userNumLabel.layer.masksToBounds = YES;
-    [_frontView addSubview:userNumLabel];
-    [userNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(closeRoomBtn.mas_left).offset(-10);
-        make.centerY.height.equalTo(closeRoomBtn);
+    [self.userCountLabel addGestureRecognizer:tap];
+    self.userCountLabel.layer.cornerRadius = 15;
+    self.userCountLabel.layer.masksToBounds = YES;
+    [self.liveRoomContainerView addSubview:self.userCountLabel];
+    [self.userCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.closeRoomButton.mas_left).offset(-10);
+        make.centerY.height.equalTo(self.closeRoomButton);
         make.width.mas_greaterThanOrEqualTo(40);
     }];
     
-    chatBtn = [UIButton buttonWithType:0];
-    [chatBtn setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.3]];
-    [chatBtn addTarget:self action:@selector(showToolbarView) forControlEvents:UIControlEventTouchUpInside];
-    [chatBtn setTitle:@"  说点什么..." forState:0];
-    chatBtn.titleLabel.font = SYS_Font(14);
-    chatBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    chatBtn.layer.cornerRadius = 18;
-    chatBtn.layer.masksToBounds = YES;
-    [_frontView addSubview:chatBtn];
-    [chatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_frontView).offset(10);
-        make.bottom.equalTo(_frontView).offset(-10-ShowDiff);
+    // 3) 底部输入与操作按钮区
+    self.chatButton = [UIButton buttonWithType:0];
+    [self.chatButton setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.3]];
+    [self.chatButton addTarget:self action:@selector(showToolbarView) forControlEvents:UIControlEventTouchUpInside];
+    [self.chatButton setTitle:@"  说点什么..." forState:0];
+    self.chatButton.titleLabel.font = SYS_Font(14);
+    self.chatButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    self.chatButton.layer.cornerRadius = 18;
+    self.chatButton.layer.masksToBounds = YES;
+    [self.liveRoomContainerView addSubview:self.chatButton];
+    [self.chatButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.liveRoomContainerView).offset(10);
+        make.bottom.equalTo(self.liveRoomContainerView).offset(-10-ShowDiff);
         make.height.mas_equalTo(36);
         make.width.mas_equalTo(128);
     }];
     
-    moreBtn = [UIButton buttonWithType:0];
-    [moreBtn setBackgroundImage:[UIImage imageNamed:@"功能"] forState:UIControlStateNormal];
-    [moreBtn setBackgroundImage:[UIImage imageNamed:@"功能_s"] forState:UIControlStateSelected];
-    [moreBtn addTarget:self action:@selector(showmoreview) forControlEvents:UIControlEventTouchUpInside];
-    [_frontView addSubview:moreBtn];
-    [moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(chatBtn);
-        make.right.equalTo(_frontView).offset(-10);
+    self.moreButton = [UIButton buttonWithType:0];
+    [self.moreButton setBackgroundImage:[UIImage imageNamed:@"功能"] forState:UIControlStateNormal];
+    [self.moreButton setBackgroundImage:[UIImage imageNamed:@"功能_s"] forState:UIControlStateSelected];
+    [self.moreButton addTarget:self action:@selector(showmoreview) forControlEvents:UIControlEventTouchUpInside];
+    [self.liveRoomContainerView addSubview:self.moreButton];
+    [self.moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.chatButton);
+        make.right.equalTo(self.liveRoomContainerView).offset(-10);
         make.width.height.mas_equalTo(36);
     }];
     
-    goodsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [goodsBtn setBackgroundImage:[UIImage imageNamed:@"live_小黄车底"] forState:UIControlStateNormal];
-    [goodsBtn setImage:[UIImage imageNamed:@"live_小黄车"] forState:0];
-    [goodsBtn addTarget:self action:@selector(showgoodsShowView) forControlEvents:UIControlEventTouchUpInside];
-    [_frontView addSubview:goodsBtn];
-    [goodsBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(chatBtn);
-        make.right.equalTo(moreBtn.mas_left).offset(-10);
+    self.goodsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.goodsButton setBackgroundImage:[UIImage imageNamed:@"live_小黄车底"] forState:UIControlStateNormal];
+    [self.goodsButton setImage:[UIImage imageNamed:@"live_小黄车"] forState:0];
+    [self.goodsButton addTarget:self action:@selector(showgoodsShowView) forControlEvents:UIControlEventTouchUpInside];
+    [self.liveRoomContainerView addSubview:self.goodsButton];
+    [self.goodsButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.chatButton);
+        make.right.equalTo(self.moreButton.mas_left).offset(-10);
         make.width.height.mas_equalTo(36);
     }];
     [self showGoodsBtnAnimaition];
 
     //
-    linkBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [linkBtn setBackgroundImage:[UIImage imageNamed:@"live_link"] forState:UIControlStateNormal];
-    [linkBtn setBackgroundImage:[UIImage imageNamed:@"live_link"] forState:UIControlStateSelected];
-    [linkBtn addTarget:self action:@selector(clickLinkBtn) forControlEvents:UIControlEventTouchUpInside];
-    [_frontView addSubview:linkBtn];
-    [linkBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(chatBtn);
-        make.right.equalTo(goodsBtn.mas_left).offset(-10);
+    self.linkButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.linkButton setBackgroundImage:[UIImage imageNamed:@"live_link"] forState:UIControlStateNormal];
+    [self.linkButton setBackgroundImage:[UIImage imageNamed:@"live_link"] forState:UIControlStateSelected];
+    [self.linkButton addTarget:self action:@selector(clickLinkBtn) forControlEvents:UIControlEventTouchUpInside];
+    [self.liveRoomContainerView addSubview:self.linkButton];
+    [self.linkButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.chatButton);
+        make.right.equalTo(self.goodsButton.mas_left).offset(-10);
         make.width.height.mas_equalTo(36);
     }];
-    linkRed = [[UILabel alloc] init];
-    linkRed.backgroundColor = RGB_COLOR(@"#ff0000", 1);
-    linkRed.layer.cornerRadius = 4;
-    linkRed.layer.masksToBounds = YES;
-    linkRed.hidden = YES;
-    [linkBtn addSubview:linkRed];
-    [linkRed mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.linkRequestRedDotView = [[UILabel alloc] init];
+    self.linkRequestRedDotView.backgroundColor = RGB_COLOR(@"#ff0000", 1);
+    self.linkRequestRedDotView.layer.cornerRadius = 4;
+    self.linkRequestRedDotView.layer.masksToBounds = YES;
+    self.linkRequestRedDotView.hidden = YES;
+    [self.linkButton addSubview:self.linkRequestRedDotView];
+    [self.linkRequestRedDotView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(8);
-        make.top.equalTo(linkBtn.mas_top);
-        make.right.equalTo(linkBtn.mas_right);
+        make.top.equalTo(self.linkButton.mas_top);
+        make.right.equalTo(self.linkButton.mas_right);
     }];
 
-    linkEndBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [linkEndBtn setBackgroundImage:[UIImage imageNamed:@"endLink"] forState:UIControlStateNormal];
-    [linkEndBtn setBackgroundImage:[UIImage imageNamed:@"endLink"] forState:UIControlStateSelected];
-    [linkEndBtn addTarget:self action:@selector(endLinkMaic) forControlEvents:UIControlEventTouchUpInside];
-    linkEndBtn.hidden = YES;
-    [_frontView addSubview:linkEndBtn];
-    [linkEndBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(chatBtn);
-        make.right.equalTo(linkBtn.mas_left).offset(-10);
+    self.linkEndButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.linkEndButton setBackgroundImage:[UIImage imageNamed:@"endLink"] forState:UIControlStateNormal];
+    [self.linkEndButton setBackgroundImage:[UIImage imageNamed:@"endLink"] forState:UIControlStateSelected];
+    [self.linkEndButton addTarget:self action:@selector(endLinkMaic) forControlEvents:UIControlEventTouchUpInside];
+    self.linkEndButton.hidden = YES;
+    [self.liveRoomContainerView addSubview:self.linkEndButton];
+    [self.linkEndButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.chatButton);
+        make.right.equalTo(self.linkButton.mas_left).offset(-10);
         make.width.height.mas_equalTo(36);
     }];
     
-    [_frontView addSubview:self.chatTableView];
+    // 4) 聊天展示区 + 礼物展示区
+    [self.liveRoomContainerView addSubview:self.chatTableView];
     [_chatTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_frontView).offset(10);
-        make.width.equalTo(_frontView).multipliedBy(0.7);
+        make.left.equalTo(self.liveRoomContainerView).offset(10);
+        make.width.equalTo(self.liveRoomContainerView).multipliedBy(0.7);
         make.height.mas_equalTo(190);
-        make.bottom.equalTo(chatBtn.mas_top).offset(-35);
+        make.bottom.equalTo(self.chatButton.mas_top).offset(-35);
     }];
-    liansongliwubottomview = [[UIView alloc]init];
-    [_frontView addSubview:liansongliwubottomview];
-    [liansongliwubottomview mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_frontView);
+    self.continueGiftContainerView = [[UIView alloc]init];
+    [self.liveRoomContainerView addSubview:self.continueGiftContainerView];
+    [self.continueGiftContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.liveRoomContainerView);
         make.bottom.equalTo(_chatTableView.mas_top).offset(-10);
         make.width.mas_equalTo(_window_width/2);
         make.height.mas_equalTo(140);
     }];
 
-    [self.view addSubview:self.toolView];
-    heartTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(showHeart) userInfo:nil repeats:YES];
-    reloadTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(reloadRoomMessage) userInfo:nil repeats:YES];
+    // 5) 输入容器与定时任务（飘心 + 统计刷新）
+    [self.view addSubview:self.chatInputContainerView];
+    self.heartAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(showHeart) userInfo:nil repeats:YES];
+    self.statsRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(reloadRoomMessage) userInfo:nil repeats:YES];
 
 }
 -(void)clickLinkBtn {
@@ -1794,21 +1817,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 
 -(void)showApplyView {
+    // 展示连麦申请面板并清理红点状态
     BOOL isLinking = [SWLinkmicManager shareInstance].isLinking;
-    if(_linkUserView){
+    if(_linkMicUserView){
         [MBProgressHUD showError:@"当前用户正在连麦，请先结束连麦"];
         return;
     }
-    if (moreMenuView) {
-        moreMenuView.hidden = YES;
+    if (self.anchorMoreMenuView) {
+        self.anchorMoreMenuView.hidden = YES;
     }
-    if (!applyView) {
-        applyView = [[SWLinkApplyView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:[SWConfig getOwnID]];
-        applyView.delegate = self;
-        [self.view addSubview:applyView];
+    if (!self.linkRequestView) {
+        self.linkRequestView = [[SWLinkApplyView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:[SWConfig getOwnID]];
+        self.linkRequestView.delegate = self;
+        [self.view addSubview:self.linkRequestView];
     }
-    [applyView show];
-    [self.view bringSubviewToFront:applyView];
+    [self.linkRequestView show];
+    [self.view bringSubviewToFront:self.linkRequestView];
 
     // 已读
     [[SWLinkmicManager shareInstance] resetNums];
@@ -1824,7 +1848,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         // 开启
         [[SWLinkmicManager shareInstance] livemicSwitch:1];
         // socket
-        [_socketL linkMicSocket:8 andParam:@{}];
+        [self.liveSocket linkMicSocket:8 andParam:@{}];
     }];
     [cancleAction setValue:RGB_COLOR(@"#323232", 1) forKey:@"_titleTextColor"];
     [sureAction setValue:normalColors forKey:@"_titleTextColor"];
@@ -1833,27 +1857,27 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 
 
--(UIView *)toolView{
-    if (!_toolView) {
-        _toolView = [[UIView alloc]initWithFrame:CGRectMake(0, _window_height, _window_width, 50)];
-        _toolView.backgroundColor = [UIColor whiteColor];
-        _inputTextView = [[UITextField alloc]initWithFrame:CGRectMake(10, 7, _window_width-20, 36)];
-        _inputTextView.font = SYS_Font(14);
-        _inputTextView.placeholder = @"说点什么...";
-        _inputTextView.delegate = self;
-        _inputTextView.returnKeyType = UIReturnKeySend;
-        _inputTextView.layer.cornerRadius = 18;
-        _inputTextView.layer.masksToBounds = YES;
-        _inputTextView.leftViewMode = UITextFieldViewModeAlways;
+-(UIView *)chatInputContainerView{
+    if (!_chatInputContainerView) {
+        _chatInputContainerView = [[UIView alloc]initWithFrame:CGRectMake(0, _window_height, _window_width, 50)];
+        _chatInputContainerView.backgroundColor = [UIColor whiteColor];
+        _chatInputTextField = [[UITextField alloc]initWithFrame:CGRectMake(10, 7, _window_width-20, 36)];
+        _chatInputTextField.font = SYS_Font(14);
+        _chatInputTextField.placeholder = @"说点什么...";
+        _chatInputTextField.delegate = self;
+        _chatInputTextField.returnKeyType = UIReturnKeySend;
+        _chatInputTextField.layer.cornerRadius = 18;
+        _chatInputTextField.layer.masksToBounds = YES;
+        _chatInputTextField.leftViewMode = UITextFieldViewModeAlways;
         UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 18, 36)];
-        _inputTextView.leftView = view;
-        _inputTextView.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
-        [_toolView addSubview:_inputTextView];
+        _chatInputTextField.leftView = view;
+        _chatInputTextField.backgroundColor = RGB_COLOR(@"#f5f5f5", 1);
+        [_chatInputContainerView addSubview:_chatInputTextField];
     }
-    return _toolView;
+    return _chatInputContainerView;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
-    if (isShutUp) {
+    if (self.isMuted) {
         [MBProgressHUD showError:@"你已被禁言"];
         [textField resignFirstResponder];
         return NO;
@@ -1861,7 +1885,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     
     [textField resignFirstResponder];
     if (textField.text.length > 0) {
-        [_socketL sendMessage:textField.text andisAtt:@"0" userType:kAnchorUser];
+        [self.liveSocket sendMessage:textField.text andisAtt:@"0" userType:kAnchorUser];
         textField.text = @"";
     }
     return YES;
@@ -1889,7 +1913,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     animation.autoreverses = YES;    //完成动画后会回到执行动画之前的状态
     animation.fromValue = [NSNumber numberWithFloat:0.7];   //初始伸缩倍数
     animation.toValue = [NSNumber numberWithFloat:1.1];     //结束伸缩倍数
-    [goodsBtn.imageView.layer addAnimation:animation forKey:nil];
+    [self.goodsButton.imageView.layer addAnimation:animation forKey:nil];
 }
 
 //直播间左上角视图
@@ -1897,10 +1921,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     UIView *leftView = [[UIView alloc]init];
     leftView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     leftView.layer.cornerRadius = 17;
-    [_frontView addSubview:leftView];
+    [self.liveRoomContainerView addSubview:leftView];
     [leftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(_frontView).offset(10);
-        make.top.equalTo(_frontView).offset(25+statusbarHeight);
+        make.left.equalTo(self.liveRoomContainerView).offset(10);
+        make.top.equalTo(self.liveRoomContainerView).offset(25+statusbarHeight);
         make.height.mas_equalTo(34);
     }];
     UIImageView *iconImgView = [[UIImageView alloc]init];
@@ -1935,12 +1959,12 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         make.width.height.mas_equalTo(9);
         make.bottom.equalTo(iconImgView).offset(-1);
     }];
-    likesNumLabel = [[UILabel alloc]init];
-    likesNumLabel.font = SYS_Font(10);
-    likesNumLabel.textColor = [UIColor whiteColor];
-    likesNumLabel.text = @"0";
-    [leftView addSubview:likesNumLabel];
-    [likesNumLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.likesCountLabel = [[UILabel alloc]init];
+    self.likesCountLabel.font = SYS_Font(10);
+    self.likesCountLabel.textColor = [UIColor whiteColor];
+    self.likesCountLabel.text = @"0";
+    [leftView addSubview:self.likesCountLabel];
+    [self.likesCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(likeImgView);
         make.left.equalTo(likeImgView.mas_right).offset(4);
         make.right.lessThanOrEqualTo(leftView).offset(-14);
@@ -1949,7 +1973,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     UIView *sellerGoodsNumsView = [[UIView alloc]init];
     sellerGoodsNumsView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.4];
     sellerGoodsNumsView.layer.cornerRadius = 11;
-    [_frontView addSubview:sellerGoodsNumsView];
+    [self.liveRoomContainerView addSubview:sellerGoodsNumsView];
     [sellerGoodsNumsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(leftView);
         make.top.equalTo(leftView.mas_bottom).offset(10);
@@ -1965,12 +1989,12 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         make.left.equalTo(sellerGoodsNumsView).offset(10);
     }];
 
-    sellerGoodsNumsLabel = [[UILabel alloc]init];
-    sellerGoodsNumsLabel.font = SYS_Font(10);
-    sellerGoodsNumsLabel.textColor = normalColors;
-    sellerGoodsNumsLabel.text = @"0";
-    [sellerGoodsNumsView addSubview:sellerGoodsNumsLabel];
-    [sellerGoodsNumsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.soldGoodsCountLabel = [[UILabel alloc]init];
+    self.soldGoodsCountLabel.font = SYS_Font(10);
+    self.soldGoodsCountLabel.textColor = normalColors;
+    self.soldGoodsCountLabel.text = @"0";
+    [sellerGoodsNumsView addSubview:self.soldGoodsCountLabel];
+    [self.soldGoodsCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(sellerGoodsNumsView);
         make.left.equalTo(sellerTipsL.mas_right);
         make.right.lessThanOrEqualTo(sellerGoodsNumsView).offset(-10);
@@ -1979,23 +2003,23 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 //展示底部按钮
 - (void)showBTN{
-    closeRoomBtn.hidden = NO;
-    userNumLabel.hidden = NO;
-    chatBtn.hidden = NO;
-    moreBtn.hidden = NO;
-    goodsBtn.hidden = NO;
-    linkBtn.hidden = NO;
-    linkEndBtn.hidden = !showEndLinkBtn;
+    self.closeRoomButton.hidden = NO;
+    self.userCountLabel.hidden = NO;
+    self.chatButton.hidden = NO;
+    self.moreButton.hidden = NO;
+    self.goodsButton.hidden = NO;
+    self.linkButton.hidden = NO;
+    self.linkEndButton.hidden = !self.shouldShowEndLinkButton;
 }
 //隐藏底部按钮
 - (void)hideBTN{
-    closeRoomBtn.hidden = YES;
-    userNumLabel.hidden = YES;
-    chatBtn.hidden = YES;
-    moreBtn.hidden = YES;
-    goodsBtn.hidden = YES;
-    linkBtn.hidden = YES;
-    linkEndBtn.hidden = YES;
+    self.closeRoomButton.hidden = YES;
+    self.userCountLabel.hidden = YES;
+    self.chatButton.hidden = YES;
+    self.moreButton.hidden = YES;
+    self.goodsButton.hidden = YES;
+    self.linkButton.hidden = YES;
+    self.linkEndButton.hidden = YES;
 }
 #pragma mark - 警告弹窗
 - (void)jinggaoUser:(NSString *)content{
@@ -2011,12 +2035,12 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 #pragma mark - 在线用户列表相关
 - (void)checkUseList{
-    if (!onlineList) {
-        onlineList = [[SWLiveOnlineList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) stream:_roomDic[@"stream"] liveUID:[SWConfig getOwnID]];
-        onlineList.delegate = self;
+    if (!self.onlineUserListView) {
+        self.onlineUserListView = [[SWLiveOnlineList alloc] initWithFrame:CGRectMake(0, 0, _window_width, _window_height) stream:self.roomInfoMap[@"stream"] liveUID:[SWConfig getOwnID]];
+        self.onlineUserListView.delegate = self;
     }
-    [onlineList requestData];
-    [self.view addSubview:onlineList];
+    [self.onlineUserListView requestData];
+    [self.view addSubview:self.onlineUserListView];
 }
 //delegate
 - (void)showUserToast:(SWChatModel *)model {
@@ -2025,17 +2049,17 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 #pragma mark -- 改变开播按钮的状态
 - (void)changeStartLiveButtonState{
-    if (thumbImage && liveTitleTextView.text.length > 0 && ![liveClassID isEqual:@"未选择"]) {
-        startLiveBtn.userInteractionEnabled = YES;
-        startLiveBtn.alpha = 1;
+    if (self.previewThumbnailImage && self.liveTitleTextView.text.length > 0 && ![self.selectedLiveClassId isEqual:@"未选择"]) {
+        self.startLiveButton.userInteractionEnabled = YES;
+        self.startLiveButton.alpha = 1;
     }else{
-        startLiveBtn.userInteractionEnabled = NO;
-        startLiveBtn.alpha = 0.5;
+        self.startLiveButton.userInteractionEnabled = NO;
+        self.startLiveButton.alpha = 0.5;
     }
 }
 #pragma mark -- tableView相关
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return _chatArray.count;
+    return _chatMessageList.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
        SWChatMsgCell *cell = [tableView dequeueReusableCellWithIdentifier:@"chatMsgCELL"];
@@ -2043,7 +2067,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SWChatMsgCell" owner:nil options:nil] lastObject];
     }
     
-    SWChatModel *models = _chatArray[indexPath.row];
+    SWChatModel *models = _chatMessageList[indexPath.row];
 
     cell.model =models;
     
@@ -2053,48 +2077,48 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    SWChatModel *model = _chatArray[indexPath.row];
+    SWChatModel *model = _chatMessageList[indexPath.row];
     if (model.userID && model.userID.length > 0 && ![model.userID isEqual:[SWConfig getOwnID]]) {
         [self showUserPopupView:model isonline:NO];
     }
 }
 #pragma mark -- 用户弹窗相关
 - (void)showUserPopupView:(SWChatModel *)model isonline:(BOOL)isOnline{
-    if (userPview) {
-        [userPview removeFromSuperview];
-        userPview = nil;
+    if (self.userPopupView) {
+        [self.userPopupView removeFromSuperview];
+        self.userPopupView = nil;
     }
-    userPview = [[SWUserPopupView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andModel:model liveUid:[SWConfig getOwnID]];
-    userPview.delegate = self;
-    userPview.isOnlineUser = isOnline;
-    [self.view addSubview:userPview];
+    self.userPopupView = [[SWUserPopupView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andModel:model liveUid:[SWConfig getOwnID]];
+    self.userPopupView.delegate = self;
+    self.userPopupView.isOnlineUser = isOnline;
+    [self.view addSubview:self.userPopupView];
 }
 - (void)removeUserPopupView{
-    [userPview removeFromSuperview];
-    userPview = nil;
+    [self.userPopupView removeFromSuperview];
+    self.userPopupView = nil;
 }
 - (void)doShutupUser:(NSString *)userID andUserName:(NSString *)uname content:(nonnull NSString *)content{
-    [_socketL shutUpUser:userID andName:uname andAction:@"1" content:content];
+    [self.liveSocket shutUpUser:userID andName:uname andAction:@"1" content:content];
 }
 -(void)doKickUser:(NSString *)userID andUserName:(NSString *)uname{
-    [_socketL kickUser:userID andName:uname];
+    [self.liveSocket kickUser:userID andName:uname];
 }
 - (void)doCancleShutupUser:(NSString *)userID andUserName:(NSString *)uname{
     NSString *content = [NSString stringWithFormat:@"%@被解除禁言",uname];
-    [_socketL shutUpUser:userID andName:uname andAction:@"2" content:content];
+    [self.liveSocket shutUpUser:userID andName:uname andAction:@"2" content:content];
 }
 //禁言
 - (void)anchorShutUser:(NSString *)touid andAction:(int)action content:(NSString *)content{
     if ([touid isEqual:[SWConfig getOwnID]]) {
         if (action == 1) {
-            isShutUp = YES;
+            self.isMuted = YES;
             [MBProgressHUD showError:@"你已被禁言"];
         }else if (action == 2){
-            isShutUp = NO;
+            self.isMuted = NO;
             [MBProgressHUD showError:@"你已解除禁言"];
         }
     }
-    NSDictionary *chatDic = @{
+    NSDictionary *chatMap = @{
         @"contentChat":content,
         @"userName":@"",
         @"userID":@"",
@@ -2102,10 +2126,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         @"icon":@"",
         @"isattent":@"0",
     };
-    SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
-    [_chatArray addObject:model];
-    if (_chatArray.count > 100) {
-        [_chatArray removeObjectAtIndex:1];
+    SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
+    [_chatMessageList addObject:model];
+    if (_chatMessageList.count > 100) {
+        [_chatMessageList removeObjectAtIndex:1];
     }
     [_chatTableView reloadData];
     [self jumpLast];
@@ -2116,50 +2140,50 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     
 }
 - (void)setAdminUser:(NSString *)userID andUserName:(NSString *)uname{
-    [_socketL setAdmin:userID andName:uname];
+    [self.liveSocket setAdmin:userID andName:uname];
 }
 -(void)cancelAdminUser:(NSString *)userID andUserName:(NSString *)uname{
-    [_socketL cancelSetAdmin:userID andName:uname];
+    [self.liveSocket cancelSetAdmin:userID andName:uname];
 }
 #pragma mark -- 回到后台
 -(void)backgroundselector{
-    backTime +=1;
-    NSLog(@"返回后台时间%d",backTime);
-    if (backTime > 60) {
+    self.backgroundElapsedTime +=1;
+    NSLog(@"返回后台时间%d",self.backgroundElapsedTime);
+    if (self.backgroundElapsedTime > 60) {
         [self getCloseShow];
     }
 }
 -(void)backGround{
     //进入后台
-    if (!backGroundTimer) {
+    if (!self.backgroundTimer) {
         [self sendEmccBack];
-        backGroundTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(backgroundselector) userInfo:nil repeats:YES];
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(backgroundselector) userInfo:nil repeats:YES];
     }
 }
 -(void)forwardGround{
-    if (backTime != 0) {
-//        [_socketL sendMessage:@"主播回来了"];
+    if (self.backgroundElapsedTime != 0) {
+//        [self.liveSocket sendMessage:@"主播回来了"];
     }
     //进入前台
-    if (backTime > 60) {
+    if (self.backgroundElapsedTime > 60) {
         [self getCloseShow];
     }
-    [backGroundTimer invalidate];
-    backGroundTimer  = nil;
-    backTime = 0;
+    [self.backgroundTimer invalidate];
+    self.backgroundTimer  = nil;
+    self.backgroundElapsedTime = 0;
 }
 -(void)appactive{
     NSLog(@"哈哈哈哈哈哈哈哈哈哈哈哈 app回到前台");
-    [_socketL sendRoomSystemNotMessage:@"主播回来了！"];
+    [self.liveSocket sendRoomSystemNotMessage:@"主播回来了！"];
     [_txLivePusher resumeVideo];
 }
 -(void)appnoactive{
-    [_socketL sendRoomSystemNotMessage:@"主播离开一下，精彩不中断，不要走开哦"];
+    [self.liveSocket sendRoomSystemNotMessage:@"主播离开一下，精彩不中断，不要走开哦"];
     [_txLivePusher pauseVideo];
     NSLog(@"0000000000000000000 app进入后台");
 }
 -(void)sendEmccBack {
-//    [_socketL phoneCall:YZMsg(@"主播离开一下，精彩不中断，不要走开哦")];
+//    [self.liveSocket phoneCall:YZMsg(@"主播离开一下，精彩不中断，不要走开哦")];
 }
 
 #pragma mark ============电话监听=============
@@ -2187,21 +2211,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 -(void)getCloseShow
 {
+    // 1) 请求服务端关播并清理本地资源
     [MBProgressHUD showMessage:@""];
-    [SWToolClass postNetworkWithUrl:@"live/stop" andParameter:@{@"stream":minstr([_roomDic valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass postNetworkWithUrl:@"live/stop" andParameter:@{@"stream":minstr([self.roomInfoMap valueForKey:@"stream"])} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD hideHUD];
-        [_socketL closeRoom];//发送关闭直播的socket
-        [_socketL colseSocket];//注销socket
-        _socketL = nil;//注销socket
+        [self.liveSocket closeRoom];//发送关闭直播的socket
+        [self.liveSocket closeSocket];//注销socket
+        self.liveSocket = nil;//注销socket
         [self txStopRtmp];
         [self invalidateTimer];
         [self requestLiveAllTimeandVotes];
         // 服务端在关播处处理
         [[SWLinkmicManager shareInstance] livemicStop];
     } fail:^{
-        [_socketL closeRoom];//发送关闭直播的socket
-        [_socketL colseSocket];//注销socket
-        _socketL = nil;//注销socket
+        [self.liveSocket closeRoom];//发送关闭直播的socket
+        [self.liveSocket closeSocket];//注销socket
+        self.liveSocket = nil;//注销socket
         [self txStopRtmp];
         [self invalidateTimer];
         [self requestLiveAllTimeandVotes];
@@ -2219,24 +2244,24 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 注销计时器
 - (void)invalidateTimer{
-    if (heartTimer) {
-        [heartTimer invalidate];
-        heartTimer = nil;
+    if (self.heartAnimationTimer) {
+        [self.heartAnimationTimer invalidate];
+        self.heartAnimationTimer = nil;
     }
-    if (backGroundTimer) {
-        [backGroundTimer invalidate];
-        backGroundTimer = nil;
+    if (self.backgroundTimer) {
+        [self.backgroundTimer invalidate];
+        self.backgroundTimer = nil;
     }
-    if (reloadTimer) {
-        [reloadTimer invalidate];
-        reloadTimer = nil;
+    if (self.statsRefreshTimer) {
+        [self.statsRefreshTimer invalidate];
+        self.statsRefreshTimer = nil;
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 }
 #pragma mark ================ 直播结束 ===============
 - (void)requestLiveAllTimeandVotes{
-    NSString *url = [NSString stringWithFormat:@"live/stopinfo?stream=%@",minstr([_roomDic valueForKey:@"stream"])];
+    NSString *url = [NSString stringWithFormat:@"live/stopinfo?stream=%@",minstr([self.roomInfoMap valueForKey:@"stream"])];
     [SWToolClass getQCloudWithUrl:url Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             [self lastview:info];
@@ -2249,14 +2274,14 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     
 
 }
--(void)lastview:(NSDictionary *)dic{
+-(void)lastview:(NSDictionary *)summaryMap{
     //无数据都显示0
-    if (!dic) {
-        dic = @{@"length":@"0",@"nums":@"0"};
+    if (!summaryMap) {
+        summaryMap = @{@"length":@"0",@"nums":@"0"};
     }
     UIImageView *lastView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height)];
     lastView.userInteractionEnabled = YES;
-    [lastView sd_setImageWithURL:[NSURL URLWithString:minstr([_roomDic valueForKey:@"thumb"])]];
+    [lastView sd_setImageWithURL:[NSURL URLWithString:minstr([self.roomInfoMap valueForKey:@"thumb"])]];
     UIBlurEffect *blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     UIVisualEffectView *effectview = [[UIVisualEffectView alloc] initWithEffect:blur];
     effectview.frame = CGRectMake(0, 0,_window_width,_window_height);
@@ -2299,13 +2324,13 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         topLabel.textColor = [UIColor whiteColor];
         topLabel.textAlignment = NSTextAlignmentCenter;
         if (i == 0) {
-            topLabel.text = minstr([dic valueForKey:@"length"]);
+            topLabel.text = minstr([summaryMap valueForKey:@"length"]);
         }
 //        if (i == 1) {
 //            topLabel.text = minstr([dic valueForKey:@"votes"]);
 //        }
         if (i == 1) {
-            topLabel.text = minstr([dic valueForKey:@"nums"]);
+            topLabel.text = minstr([summaryMap valueForKey:@"nums"]);
         }
         [backView addSubview:topLabel];
         UILabel *footLabel = [[UILabel alloc]initWithFrame:CGRectMake(topLabel.left, topLabel.bottom, topLabel.width, 14)];
@@ -2343,11 +2368,11 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 #pragma mark -- 展示输入框
 - (void)showToolbarView{
-    if (moreMenuView) {
-        moreMenuView.hidden = YES;
-        moreBtn.selected = NO;
+    if (self.anchorMoreMenuView) {
+        self.anchorMoreMenuView.hidden = YES;
+        self.moreButton.selected = NO;
     }
-    [_inputTextView becomeFirstResponder];
+    [_chatInputTextField becomeFirstResponder];
 //    NSDictionary *dic = @{
 //        @"id":@"1",
 //        @"userName":@"张三",
@@ -2356,22 +2381,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 //        @"isAnchor":@"1",
 //        @"uhead":@""
 //    };
-//    SWChatModel *model = [[SWChatModel alloc]initWithDic:dic];
-//    [_chatArray addObject:model];
+//    SWChatModel *model = [[SWChatModel alloc]initWithDictionary:dic];
+//    [_chatMessageList addObject:model];
 //    [_chatTableView reloadData];
 //    [self jumpLast];
 }
 - (void)jumpLast{
-    [_chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_chatArray.count-1 inSection:0]
+    [_chatTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_chatMessageList.count-1 inSection:0]
                           atScrollPosition:UITableViewScrollPositionBottom animated:NO];
 
 }
 #pragma mark -- 底部更多按钮点击
 - (void)showmoreview{
-    if (!moreMenuView) {
-        moreMenuView = [[SWAnchorMoreMenuView alloc]initWithFrame:CGRectMake(10, _window_height-46-ShowDiff-100, _window_width-20, 97.5)];
+    if (!self.anchorMoreMenuView) {
+        self.anchorMoreMenuView = [[SWAnchorMoreMenuView alloc]initWithFrame:CGRectMake(10, _window_height-46-ShowDiff-100, _window_width-20, 97.5)];
         WeakSelf;
-        moreMenuView.block = ^(NSString * _Nonnull name) {
+        self.anchorMoreMenuView.block = ^(NSString * _Nonnull name) {
             if ([name isEqual:@"翻转"]) {
                 [weakSelf rotateCamera];
             }
@@ -2384,30 +2409,30 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             if ([name isEqual:@"分享"]) {
                 [weakSelf doShare];
             }
-            moreMenuView.hidden = YES;
-            moreBtn.selected = NO;
+            self.anchorMoreMenuView.hidden = YES;
+            self.moreButton.selected = NO;
         };
-        [self.view addSubview:moreMenuView];
+        [self.view addSubview:self.anchorMoreMenuView];
     }
-    moreMenuView.isTorch = isTorch;
-    moreMenuView.hidden = NO;
-    moreBtn.selected = YES;
+    self.anchorMoreMenuView.isTorch = self.isTorch;
+    self.anchorMoreMenuView.hidden = NO;
+    self.moreButton.selected = YES;
 
 }
 #pragma mark -- 闪光灯
 -(void)toggleTorch{
-    isTorch = !isTorch;
+    self.isTorch = !self.isTorch;
     /*
     if (![_txLivePublisher toggleTorch:isTorch]) {
-        isTorch = !isTorch;
+        self.isTorch = !self.isTorch;
     }
     */
     TXDeviceManager *deviceManager = [_txLivePusher getDeviceManager];
     BOOL isTorSupported = [deviceManager isCameraTorchSupported];
     if (isTorSupported) {
-        [deviceManager enableCameraTorch:isTorch];
+        [deviceManager enableCameraTorch:self.isTorch];
     }else{
-        isTorch = !isTorch;
+        self.isTorch = !self.isTorch;
         [MBProgressHUD showError:@"只有后置摄像头才能开启闪光灯"];
     }
 
@@ -2428,23 +2453,21 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 - (void)doShare{
     //杨剑修改，分享
     [MBProgressHUD showMessage:@""];
-    NSString *uid = minstr([self.roomDic valueForKey:@"uid"]);
-    NSString *stream = minstr([self.roomDic valueForKey:@"stream"]);
+    NSString *uid = minstr([self.roomInfoMap valueForKey:@"uid"]);
+    NSString *stream = minstr([self.roomInfoMap valueForKey:@"stream"]);
     NSString *restApiPath = [NSString stringWithFormat:@"/#/home?redirect=%%2Flive%%2Fdetail%%3Fuid%%3D%@%%26stream%%3D%@",uid,stream];
     [SWToolClass getQCloudNoTokenWithUrl:@"/frontend" Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD hideHUD];
-        NSString *restApi = @"https://m.shenwei.info";
+        NSString *restApi = h5share_url;
         if (code == 200) {
             NSString *newRestApi = minstr([info valueForKey:@"frontend_url"] );
-            if (newRestApi.length > 10){
-                restApi = newRestApi;
-            }
+            restApi = newRestApi;
         }
         NSString *linkText = [NSString stringWithFormat:@"%@%@",restApi,restApiPath];
         [self showShareAlert:linkText];
     } Fail:^{
         [MBProgressHUD hideHUD];
-        NSString *linkText = [NSString stringWithFormat:@"https://m.shenwei.info%@",restApiPath];
+        NSString *linkText = [NSString stringWithFormat:@"%@%@",h5share_url,restApiPath];
         [self showShareAlert:linkText];
     }];
 
@@ -2452,7 +2475,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     
 
 //    if (!shareV) {
-//        shareV = [[SWShareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:_roomDic];
+//        shareV = [[SWShareView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andRoomMessage:self.roomInfoMap];
 //        [self.view addSubview:shareV];
 //    }else{
 //        [shareV show];
@@ -2460,23 +2483,23 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 底部商品按钮点击
 - (void)showgoodsShowView{
-    if (moreMenuView) {
-        moreMenuView.hidden = YES;
+    if (self.anchorMoreMenuView) {
+        self.anchorMoreMenuView.hidden = YES;
     }
-    if (!goodsView) {
-        goodsView = [[SWLiveGoodsView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:[SWConfig getOwnID]];
-        [self.view addSubview:goodsView];
+    if (!self.liveGoodsPanelView) {
+        self.liveGoodsPanelView = [[SWLiveGoodsView alloc]initWithFrame:CGRectMake(0, 0, _window_width, _window_height) andLiveUid:[SWConfig getOwnID]];
+        [self.view addSubview:self.liveGoodsPanelView];
     }
-    [goodsView show];
+    [self.liveGoodsPanelView show];
 }
 #pragma mark -- 飘心展示
 - (void)showHeart{
-    heartShowCount = arc4random()%5 + 1;
+    self.heartBurstCount = arc4random()%5 + 1;
     [self socketLight];
 }
 -(void)socketLight{
-    CGFloat starX = goodsBtn.frame.origin.x ;
-    CGFloat starY = goodsBtn.frame.origin.y - 30;
+    CGFloat starX = self.goodsButton.frame.origin.x ;
+    CGFloat starY = self.goodsButton.frame.origin.y - 30;
     UIImageView *starImage = [[UIImageView alloc]initWithFrame:CGRectMake(starX, starY, 30, 30)];
     starImage.contentMode = UIViewContentModeScaleAspectFit;
     NSMutableArray *array = [NSMutableArray arrayWithObjects:@"plane_heart_no1.png",@"plane_heart_no2.png",@"plane_heart_no3.png",@"plane_heart_no4.png",@"plane_heart_no5.png", nil];
@@ -2488,7 +2511,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         CGAffineTransform transfrom = CGAffineTransformMakeScale(1.3, 1.3);
         starImage.transform = CGAffineTransformScale(transfrom, 1, 1);
     }];
-    [_frontView addSubview:starImage];
+    [self.liveRoomContainerView addSubview:starImage];
     CGFloat finishX = _window_width - round(arc4random() % 200);
     //  动画结束点的Y值
     CGFloat finishY = 200;
@@ -2519,8 +2542,8 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     //  设置动画代理
     [UIView setAnimationDelegate:self];
     [UIView commitAnimations];
-    heartShowCount --;
-    if (heartShowCount > 0) {
+    self.heartBurstCount --;
+    if (self.heartBurstCount > 0) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self socketLight];
         });
@@ -2544,7 +2567,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     CGFloat height = keyboardRect.origin.y;
     WeakSelf;
     [UIView animateWithDuration:0.3 animations:^{
-        weakSelf.toolView.y = height-50;
+        weakSelf.chatInputContainerView.y = height-50;
     }];
 }
 - (void)keyboardWillHide:(NSNotification *)aNotification
@@ -2552,35 +2575,35 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [self showBTN];
     WeakSelf;
     [UIView animateWithDuration:0.1 animations:^{
-        weakSelf.toolView.y = _window_height;
+        weakSelf.chatInputContainerView.y = _window_height;
     }];
 }
 #pragma mark -- 送礼物效果
 -(void)sendGift:(NSDictionary *)msg andLiansong:(NSString *)liansong andTotalCoin:(NSString *)votestotal andGiftInfo:(NSDictionary *)giftInfo andCt:(NSDictionary *)ct{
 
     NSString *type = minstr([ct valueForKey:@"type"]);
-    NSMutableDictionary *muDic = [NSMutableDictionary dictionaryWithDictionary:ct];
-    [muDic setObject:msg[@"uhead"] forKey:@"avatar"];
-    [muDic setObject:giftInfo[@"nicename"] forKey:@"nicename"];
+    NSMutableDictionary *giftMap = [NSMutableDictionary dictionaryWithDictionary:ct];
+    [giftMap setObject:msg[@"uhead"] forKey:@"avatar"];
+    [giftMap setObject:giftInfo[@"nicename"] forKey:@"nicename"];
     if ([type isEqual:@"1"]) {
-        [self expensiveGift:muDic.copy isPlatGift:NO];
+        [self expensiveGift:giftMap.copy isPlatGift:NO];
     }else{
-        if (!continueGifts) {
-            continueGifts = [[SWContinueGift alloc]init];
-            [liansongliwubottomview addSubview:continueGifts];
+        if (!self.continueGiftView) {
+            self.continueGiftView = [[SWContinueGift alloc]init];
+            [self.continueGiftContainerView addSubview:self.continueGiftView];
             //初始化礼物空位
-            [continueGifts initGift];
+            [self.continueGiftView initGift];
         }
-        [continueGifts GiftPopView:muDic.copy andLianSong:liansong];
+        [self.continueGiftView GiftPopView:giftMap.copy andLianSong:liansong];
     }
 }
 -(void)expensiveGiftdelegate:(NSDictionary *)giftData{
-    if (!haohualiwuV) {
-        haohualiwuV = [[SWExpensiveGiftV alloc]initWithIsPlat:NO];
-        haohualiwuV.delegate = self;
-        [self.view addSubview:haohualiwuV];
+    if (!self.expensiveGiftView) {
+        self.expensiveGiftView = [[SWExpensiveGiftV alloc]initWithIsPlat:NO];
+        self.expensiveGiftView.delegate = self;
+        [self.view addSubview:self.expensiveGiftView];
         CGAffineTransform t = CGAffineTransformMakeTranslation(_window_width, 0);
-        haohualiwuV.transform = t;
+        self.expensiveGiftView.transform = t;
     }
     if (giftData == nil) {
         
@@ -2589,36 +2612,36 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }
     else
     {
-        [haohualiwuV addArrayCount:giftData];
+        [self.expensiveGiftView addArrayCount:giftData];
     }
-    if(haohualiwuV.haohuaCount == 0){
-        [haohualiwuV enGiftEspensive:NO];
+    if(self.expensiveGiftView.haohuaCount == 0){
+        [self.expensiveGiftView enGiftEspensive:NO];
     }
 }
 -(void)expensiveGift:(NSDictionary *)giftData isPlatGift:(BOOL)isPlat{
     
     
-    if (!haohualiwuV) {
-        haohualiwuV = [[SWExpensiveGiftV alloc]initWithIsPlat:isPlat];
-        haohualiwuV.delegate = self;
-        [self.view insertSubview:haohualiwuV atIndex:8];
+    if (!self.expensiveGiftView) {
+        self.expensiveGiftView = [[SWExpensiveGiftV alloc]initWithIsPlat:isPlat];
+        self.expensiveGiftView.delegate = self;
+        [self.view insertSubview:self.expensiveGiftView atIndex:8];
     }
     if (giftData == nil) {
     }
     else
     {
-        [haohualiwuV addArrayCount:giftData];
+        [self.expensiveGiftView addArrayCount:giftData];
     }
-    if(haohualiwuV.haohuaCount == 0){
-        [haohualiwuV enGiftEspensive:isPlat];
+    if(self.expensiveGiftView.haohuaCount == 0){
+        [self.expensiveGiftView enGiftEspensive:isPlat];
     }
 }
 
 #pragma mark -- 获取直播间人数
 - (void)getRoomUserNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livenums?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livenums?stream=%@",minstr([self.roomInfoMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            userNumLabel.text = [NSString stringWithFormat:@"  %@人  ",minstr([info valueForKey:@"nums"])];
+            self.userCountLabel.text = [NSString stringWithFormat:@"  %@人  ",minstr([info valueForKey:@"nums"])];
 
         }
     } Fail:^{
@@ -2627,9 +2650,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 获取直播间点赞数
 - (void)getRoomLikeNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livelikes?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livelikes?stream=%@",minstr([self.roomInfoMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            likesNumLabel.text = minstr([info valueForKey:@"nums"]);
+            self.likesCountLabel.text = minstr([info valueForKey:@"nums"]);
         }
     } Fail:^{
         
@@ -2638,9 +2661,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 获取直播间销售商品数
 - (void)getRoomSellerGoodsNums{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livegoodsnums?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"livegoodsnums?stream=%@",minstr([self.roomInfoMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            sellerGoodsNumsLabel.text = minstr([info valueForKey:@"nums"]);
+            self.soldGoodsCountLabel.text = minstr([info valueForKey:@"nums"]);
         }
     } Fail:^{
         
@@ -2649,7 +2672,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 }
 #pragma mark -- 检测直播状态，防止断流或者其他情况服务端给主播关播了 主播还在直播
 - (void)checkLiveState{
-    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"checklive?stream=%@",minstr([_roomDic valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+    [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"checklive?stream=%@",minstr([self.roomInfoMap valueForKey:@"stream"])] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
             if (![minstr([info valueForKey:@"islive"]) isEqual:@"1"]) {
                 [self getCloseShow];
@@ -2661,6 +2684,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 }
 - (void)reloadRoomMessage{
+    // 定时拉取直播间统计数据
     [self getRoomLikeNums];
     [self getRoomUserNums];
     [self getRoomSellerGoodsNums];
@@ -2681,7 +2705,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 //        }
     }
     /*
-    NSDictionary *chatDic = @{
+    NSDictionary *chatMap = @{
         @"contentChat":minstr(msg[@"ct"]),
         @"userName":@"",
         @"userID":@"",
@@ -2690,21 +2714,22 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
         @"isattent":@"0",
         
     };
-    SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
-    [_chatArray addObject:model];
-    if (_chatArray.count > 100) {
-        [_chatArray removeObjectAtIndex:1];
+    SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
+    [_chatMessageList addObject:model];
+    if (_chatMessageList.count > 100) {
+        [_chatMessageList removeObjectAtIndex:1];
     }
     [_chatTableView reloadData];
     [self jumpLast];
      */
 }
 //聊天消息
-- (void)reciveMessage:(NSDictionary *)dic {
-    NSDictionary *chatDic;
-    if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SystemNot"]) {
-        chatDic = @{
-            @"contentChat":minstr([dic valueForKey:@"ct"]),
+- (void)receiveMessage:(NSDictionary *)messageMap {
+    // 统一将 socket 原始消息映射为聊天模型
+    NSDictionary *chatMap;
+    if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SystemNot"]) {
+        chatMap = @{
+            @"contentChat":minstr([messageMap valueForKey:@"ct"]),
             @"userName":@"",
             @"userID":@"",
             @"type":@"1",
@@ -2712,43 +2737,43 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             @"isattent":@"0",
         };
     }
-    else if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SendMsg"]) {
-        chatDic = @{
-            @"contentChat":minstr([dic valueForKey:@"content"]),
-            @"userName":minstr([dic valueForKey:@"usernickname"]),
-            @"userID":minstr([dic valueForKey:@"uid"]),
+    else if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SendMsg"]) {
+        chatMap = @{
+            @"contentChat":minstr([messageMap valueForKey:@"content"]),
+            @"userName":minstr([messageMap valueForKey:@"usernickname"]),
+            @"userID":minstr([messageMap valueForKey:@"uid"]),
             @"type":@"2",
-            @"icon":minstr([dic valueForKey:@"avatar"]),
-            @"isattent":minstr([dic valueForKey:@"isattent"]),
-            @"usertype":minstr(dic[@"usertype"])
+            @"icon":minstr([messageMap valueForKey:@"avatar"]),
+            @"isattent":minstr([messageMap valueForKey:@"isattent"]),
+            @"usertype":minstr(messageMap[@"usertype"])
         };
     }
-    else if ([minstr([dic valueForKey:@"_method_"]) isEqual:@"SendLight"]) {
-        chatDic = @{
+    else if ([minstr([messageMap valueForKey:@"_method_"]) isEqual:@"SendLight"]) {
+        chatMap = @{
             @"contentChat":@"点亮了",
-            @"userName":minstr([dic valueForKey:@"usernickname"]),
-            @"userID":minstr([dic valueForKey:@"uid"]),
+            @"userName":minstr([messageMap valueForKey:@"usernickname"]),
+            @"userID":minstr([messageMap valueForKey:@"uid"]),
             @"type":@"4",
-            @"icon":minstr([dic valueForKey:@"avatar"]),
-            @"isattent":minstr([dic valueForKey:@"isattent"]),
+            @"icon":minstr([messageMap valueForKey:@"avatar"]),
+            @"isattent":minstr([messageMap valueForKey:@"isattent"]),
         };
 
     }
-    if (chatDic) {
-        SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
-        [_chatArray addObject:model];
-        if (_chatArray.count > 100) {
-            [_chatArray removeObjectAtIndex:1];
+    if (chatMap) {
+        SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
+        [_chatMessageList addObject:model];
+        if (_chatMessageList.count > 100) {
+            [_chatMessageList removeObjectAtIndex:1];
         }
         [_chatTableView reloadData];
         [self jumpLast];
     }
 }
 //用户进入
-- (void)userEnterRoom:(NSDictionary *)dic {
-    NSDictionary *ct = [dic valueForKey:@"ct"];
+- (void)userEnterRoom:(NSDictionary *)userMap {
+    NSDictionary *ct = [userMap valueForKey:@"ct"];
     if (![minstr([ct valueForKey:@"uid"]) isEqual:[SWConfig getOwnID]]) {
-        NSDictionary *chatDic = @{
+        NSDictionary *chatMap = @{
             @"contentChat":@"进入了直播间",
             @"userName":minstr([ct valueForKey:@"name"]),
             @"userID":minstr([ct valueForKey:@"uid"]),
@@ -2756,10 +2781,10 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
             @"icon":minstr([ct valueForKey:@"avatar"]),
             @"isattent":minstr([ct valueForKey:@"isattent"]),
         };
-        SWChatModel *model = [[SWChatModel alloc]initWithDic:chatDic];
-        [_chatArray addObject:model];
-        if (_chatArray.count > 100) {
-            [_chatArray removeObjectAtIndex:1];
+        SWChatModel *model = [[SWChatModel alloc]initWithDictionary:chatMap];
+        [_chatMessageList addObject:model];
+        if (_chatMessageList.count > 100) {
+            [_chatMessageList removeObjectAtIndex:1];
         }
         [_chatTableView reloadData];
         [self jumpLast];
@@ -2791,19 +2816,19 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 #pragma mark - 连麦
 // 同意连麦
 - (void)agreeUserLink:(NSDictionary *)userInfo {
-    if (applyView) {
-        [applyView diHide];
+    if (self.linkRequestView) {
+        [self.linkRequestView diHide];
     }
     NSString *userid = minstr([userInfo valueForKey:@"uid"]);
-    [[SWLinkmicManager shareInstance] livemicManage:YES andUserid:userid handle:^(LinkEvent event, int eventCode, NSDictionary *eventDic) {
+    [[SWLinkmicManager shareInstance] livemicManage:YES andUserid:userid handle:^(LinkEvent event, int eventCode, NSDictionary *eventMap) {
         if (eventCode == 0) {
-            showEndLinkBtn = true;
+            self.shouldShowEndLinkButton = true;
             dispatch_async(dispatch_get_main_queue(), ^{
-                linkEndBtn.hidden = NO;
+                self.linkEndButton.hidden = NO;
             });
             
             // socket
-            [_socketL linkMicSocket:3 andParam:@{
+            [self.liveSocket linkMicSocket:3 andParam:@{
                 @"to_uid":userid,
             }];
             [SWLinkmicManager shareInstance].isLinking = YES;
@@ -2813,48 +2838,49 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     }];
 }
 - (void)closeLinkSwitch {
-    showEndLinkBtn = false;
-    linkEndBtn.hidden = YES;
-    if (applyView) {
-        [applyView diHide];
+    self.shouldShowEndLinkButton = false;
+    self.linkEndButton.hidden = YES;
+    if (self.linkRequestView) {
+        [self.linkRequestView diHide];
     }
     // socket
-    [_socketL linkMicSocket:9 andParam:@{}];
+    [self.liveSocket linkMicSocket:9 andParam:@{}];
 }
 // 连麦窗口
--(void)createLinkUserView:(NSDictionary *)infoDic {
+-(void)createLinkUserView:(NSDictionary *)infoMap {
     [self destroyLinkUserView];
 
-    NSDictionary *subdic = @{
-        @"playurl":minstr([infoDic valueForKey:@"playurl"]),
+    NSDictionary *subMap = @{
+        @"playurl":minstr([infoMap valueForKey:@"playurl"]),
         @"pushurl":@"0",
-        @"userid":minstr([infoDic valueForKey:@"userid"]),
+        @"userid":minstr([infoMap valueForKey:@"userid"]),
     };
-    _linkUserView = [[SWLinkUserView alloc]initWithRTMPURL:subdic andFrame:CGRectMake(_window_width - 100, _window_height - 110 - ShowDiff - 150 , 100, 150) andisHOST:NO andAnToAn:NO];
-    _linkUserView.delegate = self;
-    _linkUserView.tag = 1500 + [[SWConfig getOwnID] intValue];
-    [_linkUserView ctrCloseBtn:YES];
-    [self.view addSubview:_linkUserView];
+    _linkMicUserView = [[SWLinkUserView alloc]initWithRTMPURL:subMap andFrame:CGRectMake(_window_width - 100, _window_height - 110 - ShowDiff - 150 , 100, 150) andisHOST:NO andAnToAn:NO];
+    _linkMicUserView.delegate = self;
+    _linkMicUserView.tag = 1500 + [[SWConfig getOwnID] intValue];
+    [_linkMicUserView ctrCloseBtn:YES];
+    [self.view addSubview:_linkMicUserView];
 }
 
 -(void)createTRTCLinkUserViewWithUserId:(NSString *)userId {
+    // 创建 TRTC 连麦小窗（用于展示网页端用户画面）
     [self destroyLinkUserView];
-    _linkUserView = [[SWLinkUserView alloc] initWithTRTCRemoteUserId:userId
+    _linkMicUserView = [[SWLinkUserView alloc] initWithTRTCRemoteUserId:userId
                                                          andFrame:CGRectMake(_window_width - 100, _window_height - 110 - ShowDiff - 150 , 100, 150)
                                                         andisHOST:YES];
-    _linkUserView.delegate = self;
-    _linkUserView.tag = 1500 + [[SWConfig getOwnID] intValue];
-    [_linkUserView ctrCloseBtn:YES];
-    [self.view addSubview:_linkUserView];
+    _linkMicUserView.delegate = self;
+    _linkMicUserView.tag = 1500 + [[SWConfig getOwnID] intValue];
+    [_linkMicUserView ctrCloseBtn:YES];
+    [self.view addSubview:_linkMicUserView];
 }
 - (void)endLinkMaic{
     NSString *uid = @"";
-    if(_linkUserView){
-        uid = _linkUserView.subdic[@"userid"];
+    if(_linkMicUserView){
+        uid = _linkMicUserView.subMap[@"userid"];
     }
     // 主播关闭
     //socekt
-    [_socketL linkMicSocket:7 andParam:@{
+    [self.liveSocket linkMicSocket:7 andParam:@{
         @"to_uid":uid,
     }];
     //
@@ -2865,7 +2891,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 - (void)tx_closeuserconnect:(NSString *)uid {
     // 主播关闭
     //socekt
-    [_socketL linkMicSocket:7 andParam:@{
+    [self.liveSocket linkMicSocket:7 andParam:@{
         @"to_uid":uid,
     }];
     //
@@ -2873,27 +2899,27 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
     [SWLinkmicManager shareInstance].isLinking = NO;
 }
 -(void)destroyLinkUserView {
-   
-    if (_linkUserView) {
-        showEndLinkBtn = false;
-        linkEndBtn.hidden = YES;
+    // 关闭连麦窗口并停止 TRTC 远端订阅
+    if (_linkMicUserView) {
+        self.shouldShowEndLinkButton = false;
+        self.linkEndButton.hidden = YES;
         if (_linkingRemoteUserId.length > 0) {
             [self trtcInitIfNeeded];
             [_trtcCloud stopRemoteView:_linkingRemoteUserId streamType:TRTCVideoStreamTypeBig];
             _linkingRemoteUserId = nil;
         }
-        [_linkUserView stopConnect];
-        [_linkUserView stopPush];
-        [_linkUserView removeFromSuperview];
-        _linkUserView = nil;
+        [_linkMicUserView stopConnect];
+        [_linkMicUserView stopPush];
+        [_linkMicUserView removeFromSuperview];
+        _linkMicUserView = nil;
         [SWLinkmicManager shareInstance].isLinking = NO;
     }
 }
 //
-- (void)linkmicEventSoc:(NSDictionary *)linkDic {
-
-    int action = [minstr([linkDic valueForKey:@"action"]) intValue];
-    NSString *userId = minstr([linkDic valueForKey:@"uid"]);
+- (void)linkmicEventSoc:(NSDictionary *)linkMap {
+    // 连麦信令事件分发：申请、取消、上麦、下麦
+    int action = [minstr([linkMap valueForKey:@"action"]) intValue];
+    NSString *userId = minstr([linkMap valueForKey:@"uid"]);
     if (action == 1) {
         // 显示红点+1
         [[SWLinkmicManager shareInstance] applyNumsChange:YES];
@@ -2919,7 +2945,7 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
                 // 真正开始拉取以 onUserVideoAvailable 为准，这里先尝试一次（有些情况下可直接出画面）
                 NSLog(@"[TRTC] try startRemoteView (signal uid=%@)", userId);
                 TRTCCloud *cloud = strongSelf->_trtcCloud;
-                SWLinkUserView *linkView = strongSelf->_linkUserView;
+                SWLinkUserView *linkView = strongSelf->_linkMicUserView;
                 if (!cloud || !linkView) return;
                 [cloud startRemoteView:userId
                             streamType:TRTCVideoStreamTypeBig
@@ -2935,9 +2961,9 @@ typedef NS_ENUM(NSInteger,TCLVFilterType) {
 
 -(void)judgeRedShow {
     if ([SWLinkmicManager shareInstance].currentApplayNums<=0) {
-        linkRed.hidden = YES;
+        self.linkRequestRedDotView.hidden = YES;
     }else {
-        linkRed.hidden = NO;
+        self.linkRequestRedDotView.hidden = NO;
     }
 }
 

@@ -50,7 +50,7 @@ static SWLinkmicManager *_singleton = nil;
 -(void)livemicCdn {
     /*
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
     };
     [SWToolClass postNetworkWithUrl:@"livemic/cdn" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
 
@@ -64,7 +64,7 @@ static SWLinkmicManager *_singleton = nil;
     // 服务端在关播处处理 app不再请求
     /*
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
     };
     [SWToolClass postNetworkWithUrl:@"livemic/stop" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
 
@@ -92,7 +92,7 @@ static SWLinkmicManager *_singleton = nil;
 /// 同意拒绝连麦
 -(void)livemicManage:(BOOL)isAgree andUserid:(NSString*)touid handle:(LinkmicHandle)handle{
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
         @"status": isAgree ? @"1":@"0",
         @"touid":touid,
     };
@@ -116,7 +116,7 @@ static SWLinkmicManager *_singleton = nil;
 /// 混流  下麦传0
 -(void)livemicMix:(NSString *)touid {
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
         @"touid":touid,
     };
     [SWToolClass postNetworkWithUrl:@"livemic/mix" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
@@ -130,7 +130,7 @@ static SWLinkmicManager *_singleton = nil;
 }
 // sdk混流
 -(void)sdkLivemicMix:(NSString *)touid andUserPull:(NSString *)userPull pusher:(V2TXLivePusher*)livePusher; {
-    // NSString *selfUrl = minstr([_roomDic valueForKey:@"push"]);
+    // NSString *selfUrl = minstr([_roomMap valueForKey:@"push"]);
     NSString *otherUrl = userPull;
 
     // NSString * mainStreamId = [self getStreamIDByStreamUrl:selfUrl];
@@ -195,7 +195,7 @@ static SWLinkmicManager *_singleton = nil;
 #pragma mark - 用户端
 -(void)userApplay:(LinkmicHandle)handle {
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
     };
     [SWToolClass postNetworkWithUrl:@"livemic/apply" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD showError:msg];
@@ -217,7 +217,7 @@ static SWLinkmicManager *_singleton = nil;
 
 -(void)userCancel:(LinkmicHandle)handle {
     NSDictionary *changelive = @{
-        @"stream":minstr([_roomDic valueForKey:@"stream"]),
+        @"stream":minstr([_roomMap valueForKey:@"stream"]),
     };
     [SWToolClass postNetworkWithUrl:@"livemic/cancle" andParameter:changelive success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD showError:msg];
@@ -240,10 +240,10 @@ static SWLinkmicManager *_singleton = nil;
 // 获取连麦信息
 -(void)userGetLinkinfo:(LinkmicHandle)handle {
 //    NSDictionary *changelive = @{
-//        @"stream":minstr([_roomDic valueForKey:@"stream"]),
-//        @"liveuid":minstr([_roomDic valueForKey:@"uid"]),
+//        @"stream":minstr([_roomMap valueForKey:@"stream"]),
+//        @"liveuid":minstr([_roomMap valueForKey:@"uid"]),
 //    };
-    NSString *getUrl = [NSString stringWithFormat:@"livemic/url&liveuid=%@&stream=%@",minstr([_roomDic valueForKey:@"uid"]),minstr([_roomDic valueForKey:@"stream"])];
+    NSString *getUrl = [NSString stringWithFormat:@"livemic/url&liveuid=%@&stream=%@",minstr([_roomMap valueForKey:@"uid"]),minstr([_roomMap valueForKey:@"stream"])];
     [SWToolClass getQCloudWithUrl:getUrl Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         [MBProgressHUD showError:msg];
         if (code == 200) {

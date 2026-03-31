@@ -35,9 +35,9 @@
 
 @property(nonatomic,assign)CGRect countR;
 
--(instancetype)initWithDic:(NSDictionary *)dic;
+-(instancetype)initWithDictionary:(NSDictionary *)map;
 
-+(instancetype)modelWithDic:(NSDictionary *)dic;
++(instancetype)modelWithDictionary:(NSDictionary *)map;
 
 
 @end

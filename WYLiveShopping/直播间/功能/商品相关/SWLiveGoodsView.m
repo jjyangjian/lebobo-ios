@@ -14,10 +14,10 @@
 @interface SWLiveGoodsView ()<UITableViewDelegate,UITableViewDataSource,liveGoodsCellDelegate>{
     int page;
     UIView *showView;
-    UILabel *titleLable;
+    UILabel *titleLabel;
     NSString *liveUid;
 }
-@property (nonatomic,strong) UITableView *godsTableView;
+@property (nonatomic,strong) UITableView *goodsTableView;
 @property (nonatomic,strong) NSMutableArray *dataArray;
 
 @end
@@ -58,11 +58,11 @@
     showView.backgroundColor = [UIColor whiteColor];
     [self addSubview:showView];
     showView.layer.mask = [[SWToolClass sharedInstance] setViewLeftTop:20 andRightTop:20 andView:showView];
-    titleLable = [[UILabel alloc]init];
-    titleLable.font = [UIFont boldSystemFontOfSize:14];
-    titleLable.text = @"在售商品 (0)";
-    [showView addSubview:titleLable];
-    [titleLable mas_makeConstraints:^(MASConstraintMaker *make) {
+    titleLabel = [[UILabel alloc]init];
+    titleLabel.font = [UIFont boldSystemFontOfSize:14];
+    titleLabel.text = @"在售商品 (0)";
+    [showView addSubview:titleLabel];
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(showView);
         make.centerY.equalTo(showView.mas_top).offset(20);
     }];
@@ -74,31 +74,31 @@
         [addBtn addTarget:self action:@selector(addGoods) forControlEvents:UIControlEventTouchUpInside];
         [showView addSubview:addBtn];
         [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(titleLable);
+            make.centerY.equalTo(titleLabel);
             make.right.equalTo(showView).offset(-20);
         }];
     }
     [[SWToolClass sharedInstance] lineViewWithFrame:CGRectMake(10, 39, _window_width-20, 1) andColor:colorf0 andView:showView];
     
-    [showView addSubview:self.godsTableView];
+    [showView addSubview:self.goodsTableView];
 }
--(UITableView *)godsTableView{
-    if (!_godsTableView) {
-        _godsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 40, _window_width, showView.height-40-ShowDiff) style:0];
-        _godsTableView.delegate = self;
-        _godsTableView.dataSource = self;
-        _godsTableView.separatorStyle = 0;
-        _godsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+-(UITableView *)goodsTableView{
+    if (!_goodsTableView) {
+        _goodsTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 40, _window_width, showView.height-40-ShowDiff) style:0];
+        _goodsTableView.delegate = self;
+        _goodsTableView.dataSource = self;
+        _goodsTableView.separatorStyle = 0;
+        _goodsTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
             page = 1;
             [self requestData];
             [self getSellerGoodsNum];
         }];
-        _godsTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
+        _goodsTableView.mj_footer = [MJRefreshBackNormalFooter footerWithRefreshingBlock:^{
             page ++;
             [self requestData];
         }];
     }
-    return _godsTableView;
+    return _goodsTableView;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return _dataArray.count;
@@ -126,34 +126,34 @@
 }
 - (void)requestData{
     [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"shopsale?liveuid=%@&page=%d",liveUid,page] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_goodsTableView.mj_header endRefreshing];
+        [_goodsTableView.mj_footer endRefreshing];
 
         if (code == 200) {
             if (page == 1) {
                 [_dataArray removeAllObjects];
             }
-            for (NSDictionary *dci in info) {
-                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDic:dci];
+            for (NSDictionary *itemMap in info) {
+                SWLiveGoodsModel *model = [[SWLiveGoodsModel alloc]initWithDictionary:itemMap];
                 [_dataArray addObject:model];
             }
-            [_godsTableView reloadData];
+            [_goodsTableView reloadData];
             if ([info count] < 20) {
-                [_godsTableView.mj_footer endRefreshingWithNoMoreData];
+                [_goodsTableView.mj_footer endRefreshingWithNoMoreData];
             }
         }
     } Fail:^{
-        [_godsTableView.mj_header endRefreshing];
-        [_godsTableView.mj_footer endRefreshing];
+        [_goodsTableView.mj_header endRefreshing];
+        [_goodsTableView.mj_footer endRefreshing];
     }];
 }
 //添加商品
 - (void)addGoods{
     SWAddGoodsViewController *vc = [[SWAddGoodsViewController alloc]init];
     WeakSelf;
-    vc.block = ^(NSDictionary * _Nonnull dic) {
+    vc.block = ^(NSDictionary * _Nonnull goodsMap) {
         [weakSelf getSellerGoodsNum];
-        [weakSelf.godsTableView.mj_header beginRefreshing];
+        [weakSelf.goodsTableView.mj_header beginRefreshing];
     };
     [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
 }
@@ -161,7 +161,7 @@
 - (void)getSellerGoodsNum{
     [SWToolClass getQCloudWithUrl:[NSString stringWithFormat:@"shopsalenums?liveuid=%@",liveUid] Suc:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
         if (code == 200) {
-            titleLable.text = [NSString stringWithFormat:@"在售商品 (%@)",minstr([info valueForKey:@"nums"])];
+            titleLabel.text = [NSString stringWithFormat:@"在售商品 (%@)",minstr([info valueForKey:@"nums"])];
         }
     } Fail:^{
         
@@ -176,7 +176,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideHUD];
                     [_dataArray removeObject:model];
-                    [_godsTableView reloadData];
+                    [_goodsTableView reloadData];
                     [MBProgressHUD showError:msg];
                     [self getSellerGoodsNum];
                 });

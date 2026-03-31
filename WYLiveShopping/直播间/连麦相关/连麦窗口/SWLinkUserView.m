@@ -35,12 +35,12 @@
 
 @implementation SWLinkUserView
 
--(instancetype)initWithRTMPURL:(NSDictionary *)dic andFrame:(CGRect)frames andisHOST:(BOOL)ishost andAnToAn:(BOOL)isAnchor{
+-(instancetype)initWithRTMPURL:(NSDictionary *)infoMap andFrame:(CGRect)frames andisHOST:(BOOL)ishost andAnToAn:(BOOL)isAnchor{
     self = [super initWithFrame:frames];
     linkCount = 1;
-    _subdic = [NSDictionary dictionaryWithDictionary:dic];
-    _playurl = [NSString stringWithFormat:@"%@",[dic valueForKey:@"playurl"]];
-    _pushurl = [NSString stringWithFormat:@"%@",[dic valueForKey:@"pushurl"]];
+    _subMap = [NSDictionary dictionaryWithDictionary:infoMap];
+    _playurl = [NSString stringWithFormat:@"%@",[infoMap valueForKey:@"playurl"]];
+    _pushurl = [NSString stringWithFormat:@"%@",[infoMap valueForKey:@"pushurl"]];
     NSLog(@"\n_playurl=%@\n",_playurl);
     if (self) {
         _ishost = ishost;
@@ -91,7 +91,7 @@
         _returnCancle.tintColor = [UIColor whiteColor];
         [_returnCancle setImage:[UIImage imageNamed:@"直播间观众—关闭"] forState:UIControlStateNormal];
         _returnCancle.backgroundColor = [UIColor clearColor];
-        [_returnCancle setTitle:[dic valueForKey:@"userid"] forState:UIControlStateNormal];
+        [_returnCancle setTitle:[infoMap valueForKey:@"userid"] forState:UIControlStateNormal];
         [_returnCancle setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
         [_returnCancle addTarget:self action:@selector(returnCancles:) forControlEvents:UIControlEventTouchUpInside];
         _returnCancle.frame = CGRectMake(frames.size.width-37, 3, 34, 34);
@@ -155,7 +155,7 @@
     if (self) {
         _ishost = ishost;
         _remoteUserId = [userId copy];
-        _subdic = @{ @"userid": userId ?: @"" };
+        _subMap = @{ @"userid": userId ?: @"" };
         _playurl = @"";
         _pushurl = @"0";
 
@@ -321,7 +321,7 @@
     //
     //    V2TXLiveMixStream *subStream = [[V2TXLiveMixStream alloc] init];
     //    subStream.streamId = streamId;
-    //    subStream.userId = minstr([_subdic valueForKey:@"userid"]);
+    //    subStream.userId = minstr([_subMap valueForKey:@"userid"]);
     //    subStream.height = 180;
     //    subStream.width = 100;
     //    subStream.x = 220;
@@ -410,7 +410,7 @@
         else if (EvtID == PLAY_ERR_NET_DISCONNECT) {
             NSLog(@"play_linkMic网络断连,且经多次重连抢救无效,可以放弃治疗,更多重试请自行重启播放");
             //            if ([self.delegate respondsToSelector:@selector(tx_closeUserbyVideo:)]) {
-            //                [self.delegate tx_closeUserbyVideo:_subdic];
+            //                [self.delegate tx_closeUserbyVideo:_subMap];
             //            }
             [self returnCancles:_returnCancle];
         }
@@ -436,9 +436,9 @@
 -(void)onNetStatus:(NSDictionary *)param{
 }
 //混流
--(void)hunliu:(NSDictionary *)hunDic andHost:(BOOL)isHost;{
-    NSString *selfUrl = minstr([hunDic valueForKey:@"selfUrl"]);
-    NSString *otherUrl = minstr([hunDic valueForKey:@"otherUrl"]);
+-(void)hunliu:(NSDictionary *)hunMap andHost:(BOOL)isHost;{
+    NSString *selfUrl = minstr([hunMap valueForKey:@"selfUrl"]);
+    NSString *otherUrl = minstr([hunMap valueForKey:@"otherUrl"]);
 
     NSString * mainStreamId = [self getStreamIDByStreamUrl:selfUrl];
     NSString *subStreamId = [self getStreamIDByStreamUrl:otherUrl];
@@ -467,7 +467,7 @@
             mainStream.inputType = V2TXLiveMixInputTypeAudioVideo;
 
             subStream.streamId = subStreamId;
-            subStream.userId = minstr([_subdic valueForKey:@"userid"]);
+            subStream.userId = minstr([_subMap valueForKey:@"userid"]);
             subStream.height = _window_width*2/3;
             subStream.width = _window_width/2;
             subStream.x = _window_width/2;//rr
@@ -485,7 +485,7 @@
             mainStream.inputType = V2TXLiveMixInputTypeAudioVideo;
 
             subStream.streamId = subStreamId;
-            subStream.userId = minstr([_subdic valueForKey:@"userid"]);
+            subStream.userId = minstr([_subMap valueForKey:@"userid"]);
             subStream.height =  240;
             subStream.width = 135;
             subStream.x = 390;
@@ -501,10 +501,10 @@
         // [[YBLiveRTCManager shareInstance]MixTranscoding:nil];
     }
 }
--(void)requestLink:(NSDictionary *)dicInfo andUrl:(NSString *)urlStr{
+-(void)requestLink:(NSDictionary *)infoMap andUrl:(NSString *)urlStr{
 
     //    YBWeakSelf;
-//    [YBNetworking postWithUrl:urlStr Dic:dicInfo Suc:^(NSDictionary *data, NSString *code, NSString *msg) {
+//    [YBNetworking postWithUrl:urlStr Dic:infoMap Suc:^(NSDictionary *data, NSString *code, NSString *msg) {
 //        NSLog(@"===检查混流(uid%@)===code:%@==date:%@===msg:%@",[SWConfig getOwnID],code,data,msg);
 //        if ([code isEqual:@"0"]) {
 //
@@ -514,7 +514,7 @@
 //            }else{
 //                linkCount ++;
 //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    [weakSelf requestLink:dicInfo andUrl:urlStr];
+//                    [weakSelf requestLink:infoMap andUrl:urlStr];
 //                });
 //
 //            }
@@ -579,11 +579,11 @@
 }
 
 #pragma mark -判断用户信息
--(void)getUserInfo:(NSDictionary *)dic{
+-(void)getUserInfo:(NSDictionary *)infoMap{
     /*
     NSDictionary *getPop = @{
         @"uid":[SWConfig getOwnID],
-        @"touid":[dic valueForKey:@"userid"],
+        @"touid":[infoMap valueForKey:@"userid"],
         @"liveuid":[SWConfig getOwnID]
     };
     [YBToolClass postNetworkWithUrl:@"Live.getPop" andParameter:getPop success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
