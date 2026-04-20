@@ -10,7 +10,7 @@
 #import "TIMUserProfile+DataProvider.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "TUIKit.h"
-#import "CreatGroupAvatar.h"
+#import "SWCreatGroupAvatar.h"
 #import "ReactiveObjC/ReactiveObjC.h"
 #import "UIColor+TUIDarkMode.h"
 #import "UIImage+TUIDarkMode.h"
@@ -106,7 +106,7 @@
         // 群组, 则将群组默认头像修改成上次使用的头像
         NSString *key = [NSString stringWithFormat:@"TUIConversationLastGroupMember_%@", convData.groupID];
         NSInteger member = [NSUserDefaults.standardUserDefaults integerForKey:key];
-        UIImage *avatar = [CreatGroupAvatar getCacheAvatarForGroup:convData.groupID number:(UInt32)member];
+        UIImage *avatar = [SWCreatGroupAvatar getCacheAvatarForGroup:convData.groupID number:(UInt32)member];
         if (avatar) {
             convData.avatarImage = avatar;
         }
@@ -117,14 +117,14 @@
         if (self.convData.groupID.length > 0) { //群组
             // fix: 由于getCacheGroupAvatar需要请求网络，断网时，由于并没有设置headImageView，此时当前会话发消息，会话会上移，复用了第一条会话的头像，导致头像错乱
             self.headImageView.image = self.convData.avatarImage;
-            [CreatGroupAvatar getCacheGroupAvatar:convData.groupID callback:^(UIImage *avatar) {
+            [SWCreatGroupAvatar getCacheGroupAvatar:convData.groupID callback:^(UIImage *avatar) {
                 @strongify(self)
                 if (avatar != nil) { //已缓存群组头像
                     self.headImageView.image = avatar;
                 } else { //未缓存群组头像
                     [self.headImageView sd_setImageWithURL:[NSURL URLWithString:x]
                                           placeholderImage:self.convData.avatarImage];
-                    [CreatGroupAvatar fetchGroupAvatars:convData.groupID placeholder:convData.avatarImage callback:^(BOOL success, UIImage *image, NSString *groupID) {
+                    [SWCreatGroupAvatar fetchGroupAvatars:convData.groupID placeholder:convData.avatarImage callback:^(BOOL success, UIImage *image, NSString *groupID) {
                         @strongify(self)
                         if ([groupID isEqualToString:self.convData.groupID]) {
                             // 需要判断下，防止复用问题
@@ -212,7 +212,7 @@
 ///// 创建九宫格群头像
 //- (void)createGroupAvatar:(NSMutableArray*)groupMemberAvatars{
 //    @weakify(self)
-//    [CreatGroupAvatar createGroupAvatar:groupMemberAvatars finished:^(NSData *groupAvatar) {
+//    [SWCreatGroupAvatar createGroupAvatar:groupMemberAvatars finished:^(NSData *groupAvatar) {
 //        @strongify(self)
 //        UIImage *avatar = [UIImage imageWithData:groupAvatar];
 //        self.headImageView.image = avatar;

@@ -242,12 +242,12 @@
 #define TSwitchCell_Height 50
 #define TSwitchCell_Margin 10
 
-//personal common cell
+//personal SWCommon cell
 #define TPersonalCommonCell_Image_Size CGSizeMake(80, 80)
 #define TPersonalCommonCell_Margin 10
 #define TPersonalCommonCell_Indicator_Size CGSizeMake(15, 15)
 
-//group common cell
+//group SWCommon cell
 #define TGroupCommonCell_ReuseId @"TGroupCommonCell"
 #define TGroupCommonCell_Image_Size CGSizeMake(80, 80)
 #define TGroupCommonCell_Margin 10

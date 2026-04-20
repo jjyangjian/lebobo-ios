@@ -285,7 +285,7 @@ char pinyinFirstLetter(unsigned short hanzi)
 }
 
 
-#pragma mark - Utils
+#pragma mark - SWUtils
 + (BOOL)isEmpty:(NSString *)string
 {
     return string == nil || string.length == 0;

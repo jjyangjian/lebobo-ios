@@ -9,10 +9,10 @@
 #import "DataVerifier.h"
 
 
-#import "RSADataVerifier.h"
+#import "SWRSADataVerifier.h"
 
 id<DataVerifier> CreateRSADataVerifier(NSString *publicKey) {
 	
-	return [[RSADataVerifier alloc] initWithPublicKey:publicKey];
+	return [[SWRSADataVerifier alloc] initWithPublicKey:publicKey];
 	
 }

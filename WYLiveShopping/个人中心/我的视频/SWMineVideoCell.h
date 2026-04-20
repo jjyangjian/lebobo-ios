@@ -1,0 +1,23 @@
+//
+//  SWMineVideoCell.h
+//  WYLiveShopping
+//
+//  Created by IOS1 on 2021/9/2.
+//  Copyright © 2021 IOS1. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "SWVideoModel.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface SWMineVideoCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *thumbImgV;
+@property (weak, nonatomic) IBOutlet UIImageView *storeIconImgV;
+@property (weak, nonatomic) IBOutlet UIButton *looksBtn;
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic,strong) SWVideoModel *model;
+@end
+
+NS_ASSUME_NONNULL_END

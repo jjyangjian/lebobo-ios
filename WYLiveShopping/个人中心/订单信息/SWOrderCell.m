@@ -1,0 +1,127 @@
+//
+//  SWOrderCell.m
+//  WYLiveShopping
+//
+//  Created by IOS1 on 2020/6/19.
+//  Copyright © 2020 IOS1. All rights reserved.
+//
+
+#import "SWOrderCell.h"
+#import "SWSubmitOrderVC.h"
+@implementation SWOrderCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // 设置按钮颜色和字号
+    _rightBtn.backgroundColor = JJAPPTHEMECOLOR;
+    _rightBtn.titleLabel.font = SYS_Font(15);
+    _leftBtn.titleLabel.font = SYS_Font(15);
+    _statusLabel.font = SYS_Font(16);
+    _allPriceL.font = SYS_Font(14);
+    _tipsL.font = SYS_Font(14);
+    _profitLabel.font = SYS_Font(14);
+    _timeL.font = SYS_Font(16);
+    _store_nameL.font = SYS_Font(16);
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (void)doBuyAndPayView:(NSString *)cartID{
+    [SWToolClass postNetworkWithUrl:@"order/confirm" andParameter:@{@"cartId":cartID} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+        if (code == 200) {
+            [MBProgressHUD hideHUD];
+            SWSubmitOrderVC *vc = [[SWSubmitOrderVC alloc]init];
+            vc.orderMessage = [info mutableCopy];
+            vc.liveUid = @"";
+            [[SWMXBADelegate sharedAppDelegate] pushViewController:vc animated:YES];
+        }
+    } fail:^{
+        
+    }];
+
+}
+
+- (IBAction)rightButtonClick:(id)sender {
+    if ([_model.paid isEqual:@"1"]) {
+        if ([_model.status isEqual:@"2"]) {
+            //待评价
+        }
+        if ([_model.status isEqual:@"3"]) {
+            //已完成-删除订单
+            [SWToolClass postNetworkWithUrl:@"order/del" andParameter:@{@"uni":_model.orderNums} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+                [MBProgressHUD hideHUD];
+                [MBProgressHUD showSuccess:@"删除成功"];
+                if (code == 200) {
+                    if (self.delegate) {
+                        [self.delegate doRemoveCurrentOrder:_model];
+                    }
+                }
+            } fail:^{
+                
+            }];
+
+        }
+
+    }else{
+        if (self.delegate) {
+            [self.delegate doPayOrder:_model];
+        }
+    }
+
+}
+- (IBAction)leftButtonClick:(id)sender {
+    if ([_model.paid isEqual:@"1"]) {
+        if ([_model.status isEqual:@"3"]) {
+            //再次购买
+            [MBProgressHUD showMessage:@""];
+            [SWToolClass postNetworkWithUrl:@"order/again" andParameter:@{@"uni":_model.orderNums} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+                if (code == 200) {
+                    [self doBuyAndPayView:minstr([info valueForKey:@"cateId"])];
+                }else{
+                    [MBProgressHUD hideHUD];
+                }
+            } fail:^{
+                
+            }];
+
+        }
+
+    }else{
+        [SWToolClass postNetworkWithUrl:@"order/cancel" andParameter:@{@"id":_model.orderNums} success:^(int code, id  _Nonnull info, NSString * _Nonnull msg) {
+            if (code == 200) {
+                if (self.delegate) {
+                    [self.delegate doRemoveCurrentOrder:_model];
+                }
+            }
+        } fail:^{
+            
+        }];
+    }
+}
+-(void)setModel:(SWOrderModel *)model{
+    _model = model;
+    _store_nameL.text = _model.store_name;
+    _statusLabel.text = _model.status_name;
+    _allPriceL.text = [NSString stringWithFormat:@"¥ %@",_model.pay_price];
+    _tipsL.text = [NSString stringWithFormat:@"共%@件商品，总金额",_model.total_num];
+    [_goodsTableView reloadData];
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return _model.goodsArray.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    SWOrderGoodsCell *cell = [tableView dequeueReusableCellWithIdentifier:@"orderGoodsCELL"];
+    if (!cell) {
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"SWOrderGoodsCell" owner:nil options:nil] lastObject];
+    }
+    cell.model = _model.goodsArray[indexPath.row];
+    return cell;
+
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 80;
+}
+@end

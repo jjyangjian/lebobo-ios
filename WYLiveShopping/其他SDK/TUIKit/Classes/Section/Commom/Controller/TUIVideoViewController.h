@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TUIVideoViewController : WYBaseViewController
+@interface TUIVideoViewController : SWBaseViewController
 
 @property (nonatomic, strong) TUIVideoMessageCellData *data;
 

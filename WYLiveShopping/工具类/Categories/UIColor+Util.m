@@ -7,7 +7,7 @@
 //
 
 #import "UIColor+Util.h"
-#import "AppDelegate.h"
+#import "SWAppDelegate.h"
 
 @implementation UIColor (Util)
 

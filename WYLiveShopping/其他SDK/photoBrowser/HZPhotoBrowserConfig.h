@@ -1,6 +1,6 @@
 //
 //  HZPhotoBrowserConfig.h
-//  HZPhotoBrowser
+//  SWHZPhotoBrowser
 //
 //  Created by huangzhenyu on 15-2-9.
 //  Copyright (c) 2015年 huangzhenyu. All rights reserved.
@@ -88,7 +88,7 @@ _Pragma("clang diagnostic pop")
 #define kBottomSafeHeight (KIsiPhoneHear?34.0f:0.0f)
 
 // 图片路径
-#define HZPhotoBrowserSrc(file)  ([@"HZPhotoBrowser.bundle" stringByAppendingPathComponent:file])
+#define HZPhotoBrowserSrc(file)  ([@"SWHZPhotoBrowser.bundle" stringByAppendingPathComponent:file])
 #define HZPhotoBrowserImage(file)     ([UIImage imageNamed:HZPhotoBrowserSrc(file)])
 
 // 图片保存成功提示文字

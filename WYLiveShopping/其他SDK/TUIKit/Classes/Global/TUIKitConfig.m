@@ -101,7 +101,7 @@
  */
 - (void)defaultResourceCache
 {
-    //common
+    //SWCommon
     [self addResourceToCache:TUIKitResource(@"more_normal")];
     [self addResourceToCache:TUIKitResource(@"more_pressed")];
     [self addResourceToCache:TUIKitResource(@"face_normal")];

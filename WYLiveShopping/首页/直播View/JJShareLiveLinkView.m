@@ -145,7 +145,11 @@
     if (self.linkText) {
         UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
         pasteboard.string = self.linkText;
+        if (self.doneBlock) {
+            self.doneBlock();
+        }
         [self dismiss];
+
     }
 }
 

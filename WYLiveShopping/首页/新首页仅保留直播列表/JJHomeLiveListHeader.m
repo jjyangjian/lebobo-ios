@@ -29,13 +29,13 @@
             make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
     }];
 //    if (i == 0) {
-//        view.frame = CGRectMake(10, 8, recommendView.width/2-15, recommendView.height-16);
+//        view.frame = CGRectMake(10, 8, SWRecommendView.width/2-15, SWRecommendView.height-16);
 //        liveView = view;
 //    }else if(i == 1){
-//        view.frame = CGRectMake(recommendView.width/2+5, 8, recommendView.width/2-15, (recommendView.height-26)/2);
+//        view.frame = CGRectMake(SWRecommendView.width/2+5, 8, SWRecommendView.width/2-15, (SWRecommendView.height-26)/2);
 //        videoView = view;
 //    }else{
-//        view.frame = CGRectMake(recommendView.width/2+5, 18+(recommendView.height-26)/2, recommendView.width/2-15, (recommendView.height-26)/2);
+//        view.frame = CGRectMake(SWRecommendView.width/2+5, 18+(SWRecommendView.height-26)/2, SWRecommendView.width/2-15, (SWRecommendView.height-26)/2);
 //        courseView = view;
 //
 //    }

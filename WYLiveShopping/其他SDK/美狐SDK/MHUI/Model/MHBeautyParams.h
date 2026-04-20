@@ -6,7 +6,7 @@
 #define MHBeautyParams_h
 //#import "UIView+Additions.h"
 #import <UIKit/UIKit.h>
-#import "RookieTools.h"
+#import "SWRookieTools.h"
 #import <MHBeautySDK/MHSDK.h>
 typedef NS_ENUM(NSInteger , MHBeautyAssembleType) {
     MHBeautyAssembleType_Beauty = 0,//美颜
@@ -99,6 +99,6 @@ static const CGFloat MHBlackAlpha = 0.5f;
 #define IsDictionary(__dict) ([(__dict) isKindOfClass:[NSDictionary class]])
 #define IsDictionaryWithAnyKeyValue(__dict) (IsDictionary(__dict) && ([[((NSDictionary *)__dict) allKeys] count] > 0))
 
-#define YZMsg(key) [[RookieTools shareInstance] getStringForKey:key withTable:@"InfoPlist"]
+#define YZMsg(key) [[SWRookieTools shareInstance] getStringForKey:key withTable:@"InfoPlist"]
 
 #endif /* MHBeautyParams_h */

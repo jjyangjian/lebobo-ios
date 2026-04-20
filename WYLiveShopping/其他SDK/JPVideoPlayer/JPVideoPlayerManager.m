@@ -128,7 +128,7 @@ static NSString * const JPVideoPlayerSDKVersionKey = @"com.jpvideoplayer.sdk.ver
     [self reset];
     [self activeAudioSessionIfNeed];
 
-    // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
+    // Very SWCommon mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
     if ([url isKindOfClass:NSString.class]) {
         url = [NSURL URLWithString:(NSString *)url];

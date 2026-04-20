@@ -120,7 +120,7 @@ void UI_free(UI *ui);
    be safe to ignore if the expected user action is obvious, for example with
    a dialog box with an OK button and a Cancel button), a string of acceptable
    characters to mean OK and to mean Cancel.  The two last strings are checked
-   to make sure they don't have common characters.  Additionally, the same
+   to make sure they don't have SWCommon characters.  Additionally, the same
    flag argument as for the string input is taken, as well as a result buffer.
    The result buffer is required to be at least one byte long.  Depending on
    the answer, the first character from the OK or the Cancel character strings
